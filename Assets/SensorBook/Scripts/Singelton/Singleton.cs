@@ -12,7 +12,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         get
         {
-            if (destroyed) return null;
+            //if (destroyed) return null;
 
             lock (lockObject)
             {

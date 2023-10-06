@@ -42,7 +42,8 @@ public class BookPro : MonoBehaviour
     /// The Current Shown paper (the paper its front shown in right part)
     /// </summary>
     /// 
-    
+
+    private Book _currentBook; public Book CurrentBook { set { _currentBook = value; } }
     public void Create(Sprite Front = null, Sprite Back = null)
     {
         GameObject rightPage = Instantiate(Page) as GameObject;
@@ -74,38 +75,9 @@ public class BookPro : MonoBehaviour
         papers[papers.Count - 1].Back = rightPage;
 
         papers[papers.Count - 1].Front.GetComponent<Image>().sprite = Front;
-        papers[papers.Count - 1].Back.GetComponent<Image>().sprite = Back; 
+        papers[papers.Count - 1].Back.GetComponent<Image>().sprite = Back;
     }
 
-    
-    private void OnEnable()
-    {
-        if (FileHandler._pdfpath != null)
-        {
-            List<Sprite> pages = FileHandler.OpenPDF_file(true);
-
-            for (int x = 0; x < pages.Count; x++)
-            {
-                if (x  > pages.Count - 1)
-                    Create(pages[pages.Count -1], null);
-                else
-                {
-                    if (x + 1 <= pages.Count -1)
-                        Create(pages[x], pages[x + 1]);
-                    
-                    x = x + 1;
-                }
-
-            }
-
-            StartFlippingPaper = 1;
-            EndFlippingPaper = papers.Count -2;
-
-            currentPaper = 1;
-
-            UpdatePages();
-        }
-    }
 
     public int CurrentPaper
     {
@@ -197,21 +169,39 @@ public class BookPro : MonoBehaviour
         LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
     }
 
-    private void ExitToMenu()
+    private void OnEnable()
     {
-        LeftPageShadow.transform.SetParent(BookPanel, true);
-        RightPageShadow.transform.SetParent(BookPanel, true);
-        Shadow.transform.SetParent(BookPanel, true);
-        ShadowLTR.transform.SetParent(BookPanel, true);
-
-        for (int x = 0; x < papers.Count; x++)
-        {
-            Destroy(papers[x].Front);
-            Destroy(papers[x].Back);
-        }
-
-        papers.Clear();
+        OpenCurrentBook();
     }
+
+    private void OpenCurrentBook()
+    {
+        if (MenuSceneController.Instance.CurrentBook != null)
+        {
+            _currentBook = MenuSceneController.Instance.CurrentBook;
+            List<Sprite> pages = _currentBook.PagesBook;
+
+            for (int x = 0; x < pages.Count; x++)
+            {
+                if (x > pages.Count - 1)
+                    Create(pages[pages.Count - 1], null);
+                else
+                {
+                    if (x + 1 <= pages.Count - 1)
+                        Create(pages[x], pages[x + 1]);
+
+                    x = x + 1;
+                }
+            }
+
+            StartFlippingPaper = 1;
+            EndFlippingPaper = papers.Count - 2;
+            currentPaper = 1;
+
+            UpdatePages();
+        }
+    }
+
 
     /// <summary>
     /// transform point from global (world-space) to local space
@@ -559,6 +549,17 @@ public class BookPro : MonoBehaviour
                 UpdatePages();
             });
         }
+    }
+
+    private void OnDisable()
+    {
+        for (int x = 0; x < papers.Count; x++)
+        {
+            Destroy(papers[x].Front);
+            Destroy(papers[x].Back);
+        }
+
+        papers.Clear();
     }
 
     #region Page Curl Internal Calculations
