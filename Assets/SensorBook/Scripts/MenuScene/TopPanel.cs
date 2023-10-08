@@ -17,8 +17,8 @@ public class TopPanel : MonoBehaviour
         _addNewBook.onClick.AddListener(ClickAddNewBookBTN);
         _sortBook.onValueChanged.AddListener(OnSizeValueChanged);
 
-        MenuSceneController.Instance._adminOn += delegate { AdminMode(true); };
-        MenuSceneController.Instance._adminOff += delegate { AdminMode(false); };
+        MenuSceneController.Instance._adminOn += ActivateAdminPanel;
+        MenuSceneController.Instance._adminOff += DeActivateAdminPanel;
     }
 
     private void OnDisable()
@@ -27,10 +27,9 @@ public class TopPanel : MonoBehaviour
         _addNewBook.onClick.RemoveListener(ClickAddNewBookBTN);
         _sortBook.onValueChanged.RemoveListener(OnSizeValueChanged);
 
-        MenuSceneController.Instance._adminOn -= delegate { AdminMode(true); };
-        MenuSceneController.Instance._adminOff -= delegate { AdminMode(false); };
+        MenuSceneController.Instance._adminOn -= ActivateAdminPanel;
+        MenuSceneController.Instance._adminOff -= DeActivateAdminPanel;
     }
-
 
     private void ClickCreateBTN()
     {
@@ -49,6 +48,7 @@ public class TopPanel : MonoBehaviour
             MenuSceneController.Instance.SortDate = false;
             MenuSceneController.Instance.SortBook();
         }
+
         if (value == 1)
         {
             MenuSceneController.Instance.SortDate = true;
@@ -56,7 +56,16 @@ public class TopPanel : MonoBehaviour
         }
     }
 
-    private void AdminMode(bool active)
+    private void ActivateAdminPanel()
+    {
+        AdminPanel(true);
+    }
+
+    private void DeActivateAdminPanel()
+    {
+        AdminPanel(false);
+    }
+    private void AdminPanel(bool active)
     {
         _createBook.gameObject.SetActive(active);
         _addNewBook.gameObject.SetActive(active);

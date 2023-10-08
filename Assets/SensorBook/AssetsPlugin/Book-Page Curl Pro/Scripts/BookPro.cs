@@ -183,20 +183,25 @@ public class BookPro : MonoBehaviour
 
             for (int x = 0; x < pages.Count; x++)
             {
-                if (x > pages.Count - 1)
+                int nextPage = x + 1;
+
+                if (x > pages.Count)
+                {
                     Create(pages[pages.Count - 1], null);
+                    break;
+                }
                 else
                 {
-                    if (x + 1 <= pages.Count - 1)
-                        Create(pages[x], pages[x + 1]);
+                    if (nextPage < pages.Count)
+                        Create(pages[x], pages[nextPage]);
 
-                    x = x + 1;
+                    x++;
                 }
             }
 
-            StartFlippingPaper = 1;
-            EndFlippingPaper = papers.Count - 2;
-            currentPaper = 1;
+            StartFlippingPaper = 0;
+            EndFlippingPaper = papers.Count - 1;
+            currentPaper = 0;
 
             UpdatePages();
         }
