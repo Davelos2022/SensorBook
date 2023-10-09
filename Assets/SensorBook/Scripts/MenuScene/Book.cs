@@ -74,7 +74,8 @@ public class Book : MonoBehaviour
         _nameBookTMP.text = Path.GetFileNameWithoutExtension(PathToBook);
         _coverBook.texture = CoverTexture;
         _pathToPDF = PathToBook;
-        _dateTimeCreation = FileManager.GetDateCreation(PathToBook);
+        _dateTimeCreation = FileManager.
+            GetDateCreation(PathToBook);
     }
 
     private void Book_Click()
@@ -102,7 +103,8 @@ public class Book : MonoBehaviour
         _favoriteBook = !_favoriteBook;
         _selectionFavoriteBTN.SetActive(_favoriteBook);
 
-        MenuSceneController.Instance.ShowBook();
+        MenuSceneController.Instance.
+            SortBook(MenuSceneController.Instance.SortMode);
     }
 
     private void ActivateAdminPanel()
@@ -134,13 +136,16 @@ public class Book : MonoBehaviour
         switch (stateBook)
         {
             case _stateBook.Show:
-                MenuSceneController.Instance.BookMode(this);
+                MenuSceneController.Instance.
+                    BookMode(this);
                 break;
             case _stateBook.Edit:
-                MenuSceneController.Instance.EditorBook(this);
+                MenuSceneController.Instance.
+                    EditorBook(this);
                 break;
             case _stateBook.Export:
-                MenuSceneController.Instance.ExportBook(this);
+                MenuSceneController.Instance.
+                    ExportBook(this);
                 break;
             default:
                 break;

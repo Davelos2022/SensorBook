@@ -44,16 +44,9 @@ public class TopPanel : MonoBehaviour
     private void OnSizeValueChanged(int value)
     {
         if (value == 0)
-        {
-            MenuSceneController.Instance.SortDate = false;
-            MenuSceneController.Instance.SortBook();
-        }
-
+            MenuSceneController.Instance.SortBook(MenuSceneController._sortMode.sortAz);
         if (value == 1)
-        {
-            MenuSceneController.Instance.SortDate = true;
-            MenuSceneController.Instance.SortBook();
-        }
+            MenuSceneController.Instance.SortBook(MenuSceneController._sortMode.sortDate);
     }
 
     private void ActivateAdminPanel()

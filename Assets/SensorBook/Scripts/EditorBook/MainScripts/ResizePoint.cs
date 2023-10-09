@@ -9,13 +9,11 @@ public class ResizePoint: MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     [SerializeField] private bool cornerPoint;
 
     private bool _dragging;
-
     public bool Dragging => _dragging;
     public bool CornerPoint => cornerPoint;
     public Vector2 NormalizedPoint => normalizedPoint;
     public PointerEventData EventData => _data;
 
-    private RectTransform rect;
     private RectResizer _resizer;
     private PointerEventData _data;
 
@@ -24,16 +22,13 @@ public class ResizePoint: MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         get
         {
             Vector2 ratio;
-            ratio.x = (float)Screen.width / (float)Screen.currentResolution.width;
-            ratio.y = (float)Screen.height / (float)Screen.currentResolution.height;
+            ratio.x = Screen.width / Screen.currentResolution.width;
+            ratio.y = Screen.height / Screen.currentResolution.height;
             return ratio;
         }
     }
 
-    private void Awake()
-    {
-        rect = transform as RectTransform;
-    }
+ 
 
     public void Initialize(RectResizer resizer)
     {

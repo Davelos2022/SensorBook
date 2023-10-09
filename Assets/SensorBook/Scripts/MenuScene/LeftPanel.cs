@@ -10,7 +10,6 @@ public class LeftPanel : MonoBehaviour
     [SerializeField] private Button _favoriteBook;
     [SerializeField] private GameObject _selectedFavoriteBook;
 
-
     private void OnEnable()
     {
         _allBook.onClick.AddListener(ClickAll);
@@ -30,8 +29,7 @@ public class LeftPanel : MonoBehaviour
         _selectedFavoriteBook.SetActive(false);
         _selectedAllBook.SetActive(true);
 
-        MenuSceneController.Instance.FavoriteMode = false;
-        MenuSceneController.Instance.ShowBook();
+        MenuSceneController.Instance.SortBook(MenuSceneController._sortMode.sortAz);
     }
 
     private void ClickFavorite()
@@ -39,7 +37,6 @@ public class LeftPanel : MonoBehaviour
         _selectedFavoriteBook.SetActive(true);
         _selectedAllBook.SetActive(false);
 
-        MenuSceneController.Instance.FavoriteMode = true;
-        MenuSceneController.Instance.ShowBook();
+        MenuSceneController.Instance.SortBook(MenuSceneController._sortMode.sortFavorite);
     }
 }

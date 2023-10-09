@@ -14,7 +14,7 @@ public enum FlipMode
 public class BookPro : MonoBehaviour
 {
     public GameObject Page;
-
+    public RectTransform BookObject;
     Canvas canvas;
     [SerializeField]
     RectTransform BookPanel;
@@ -203,10 +203,31 @@ public class BookPro : MonoBehaviour
             EndFlippingPaper = papers.Count - 1;
             currentPaper = 0;
 
+            CheckAndSetSizeBook(pages[0], pages[1]);
             UpdatePages();
         }
     }
 
+    private void CheckAndSetSizeBook(Sprite leftPage, Sprite rightPage)
+    {
+        if (leftPage != null && rightPage != null)
+        {
+            // Левая страница
+            int spriteWidtLeft = leftPage.texture.width;
+
+            // Правая страница
+            int spriteWidtRight = rightPage.texture.width;
+
+            // Получаем размеры экрана сцены в пикселях
+            float pageWidth = BookPanel.rect.width;
+
+            // Вычисляем разницу размеров в пикселях
+            float widthDifference = (spriteWidtLeft + spriteWidtRight) / pageWidth;
+
+            BookObject.localScale = new Vector3(widthDifference, 1, 1);
+            Debug.Log("Разница в ширине: " + widthDifference);
+        }
+    }
 
     /// <summary>
     /// transform point from global (world-space) to local space

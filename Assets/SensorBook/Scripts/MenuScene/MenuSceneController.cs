@@ -18,10 +18,11 @@ public class MenuSceneController : Singleton<MenuSceneController>
     [SerializeField]
     private GameObject _fadeMenu;
 
-    private List<Book> _collectionBook = new List<Book>();  //<--- ARRAY!!!!
+    public enum _sortMode { sortDate, sortAz, sortFavorite };
+    private List<Book> _collectionBook = new List<Book>();  //<--- ARRAY!!!! Why? if I need to controll collection (replenish it and delete it book)
+
     private Book _currentBook; public Book CurrentBook => _currentBook;
-    private bool _favoriteMode; public bool FavoriteMode { set { _favoriteMode = value; } }
-    private bool _sortDate; public bool SortDate { set { _sortDate = value; } }
+    private _sortMode _currentSortMode; public _sortMode SortMode => _currentSortMode;
 
     private bool _adminStatus = false; public bool AdminStatus => _adminStatus;
     public Action _adminOn;
@@ -63,7 +64,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
             await FileManager.CopyFileAsync(path, newPath);
 
             CreateBook(newPath);
-            SortBook();
+            SortBook(_currentSortMode);
 
             //Notifier.Instance.Notify(NotifyType.Success, "Книга добавлена");
             Debug.Log("Книга добавлена");
@@ -133,26 +134,40 @@ public class MenuSceneController : Singleton<MenuSceneController>
             _imageIfNullBook.SetActive(false);
     }
 
-    /*not good*/
-    public void SortBook()
+    /*not good*/ // -  and now?
+    public void SortBook(_sortMode sortMode)
     {
-        _collectionBook = _sortDate
-            ? _collectionBook.OrderByDescending(x => x.DataTimeBook.Ticks).ToList()
-            : _collectionBook.OrderBy(x => x.NameBook).ToList();
+        _currentSortMode = sortMode;
 
-        for (int x = 0; x < _collectionBook.Count; x++)
-            _collectionBook[x].transform.SetSiblingIndex(x);      
+        switch (sortMode)
+        {
+            case _sortMode.sortAz:
+                _collectionBook =_collectionBook.
+                    OrderBy(x => x.NameBook).ToList();
+                ShowBook();
+                break;
+            case _sortMode.sortDate:
+                _collectionBook =_collectionBook.
+                    OrderByDescending(x => x.DataTimeBook.Ticks).ToList();
+                ShowBook();
+                break;
+            case _sortMode.sortFavorite:
+                ShowBook(true);
+                break;
+        }
     }
 
-    /*not good*/
-    public void ShowBook()
+    /*not good*/ // -  and now?
+    private void ShowBook(bool favorite = false)
     {
-        foreach (var book in _collectionBook)
+        for (int x = 0; x < _collectionBook.Count; x++)
         {
-            if (_favoriteMode && !book.FavoriteBook)
-                book.gameObject.SetActive(false);
+            _collectionBook[x].transform.SetSiblingIndex(x);
+
+            if (favorite && !_collectionBook[x].FavoriteBook)
+                _collectionBook[x].gameObject.SetActive(false);
             else
-                book.gameObject.SetActive(true);
+                _collectionBook[x].gameObject.SetActive(true);
         }
     }
 
@@ -193,7 +208,8 @@ public class MenuSceneController : Singleton<MenuSceneController>
     private IEnumerator LoadSceneAsync(string sceneName)
     {
         _fadeMenu.SetActive(false);
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        AsyncOperation asyncLoad = SceneManager.
+            LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
         while (!asyncLoad.isDone)
         {
