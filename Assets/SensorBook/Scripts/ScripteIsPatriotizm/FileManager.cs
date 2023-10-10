@@ -419,21 +419,27 @@ public abstract class FileManager : Singleton<FileManager>
             PDFDocument pdfDocument = new PDFDocument(pathToPDF, "");
             List<Sprite> pdfPages = new List<Sprite>();
 
+            PDFRenderer.RenderSettings m_RenderSettings = new PDFRenderer.RenderSettings();
+            m_RenderSettings.optimizeTextForLCDDisplay = true;
+
             Texture2D tex;
-            int countPage;
-            countPage = pdfDocument.GetPageCount();
+            int countPage = pdfDocument.GetPageCount();
 
             for (int x = 1; x < countPage; x++)
             {
-                tex = pdfDocument.Renderer.RenderPageToTexture(pdfDocument.GetPage(x));
-                tex.filterMode = FilterMode.Bilinear;
-                tex.anisoLevel = 8;
+                PDFPage page = pdfDocument.GetPage(x);
+                int pageWidth = pdfDocument.GetPageWidth(x) * 2;
+                int pageHeight = pdfDocument.GetPageHeight(x) * 2;
 
+                tex = pdfDocument.Renderer.RenderPageToTexture
+                    (page, pageWidth, pageHeight, null, m_RenderSettings);
+
+                tex.filterMode = FilterMode.Bilinear;
+                tex.anisoLevel = 10;
                 Sprite sprite = CreateSprite(tex);
 
                 pdfPages.Add(sprite);
             }
-
 
             return pdfPages;
         }

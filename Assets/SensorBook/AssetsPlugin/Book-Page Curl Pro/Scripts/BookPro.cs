@@ -13,11 +13,10 @@ public enum FlipMode
 }
 public class BookPro : MonoBehaviour
 {
-    public GameObject Page;
+    public GameObject PagePrefab;
     public RectTransform BookObject;
-    Canvas canvas;
-    [SerializeField]
-    RectTransform BookPanel;
+    public RectTransform PegesRectTransdorm;
+    [Space]
     public Image ClippingPlane;
     public Image Shadow;
     public Image LeftPageShadow;
@@ -43,10 +42,11 @@ public class BookPro : MonoBehaviour
     /// </summary>
     /// 
 
+    private Canvas canvas;
     private Book _currentBook; public Book CurrentBook { set { _currentBook = value; } }
     public void Create(Sprite Front = null, Sprite Back = null)
     {
-        GameObject rightPage = Instantiate(Page) as GameObject;
+        GameObject rightPage = Instantiate(PagePrefab) as GameObject;
         rightPage.transform.SetParent(this.transform, true);
         rightPage.GetComponent<RectTransform>().sizeDelta = this.RightPageTransform.GetComponent<RectTransform>().sizeDelta;
         rightPage.GetComponent<RectTransform>().pivot = this.RightPageTransform.GetComponent<RectTransform>().pivot;
@@ -58,7 +58,7 @@ public class BookPro : MonoBehaviour
         rightPage.AddComponent<CanvasGroup>();
 
 
-        GameObject leftPage = Instantiate(Page) as GameObject;
+        GameObject leftPage = Instantiate(PagePrefab) as GameObject;
         leftPage.transform.SetParent(this.transform, true);
         leftPage.GetComponent<RectTransform>().sizeDelta = this.LeftPageTransform.GetComponent<RectTransform>().sizeDelta;
         leftPage.GetComponent<RectTransform>().pivot = this.LeftPageTransform.GetComponent<RectTransform>().pivot;
@@ -113,7 +113,7 @@ public class BookPro : MonoBehaviour
     {
         get
         {
-            return BookPanel.rect.height;
+            return PegesRectTransdorm.rect.height;
         }
     }
 
@@ -147,8 +147,8 @@ public class BookPro : MonoBehaviour
         CalcCurlCriticalPoints();
 
 
-        float pageWidth = BookPanel.rect.width / 2.0f;
-        float pageHeight = BookPanel.rect.height;
+        float pageWidth = PegesRectTransdorm.rect.width / 2.0f;
+        float pageHeight = PegesRectTransdorm.rect.height;
 
         ClippingPlane.rectTransform.sizeDelta = new Vector2(pageWidth * 2 + pageHeight, pageHeight + pageHeight * 2);
 
@@ -169,6 +169,7 @@ public class BookPro : MonoBehaviour
         LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
     }
 
+    //create by Denis  ****////
     private void OnEnable()
     {
         OpenCurrentBook();
@@ -210,6 +211,9 @@ public class BookPro : MonoBehaviour
 
     private void CheckAndSetSizeBook(Sprite leftPage, Sprite rightPage)
     {
+        float restrictiveIndicator = 1.45f;
+        float reSacle_x = 0.8f;
+
         if (leftPage != null && rightPage != null)
         {
             // Левая страница
@@ -219,15 +223,21 @@ public class BookPro : MonoBehaviour
             int spriteWidtRight = rightPage.texture.width;
 
             // Получаем размеры экрана сцены в пикселях
-            float pageWidth = BookPanel.rect.width;
+            float pageWidth = PegesRectTransdorm.rect.width;
 
             // Вычисляем разницу размеров в пикселях
             float widthDifference = (spriteWidtLeft + spriteWidtRight) / pageWidth;
 
-            BookObject.localScale = new Vector3(widthDifference, 1, 1);
+            if (widthDifference < restrictiveIndicator)
+                BookObject.localScale = new Vector3(reSacle_x, 1, 1);
+
             Debug.Log("Разница в ширине: " + widthDifference);
         }
     }
+
+    //End****////
+
+
 
     /// <summary>
     /// transform point from global (world-space) to local space
@@ -236,7 +246,7 @@ public class BookPro : MonoBehaviour
     /// <returns></returns>
     public Vector3 transformPoint(Vector3 global)
     {
-        Vector2 localPos = BookPanel.InverseTransformPoint(global);
+        Vector2 localPos = PegesRectTransdorm.InverseTransformPoint(global);
         return localPos;
     }
     /// <summary>
@@ -249,7 +259,7 @@ public class BookPro : MonoBehaviour
         if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
         {
             Vector3 mouseWorldPos = canvas.worldCamera.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, canvas.planeDistance));
-            Vector2 localPos = BookPanel.InverseTransformPoint(mouseWorldPos);
+            Vector2 localPos = PegesRectTransdorm.InverseTransformPoint(mouseWorldPos);
 
             return localPos;
         }
@@ -262,13 +272,13 @@ public class BookPro : MonoBehaviour
             Plane p = new Plane(globalEBR, globalEBL, globalSt);
             float distance;
             p.Raycast(ray, out distance);
-            Vector2 localPos = BookPanel.InverseTransformPoint(ray.GetPoint(distance));
+            Vector2 localPos = PegesRectTransdorm.InverseTransformPoint(ray.GetPoint(distance));
             return localPos;
         }
         else
         {
             //Screen Space Overlay
-            Vector2 localPos = BookPanel.InverseTransformPoint(mouseScreenPos);
+            Vector2 localPos = PegesRectTransdorm.InverseTransformPoint(mouseScreenPos);
             return localPos;
         }
 
@@ -286,9 +296,9 @@ public class BookPro : MonoBehaviour
         for (int i = 0; i < papers.Count; i++)
         {
             BookUtility.HidePage(papers[i].Front);
-            papers[i].Front.transform.SetParent(BookPanel.transform);
+            papers[i].Front.transform.SetParent(PegesRectTransdorm.transform);
             BookUtility.HidePage(papers[i].Back);
-            papers[i].Back.transform.SetParent(BookPanel.transform);
+            papers[i].Back.transform.SetParent(PegesRectTransdorm.transform);
         }
 
         if (hasTransparentPages)
@@ -297,7 +307,7 @@ public class BookPro : MonoBehaviour
             for (int i = 0; i <= previousPaper; i++)
             {
                 BookUtility.ShowPage(papers[i].Back);
-                papers[i].Back.transform.SetParent(BookPanel.transform);
+                papers[i].Back.transform.SetParent(PegesRectTransdorm.transform);
                 papers[i].Back.transform.SetSiblingIndex(i);
                 BookUtility.CopyTransform(LeftPageTransform.transform, papers[i].Back.transform);
             }
@@ -346,7 +356,7 @@ public class BookPro : MonoBehaviour
             {
                 //if no previous pages, the leftShaow should be disabled
                 LeftPageShadow.gameObject.SetActive(false);
-                LeftPageShadow.transform.SetParent(BookPanel, true);
+                LeftPageShadow.transform.SetParent(PegesRectTransdorm, true);
             }
 
             if (currentPaper < papers.Count)
@@ -361,17 +371,17 @@ public class BookPro : MonoBehaviour
             {
                 //no next page, the right shadow should be diabled
                 RightPageShadow.gameObject.SetActive(false);
-                RightPageShadow.transform.SetParent(BookPanel, true);
+                RightPageShadow.transform.SetParent(PegesRectTransdorm, true);
             }
         }
         else
         {
             //Enable Shadow Effect is Unchecked, all shadow effects should be disabled
             LeftPageShadow.gameObject.SetActive(false);
-            LeftPageShadow.transform.SetParent(BookPanel, true);
+            LeftPageShadow.transform.SetParent(PegesRectTransdorm, true);
 
             RightPageShadow.gameObject.SetActive(false);
-            RightPageShadow.transform.SetParent(BookPanel, true);
+            RightPageShadow.transform.SetParent(PegesRectTransdorm, true);
 
         }
         #endregion
@@ -504,9 +514,9 @@ public class BookPro : MonoBehaviour
         if (mode == FlipMode.LeftToRight)
             currentPaper -= 1;
         //Debug.Log(currentPaper);
-        Left.transform.SetParent(BookPanel.transform, true);
+        Left.transform.SetParent(PegesRectTransdorm.transform, true);
         Left.rectTransform.pivot = new Vector2(0, 0);
-        Right.transform.SetParent(BookPanel.transform, true);
+        Right.transform.SetParent(PegesRectTransdorm.transform, true);
         UpdatePages();
         Shadow.gameObject.SetActive(false);
         ShadowLTR.gameObject.SetActive(false);
@@ -552,8 +562,8 @@ public class BookPro : MonoBehaviour
             Tween.ValueTo(gameObject, f, ebr * 0.98f, 0.3f, TweenUpdate, () =>
             {
                 currentPaper -= 1;
-                Right.transform.SetParent(BookPanel.transform);
-                Left.transform.SetParent(BookPanel.transform);
+                Right.transform.SetParent(PegesRectTransdorm.transform);
+                Left.transform.SetParent(PegesRectTransdorm.transform);
                 //pageDragging = false;
                 tweening = false;
                 Shadow.gameObject.SetActive(false);
@@ -566,8 +576,8 @@ public class BookPro : MonoBehaviour
             tweening = true;
             Tween.ValueTo(gameObject, f, ebl * 0.98f, 0.3f, TweenUpdate, () =>
             {
-                Left.transform.SetParent(BookPanel.transform);
-                Right.transform.SetParent(BookPanel.transform);
+                Left.transform.SetParent(PegesRectTransdorm.transform);
+                Right.transform.SetParent(PegesRectTransdorm.transform);
                 //pageDragging = false;
                 tweening = false;
                 Shadow.gameObject.SetActive(false);
@@ -607,13 +617,13 @@ public class BookPro : MonoBehaviour
 
     private void CalcCurlCriticalPoints()
     {
-        sb = new Vector3(0, -BookPanel.rect.height / 2);
-        ebr = new Vector3(BookPanel.rect.width / 2, -BookPanel.rect.height / 2);
-        ebl = new Vector3(-BookPanel.rect.width / 2, -BookPanel.rect.height / 2);
-        st = new Vector3(0, BookPanel.rect.height / 2);
+        sb = new Vector3(0, -PegesRectTransdorm.rect.height / 2);
+        ebr = new Vector3(PegesRectTransdorm.rect.width / 2, -PegesRectTransdorm.rect.height / 2);
+        ebl = new Vector3(-PegesRectTransdorm.rect.width / 2, -PegesRectTransdorm.rect.height / 2);
+        st = new Vector3(0, PegesRectTransdorm.rect.height / 2);
         radius1 = Vector2.Distance(sb, ebr);
-        float pageWidth = BookPanel.rect.width / 2.0f;
-        float pageHeight = BookPanel.rect.height;
+        float pageWidth = PegesRectTransdorm.rect.width / 2.0f;
+        float pageHeight = PegesRectTransdorm.rect.height;
         radius2 = Mathf.Sqrt(pageWidth * pageWidth + pageHeight * pageHeight);
     }
     public void UpdateBookRTLToPoint(Vector3 followLocation)
@@ -633,7 +643,7 @@ public class BookPro : MonoBehaviour
         }
         Right.transform.SetParent(ClippingPlane.transform, true);
 
-        Left.transform.SetParent(BookPanel.transform, true);
+        Left.transform.SetParent(PegesRectTransdorm.transform, true);
         c = Calc_C_Position(followLocation);
         Vector3 t1;
         float T0_T1_Angle = Calc_T0_T1_Angle(c, ebr, out t1);
@@ -641,14 +651,14 @@ public class BookPro : MonoBehaviour
 
         ClippingPlane.rectTransform.pivot = new Vector2(1, 0.35f);
         ClippingPlane.transform.localEulerAngles = new Vector3(0, 0, T0_T1_Angle + 90);
-        ClippingPlane.transform.position = BookPanel.TransformPoint(t1);
+        ClippingPlane.transform.position = PegesRectTransdorm.TransformPoint(t1);
 
 
         RightPageShadow.transform.localEulerAngles = new Vector3(0, 0, T0_T1_Angle + 90);
-        RightPageShadow.transform.position = BookPanel.TransformPoint(t1);
+        RightPageShadow.transform.position = PegesRectTransdorm.TransformPoint(t1);
 
         //page position and angle
-        Right.transform.position = BookPanel.TransformPoint(c);
+        Right.transform.position = PegesRectTransdorm.TransformPoint(c);
         float C_T1_dy = t1.y - c.y;
         float C_T1_dx = t1.x - c.x;
         float C_T1_Angle = Mathf.Atan2(C_T1_dy, C_T1_dx) * Mathf.Rad2Deg;
@@ -675,7 +685,7 @@ public class BookPro : MonoBehaviour
             Shadow.gameObject.SetActive(true);
         }
         Left.transform.SetParent(ClippingPlane.transform, true);
-        Right.transform.SetParent(BookPanel.transform, true);
+        Right.transform.SetParent(PegesRectTransdorm.transform, true);
 
         c = Calc_C_Position(followLocation);
         Vector3 t1;
@@ -683,13 +693,13 @@ public class BookPro : MonoBehaviour
         if (T0_T1_Angle < 0) T0_T1_Angle += 180;
 
         ClippingPlane.transform.localEulerAngles = new Vector3(0, 0, T0_T1_Angle - 90);
-        ClippingPlane.transform.position = BookPanel.TransformPoint(t1);
+        ClippingPlane.transform.position = PegesRectTransdorm.TransformPoint(t1);
 
         LeftPageShadow.transform.localEulerAngles = new Vector3(0, 0, T0_T1_Angle - 90);
-        LeftPageShadow.transform.position = BookPanel.TransformPoint(t1);
+        LeftPageShadow.transform.position = PegesRectTransdorm.TransformPoint(t1);
 
         //page position and angle
-        Left.transform.position = BookPanel.TransformPoint(c);
+        Left.transform.position = PegesRectTransdorm.TransformPoint(c);
         float C_T1_dy = t1.y - c.y;
         float C_T1_dx = t1.x - c.x;
         float C_T1_Angle = Mathf.Atan2(C_T1_dy, C_T1_dx) * Mathf.Rad2Deg;

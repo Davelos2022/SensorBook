@@ -29,7 +29,7 @@ public class LeftPanel : MonoBehaviour
         _selectedFavoriteBook.SetActive(false);
         _selectedAllBook.SetActive(true);
 
-        MenuSceneController.Instance.SortBook(MenuSceneController._sortMode.sortAz);
+        MenuSceneController.Instance.ShowAllBook();
     }
 
     private void ClickFavorite()
@@ -37,6 +37,6 @@ public class LeftPanel : MonoBehaviour
         _selectedFavoriteBook.SetActive(true);
         _selectedAllBook.SetActive(false);
 
-        MenuSceneController.Instance.SortBook(MenuSceneController._sortMode.sortFavorite);
+        MenuSceneController.Instance.ShowFavoriteBook();
     }
 }

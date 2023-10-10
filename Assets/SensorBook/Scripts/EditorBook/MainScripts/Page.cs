@@ -1,49 +1,31 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class Page : MonoBehaviour
 {
-    [SerializeField] private Button _pageBTN;
-    [SerializeField] private Button _deletedBTN;
-    [Space]
-    [SerializeField] private Image _imageBox;
-    [SerializeField] private GameObject _selectedPanel;
-    [SerializeField] private TextMeshProUGUI _textPage;
+    [SerializeField] private TextMeshProUGUI _numberPage;
 
-    private int _indexPage;
+    private RectTransform _pageRectTransform;
+    public RectTransform PageRectTransform => _pageRectTransform;
 
-    private void OnEnable()
+    private void Start()
     {
-        _pageBTN.onClick.AddListener(ClickPage);
-        _deletedBTN.onClick.AddListener(DeletedPage);
+        _pageRectTransform = GetComponent<RectTransform>();
     }
 
-    private void OnDisable()
+    public void SetNumberPage(int indexPage)
     {
-        _pageBTN.onClick.RemoveListener(ClickPage);
-        _deletedBTN.onClick.RemoveListener(DeletedPage);
+        int numberPage = indexPage;
+        _numberPage.text = $"{numberPage + 1}";
+
+        transform.SetSiblingIndex(indexPage);
     }
 
-    public void SetImage(Sprite sprite)
+    public void ClearPage()
     {
-        _imageBox.sprite = sprite;
-        _imageBox.preserveAspect = true;
-    }
-
-    public void SetIndexPage(int index)
-    {
-        _indexPage = index;
-        _textPage.text = $"{_indexPage + 1}";
-    }
-
-    private void DeletedPage()
-    {
-        EditorBook.Instance.DeletedPage(_indexPage);             
-    }
-
-    private void ClickPage()
-    {
-        EditorBook.Instance.SetCurrentPage(_indexPage);
+        for (int x = 1; x < transform.childCount; x++)
+        {
+            Destroy(transform.GetChild(x).gameObject);
+        }
     }
 }

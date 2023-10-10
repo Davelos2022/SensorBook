@@ -1293,7 +1293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153560254248505694}
   m_Layer: 5
-  m_Name: Book
+  m_Name: Book_rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1382,7 +1382,7 @@ GameObject:
   - component: {fileID: 7345466552599113168}
   - component: {fileID: 7345466552546216230}
   m_Layer: 5
-  m_Name: Pages
+  m_Name: Page_rect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1745,9 +1745,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5db910d1d5395c43915144358d7a121, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Page: {fileID: 645023251603004493, guid: 959692d1f51b9514a9944ba87e07c501, type: 3}
+  PagePrefab: {fileID: 645023251603004493, guid: 959692d1f51b9514a9944ba87e07c501, type: 3}
   BookObject: {fileID: 1153560254248505694}
-  BookPanel: {fileID: 7457567709981156448}
+  PegesRectTransdorm: {fileID: 7457567709981156448}
   ClippingPlane: {fileID: 7345466551670882104}
   Shadow: {fileID: 7345466541675819114}
   LeftPageShadow: {fileID: 7345466541842504062}
@@ -1772,7 +1772,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7234708446214184138}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

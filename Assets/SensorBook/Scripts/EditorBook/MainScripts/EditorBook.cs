@@ -19,8 +19,8 @@ public class EditorBook : Singleton<EditorBook>
     [SerializeField] private GameObject _textPrefab;
     [SerializeField] private GameObject _imagePrefab;
 
-    private List<GameObject> _pages = new List<GameObject>();
-    private List<Page> _pagesInScroll = new List<Page>();
+    private List<Page> _pages = new List<Page>();
+    private List<PagePreview> _pagesPreviews = new List<PagePreview>();
     private int _currentIndexPage;
 
     private void OnEnable()
@@ -49,7 +49,7 @@ public class EditorBook : Singleton<EditorBook>
         {
             AddPage();
             CreateImage(book.PagesBook[x].texture, x);
-            _pagesInScroll[x].SetImage(book.PagesBook[x]);
+            _pagesPreviews[x].SetImage(book.PagesBook[x]);
         }
     }
 
@@ -100,12 +100,10 @@ public class EditorBook : Singleton<EditorBook>
     {
         int countObjectInPage = _pages[_currentIndexPage].transform.childCount;
 
-        if (countObjectInPage > 0)
+        if (countObjectInPage > 1)
         {
-            for (int x = 0; x < countObjectInPage; x++)
-            {
-                Destroy(_pages[_currentIndexPage].transform.GetChild(x).gameObject);
-            }
+            _pages[_currentIndexPage].ClearPage();
+            _pagesPreviews[_currentIndexPage].ClearPreviewPage();
         }
         else
         {
@@ -142,51 +140,66 @@ public class EditorBook : Singleton<EditorBook>
 
     public void AddPage()
     {
-        GameObject page = Instantiate(_pageInScroolViewPrefab, _scrollPagesView.content);
-        Page pageInPanel = page.GetComponent<Page>();
+        GameObject pagePreviewObj = Instantiate(_pageInScroolViewPrefab, _scrollPagesView.content);
+        PagePreview pagePreview = pagePreviewObj.GetComponent<PagePreview>();
 
-        _pagesInScroll.Add(pageInPanel);
-        pageInPanel.SetIndexPage(_pagesInScroll.Count - 1);
+        _pagesPreviews.Add(pagePreview);
+        pagePreview.SetNumberPage(_pagesPreviews.Count - 1);
 
-        GameObject mainPage = Instantiate(_pagePrefab, _pageParent);
-        _pages.Add(mainPage);
+        GameObject pageObj = Instantiate(_pagePrefab, _pageParent);
+        Page page = pageObj.GetComponent<Page>();
 
-        _pages[_pages.Count - 1].SetActive(false);
+
+        _pages.Add(page);
+        _pages[_pages.Count - 1].SetNumberPage(_pagesPreviews.Count - 1);
+        _pages[_pages.Count - 1].gameObject.SetActive(false);
     }
 
     public void DeletedPage(int indexPage)
     {
         Destroy(_pages[indexPage]);
-        Destroy(_pagesInScroll[indexPage].gameObject);
+        Destroy(_pagesPreviews[indexPage].gameObject);
 
         _pages.RemoveAt(indexPage);
-        _pagesInScroll.RemoveAt(indexPage);
+        _pagesPreviews.RemoveAt(indexPage);
 
         RefeshPages();
     }
 
     public void SetCurrentPage(int indexPage)
     {
-        _pages[_currentIndexPage].SetActive(false);
-        _pages[indexPage].SetActive(true);
+        _pages[_currentIndexPage].gameObject.SetActive(false);
+        _pages[indexPage].gameObject.SetActive(true);
 
         _currentIndexPage = indexPage;
     }
 
     public void SwapPages(int beforeIndex, int afterIndex)
     {
-        Page pageInPanel = _pagesInScroll[beforeIndex];
-        _pagesInScroll[beforeIndex] = _pagesInScroll[afterIndex];
-        _pagesInScroll[afterIndex] = pageInPanel;
+        PagePreview pageInPanel = _pagesPreviews[beforeIndex];
+        _pagesPreviews[beforeIndex] = _pagesPreviews[afterIndex];
+        _pagesPreviews[afterIndex] = pageInPanel;
 
-        RefeshPages();
+        Page page = _pages[beforeIndex];
+        _pages[beforeIndex] = _pages[afterIndex];
+        _pages[afterIndex] = page;
+
+
+        _pagesPreviews[beforeIndex].SetNumberPage(beforeIndex);
+        _pagesPreviews[afterIndex].SetNumberPage(afterIndex);
+
+        _pages[beforeIndex].SetNumberPage(beforeIndex);
+        _pages[afterIndex].SetNumberPage(afterIndex);
+
+        SetCurrentPage(afterIndex);
     }
 
     private void RefeshPages()
     {
-        for (int x = 0; x < _pagesInScroll.Count; x++)
+        for (int x = 0; x < _pages.Count; x++)
         {
-            _pagesInScroll[x].SetIndexPage(x);
+            _pages[x].SetNumberPage(x);
+            _pagesPreviews[x].SetNumberPage(x);
         }
     }
 }

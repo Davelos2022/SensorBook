@@ -5,82 +5,54 @@ using UnityEngine.UI;
 public class DragDropPage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] 
-    private float closestDistance = 15f;
+    private float _distance = 15f;
 
-    private RectTransform rectTransform;
-    private CanvasGroup canvasGroup;
 
-    private Vector2 startPosition;
-    private ScrollRect scrollRect;
+    private RectTransform _pageTransform;
+    private CanvasGroup _canvasGroup;
 
-    //private float scrollRectHeight;
-    //private float scrollRectWidth;
+    private Vector2 _startPosition;
+    private ScrollRect _scrollRect;
+    private GridLayoutGroup _gridLayoutGroup;
 
+    private int currentIndex;
     void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
-        canvasGroup = GetComponent<CanvasGroup>();
-        scrollRect = GetComponentInParent<ScrollRect>();
-        //scrollRectHeight = scrollRect.GetComponent<RectTransform>().rect.height;
-        //scrollRectWidth = scrollRect.GetComponent<RectTransform>().rect.width;
+        _pageTransform = GetComponent<RectTransform>();
+        _canvasGroup = GetComponent<CanvasGroup>();
+        _scrollRect = GetComponentInParent<ScrollRect>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        startPosition = rectTransform.anchoredPosition;
-        canvasGroup.alpha = 0.6f;
-        canvasGroup.blocksRaycasts = false;
+        _startPosition = _pageTransform.anchoredPosition;
+        _canvasGroup.alpha = 0.6f;
+        _canvasGroup.blocksRaycasts = false;
+
+        currentIndex = _pageTransform.transform.GetSiblingIndex();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.anchoredPosition += eventData.delta / GetComponentInParent<Canvas>().scaleFactor;
-
-        //if (scscrollRect.verticalScrollbar != null)
-        //{
-        //    float minY = -rectTransform.anchoredPosition.y;
-        //    float maxY = scrollRectHeight - rectTransform.rect.height - rectTransform.anchoredPosition.y;
-        //    float scrollBarSize = scrollRect.verticalScrollbar.value * (scrollRectHeight - scrollRectHeight / scrollRect.content.localScale.y);
-        //    float scrollBarOffset = scrollRectHeight - scrollBarSize;
-
-        //    if (minY < scrollBarOffset)
-        //    {
-        //        float scrollSpeed = Mathf.Clamp01((scrollBarOffset - minY) / scrollBarOffset);
-        //        scrollRect.verticalScrollbar.value -= Time.deltaTime * scrollSpeed * scrollRect.scrollSensitivity;
-        //    }
-        //    else if (maxY < scrollBarOffset)
-        //    {
-        //        float scrollSpeed = Mathf.Clamp01((scrollBarOffset - maxY) / scrollBarOffset);
-        //        scrollRect.verticalScrollbar.value += Time.deltaTime * scrollSpeed * scrollRect.scrollSensitivity;
-        //    }
-        //}
-
+        _pageTransform.anchoredPosition += eventData.delta / GetComponentInParent<Canvas>().scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        canvasGroup.alpha = 1f;
-        canvasGroup.blocksRaycasts = true;
+        _canvasGroup.alpha = 1f;
+        _canvasGroup.blocksRaycasts = true;
 
-        int currentIndex = rectTransform.transform.GetSiblingIndex();
-
-        for (int i = 0; i < scrollRect.content.childCount; i++)
+        for (int i = 0; i < _scrollRect.content.childCount; i++)
         {
-            if (scrollRect.content.GetChild(i) != transform)
+            if (_scrollRect.content.GetChild(i) != transform)
             {
-                int closestIndex = 0;
-                float distance = Vector3.Distance(rectTransform.anchoredPosition, scrollRect.content.GetChild(i).GetComponent<RectTransform>().anchoredPosition);
+                int closestIndex;
+                float distance = Vector3.Distance(_pageTransform.anchoredPosition, _scrollRect.content.GetChild(i).GetComponent<RectTransform>().anchoredPosition);
 
-                if (distance < closestDistance)
+                if (distance < _distance)
                 {
                     closestIndex = i;
-
-                    scrollRect.content.GetChild(i).SetSiblingIndex(currentIndex);
-                    rectTransform.transform.SetSiblingIndex(closestIndex);
                     EditorBook.Instance.SwapPages(currentIndex, closestIndex);
-
-                    Debug.Log(currentIndex);
-                    Debug.Log(closestIndex);
 
                     break;
                 }
@@ -89,9 +61,11 @@ public class DragDropPage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             }
             else
             {
-                rectTransform.anchoredPosition = startPosition;
+                _pageTransform.anchoredPosition = _startPosition;
                 break;
             }
         }
+
+
     }
 }

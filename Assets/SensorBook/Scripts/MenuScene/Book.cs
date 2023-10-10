@@ -103,8 +103,8 @@ public class Book : MonoBehaviour
         _favoriteBook = !_favoriteBook;
         _selectionFavoriteBTN.SetActive(_favoriteBook);
 
-        MenuSceneController.Instance.
-            SortBook(MenuSceneController.Instance.SortMode);
+        if (MenuSceneController.Instance.FavoriteShowNow)
+            gameObject.SetActive(_favoriteBook);
     }
 
     private void ActivateAdminPanel()
