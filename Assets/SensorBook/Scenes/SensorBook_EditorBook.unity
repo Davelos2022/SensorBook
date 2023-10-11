@@ -798,7 +798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _backBTN: {fileID: 43994404}
   _undo: {fileID: 2133140234}
-  _rendo: {fileID: 745155291}
+  _redo: {fileID: 745155291}
   _addText: {fileID: 557765479}
   _addImage: {fileID: 2040203634}
   _clearPage: {fileID: 2004856784}
@@ -1312,7 +1312,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876387077}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1876387079
 Camera:
   m_ObjectHideFlags: 0
@@ -1551,6 +1551,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2030624413}
   - component: {fileID: 2030624414}
+  - component: {fileID: 2030624415}
   m_Layer: 5
   m_Name: '[EDITOR]'
   m_TagString: Untagged
@@ -1592,6 +1593,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c77149c27859ec479e6aaad9a212c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _screenshotHandler: {fileID: 3052799183359735751}
+  _undoControllerComponent: {fileID: 2030624415}
   _nameBook: {fileID: 5590911907268172314}
   _coverImageBox: {fileID: 7841446219425154665}
   _pagePrefab: {fileID: 1870503711235373722, guid: 3d62c28d30b40114e9b2e376f727d47b, type: 3}
@@ -1600,6 +1603,18 @@ MonoBehaviour:
   _scrollPagesView: {fileID: 2273232835102064381}
   _textPrefab: {fileID: 2460595656622717767, guid: 99eae41f6337c7d4994b328a954abb9b, type: 3}
   _imagePrefab: {fileID: 2460595656622717767, guid: fe7bd32209b59b848b8a2738dce781cc, type: 3}
+--- !u!114 &2030624415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030624412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb83967a9596e7c4ebf7df36b013784b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2040203629
 GameObject:
   m_ObjectHideFlags: 0
@@ -3486,7 +3501,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 52
     m_Right: 0
-    m_Top: -27
+    m_Top: -22
     m_Bottom: 0
   m_ChildAlignment: 0
   m_StartCorner: 0
@@ -4207,6 +4222,8 @@ GameObject:
   - component: {fileID: 2273232835029001219}
   - component: {fileID: 2273232835029001216}
   - component: {fileID: 2273232835029001217}
+  - component: {fileID: 2273232835029001225}
+  - component: {fileID: 2273232835029001224}
   m_Layer: 5
   m_Name: Fade
   m_TagString: Untagged
@@ -4214,6 +4231,44 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2273232835029001224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2273232835029001223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!223 &2273232835029001225
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2273232835029001223}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
 --- !u!224 &2273232835034522960
 RectTransform:
   m_ObjectHideFlags: 0

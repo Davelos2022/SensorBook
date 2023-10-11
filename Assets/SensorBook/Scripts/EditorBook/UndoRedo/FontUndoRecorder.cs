@@ -19,6 +19,7 @@ public class FontUndoRecorder : UndoRecorder
         return fontDropdown.value;
     }
 
+
     protected override void RestoreStateHandle(object state)
     {
         fontDropdown.value = (int)state;

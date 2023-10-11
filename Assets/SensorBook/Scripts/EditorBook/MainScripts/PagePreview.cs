@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using VolumeBox.Toolbox.UIInformer;
 
 public class PagePreview : MonoBehaviour
 {
     [SerializeField] private Button _pageBTN;
     [SerializeField] private Button _deletedBTN;
     [Space]
-    [SerializeField] private Image _imageBox;
+    [SerializeField] private RawImage _imageBox;
+    [SerializeField] private RawImageAspectPreserver _rawImageAspect;
+    [Space]
     [SerializeField] private GameObject _selectedPanel;
     [SerializeField] private TextMeshProUGUI _textPage;
 
@@ -16,19 +19,19 @@ public class PagePreview : MonoBehaviour
     private void OnEnable()
     {
         _pageBTN.onClick.AddListener(ClickPage);
-        _deletedBTN.onClick.AddListener(DeletedPage);
+        _deletedBTN.onClick.AddListener(MessageInfoForDeletedPage);
     }
 
     private void OnDisable()
     {
         _pageBTN.onClick.RemoveListener(ClickPage);
-        _deletedBTN.onClick.RemoveListener(DeletedPage);
+        _deletedBTN.onClick.RemoveListener(MessageInfoForDeletedPage);
     }
 
-    public void SetImage(Sprite sprite)
+    public void SetImage(Texture2D texture)
     {
-        _imageBox.sprite = sprite;
-        _imageBox.preserveAspect = true;
+        _imageBox.texture = texture;
+        _rawImageAspect.SetAspect();
     }
 
     public void SetNumberPage(int index)
@@ -44,13 +47,24 @@ public class PagePreview : MonoBehaviour
         SetImage(null);
     }
 
+    private void MessageInfoForDeletedPage()
+    {
+        Info.Instance.ShowBox($"Вы действительно хотите удалить страницу?", 
+            DeletedPage, DeletedPage, null, "Удалить", "Отмена");
+    }
+
     private void DeletedPage()
     {
-        EditorBook.Instance.DeletedPage(_indexPage);             
+        EditorBook.Instance.DeletedPage(_indexPage);
     }
 
     private void ClickPage()
-    {
+    {      
         EditorBook.Instance.SetCurrentPage(_indexPage);
+    }
+
+    public void SelectedPage(bool active)
+    {
+        _selectedPanel.SetActive(active);
     }
 }

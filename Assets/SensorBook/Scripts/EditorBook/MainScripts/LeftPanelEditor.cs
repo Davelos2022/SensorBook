@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+using VolumeBox.Toolbox.UIInformer;
 
 public class LeftPanelEditor : MonoBehaviour
 {
     [SerializeField] private Button _backBTN;
     [SerializeField] private Button _undo;
-    [SerializeField] private Button _rendo;
+    [SerializeField] private Button _redo;
     [SerializeField] private Button _addText;
     [SerializeField] private Button _addImage;
     [SerializeField] private Button _clearPage;
@@ -17,7 +15,7 @@ public class LeftPanelEditor : MonoBehaviour
     {
         _backBTN.onClick.AddListener(BackCLick);
         _undo.onClick.AddListener(UndoCLick);
-        _rendo.onClick.AddListener(RendoClick);
+        _redo.onClick.AddListener(RedoClick);
         _addText.onClick.AddListener(AddTextClick);
         _addImage.onClick.AddListener(AddImageClick);
         _clearPage.onClick.AddListener(ClearPageClick);
@@ -27,7 +25,7 @@ public class LeftPanelEditor : MonoBehaviour
     {
         _backBTN.onClick.RemoveListener(BackCLick);
         _undo.onClick.RemoveListener(UndoCLick);
-        _rendo.onClick.RemoveListener(RendoClick);
+        _redo.onClick.RemoveListener(RedoClick);
         _addText.onClick.RemoveListener(AddTextClick);
         _addImage.onClick.RemoveListener(AddImageClick);
         _clearPage.onClick.RemoveListener(ClearPageClick);
@@ -35,7 +33,11 @@ public class LeftPanelEditor : MonoBehaviour
 
     private void BackCLick()
     {
-        MenuSceneController.Instance.ReturnLibary();
+        if (EditorBook.Instance.UndoControllerComponent.GetCountStack())
+            Info.Instance.ShowBox("Вы точно хотите выйти, внесенные изменения будут потеряны?", 
+                ReturnInLibbary, null, null, "Да, выйти", "Отмена");
+        else
+            ReturnInLibbary();
     }
 
     private void UndoCLick()
@@ -43,9 +45,9 @@ public class LeftPanelEditor : MonoBehaviour
         EditorBook.Instance.Undo();
     }
 
-    private void RendoClick()
+    private void RedoClick()
     {
-        EditorBook.Instance.Rendo();
+        EditorBook.Instance.Redo();
     }
 
     private void AddTextClick()
@@ -60,6 +62,18 @@ public class LeftPanelEditor : MonoBehaviour
 
     private void ClearPageClick()
     {
+        Info.Instance.ShowBox("Вы действительно хотите очистить страницу?", 
+            ClearPage, null, null, "Очистить страницу", "Отмена");
+    }
+
+    private void ClearPage()
+    {
         EditorBook.Instance.ClearPage();
+    }
+
+    private void ReturnInLibbary()
+    {
+        EditorBook.Instance.UndoControllerComponent.ClearHistory();
+        MenuSceneController.Instance.ReturnLibary();
     }
 }

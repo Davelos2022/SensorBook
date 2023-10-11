@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.IO;
+using VolumeBox.Toolbox.UIInformer;
 
 public class Book : MonoBehaviour
 {
@@ -66,6 +67,7 @@ public class Book : MonoBehaviour
         MenuSceneController.Instance._adminOff -= DeActiveAdminPanel;
     }
 
+
     public void SetupPreviewBook(string PathToBook, Texture2D CoverTexture)
     {
         if (MenuSceneController.Instance.AdminStatus)
@@ -94,6 +96,11 @@ public class Book : MonoBehaviour
     }
 
     private void DeletedBook_Click()
+    {
+        Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?", DeletedBook, null, null, "Удалить книгу", "Отмена");
+    }
+
+    private void DeletedBook()
     {
         MenuSceneController.Instance.DeletedBook(this);
     }

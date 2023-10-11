@@ -5,16 +5,6 @@ using UnityEngine;
 
 public class UndoControllerComponent : MonoBehaviour
 {
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.Z))
-            Undo();
-
-        if (Input.GetKeyUp(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.Y))
-            Redo();
-    }
-
-
     [ContextMenu("Undo")]
     public void Undo()
     {
@@ -30,5 +20,13 @@ public class UndoControllerComponent : MonoBehaviour
     public void ClearHistory()
     {
         UndoController.ClearHistory();
+    }
+
+    public bool GetCountStack()
+    {
+        if (UndoController.GetCountStackUndo())
+            return true;
+        else
+            return false;
     }
 }

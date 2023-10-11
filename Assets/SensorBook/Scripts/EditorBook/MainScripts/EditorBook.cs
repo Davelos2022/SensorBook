@@ -4,9 +4,13 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using VolumeBox.Toolbox;
 
 public class EditorBook : Singleton<EditorBook>
 {
+    [SerializeField] private ScreenshotHandler _screenshotHandler;
+    [SerializeField] private UndoControllerComponent _undoControllerComponent;
+    [Space]
     [SerializeField] private TMP_InputField _nameBook;
     [SerializeField] private RawImage _coverImageBox;
     [Space]
@@ -19,11 +23,13 @@ public class EditorBook : Singleton<EditorBook>
     [SerializeField] private GameObject _textPrefab;
     [SerializeField] private GameObject _imagePrefab;
 
+    public UndoControllerComponent UndoControllerComponent => _undoControllerComponent;
     private List<Page> _pages = new List<Page>();
     private List<PagePreview> _pagesPreviews = new List<PagePreview>();
     private int _currentIndexPage;
 
-    private void OnEnable()
+
+    private void Awake()
     {
         if (MenuSceneController.Instance.CurrentBook != null)
         {
@@ -48,26 +54,39 @@ public class EditorBook : Singleton<EditorBook>
         for (int x = 0; x < book.PagesBook.Count; x++)
         {
             AddPage();
+            ResizeAreaPageForTexture(book.PagesBook[x].texture, _pages[x].transform);
+
             CreateImage(book.PagesBook[x].texture, x);
-            _pagesPreviews[x].SetImage(book.PagesBook[x]);
+            _pagesPreviews[x].SetImage(book.PagesBook[x].texture);
         }
     }
 
-    public void Undo()
+    private void ResizeAreaPageForTexture(Texture2D texture, Transform page)
     {
+        RectTransform pageRectTransform = page.GetComponent<RectTransform>();
 
+        float textureWidth = texture.width / 2;
+        float textureHeight = texture.height / 2;
+
+        pageRectTransform.sizeDelta = new Vector2(textureWidth, textureHeight);
     }
 
-    public void Rendo()
-    {
 
+    public void Undo()
+    {
+        _undoControllerComponent.Undo();
+    }
+
+    public void Redo()
+    {
+        _undoControllerComponent.Redo();
     }
 
     public async void AddImage()
     {
         string pathToImage = FileManager.SelectImageInBrowser();
 
-        if (pathToImage.Length > 0)
+        if (!string.IsNullOrWhiteSpace(pathToImage))
         {
             Texture2D image = await FileManager.LoadTextureAsync(pathToImage, false);
             CreateImage(image, _currentIndexPage);
@@ -85,7 +104,8 @@ public class EditorBook : Singleton<EditorBook>
 
         RawImage rawImage = image.GetComponent<RawImage>();
         rawImage.texture = texture;
-        rawImage.SetNativeSize();
+
+        rawImage.GetComponent<RawImageAspectPreserver>().SetAspect();
     }
 
     public void AddText()
@@ -126,7 +146,7 @@ public class EditorBook : Singleton<EditorBook>
     {
         string pathToImage = FileManager.SelectImageInBrowser();
 
-        if (pathToImage.Length > 0)
+        if (!string.IsNullOrWhiteSpace(pathToImage))
         {
             Texture2D cover = await FileManager.LoadTextureAsync(pathToImage, false);
             _coverImageBox.texture = cover;
@@ -166,10 +186,23 @@ public class EditorBook : Singleton<EditorBook>
         RefeshPages();
     }
 
+    public void SavePage()
+    {
+        _screenshotHandler.TakeScreenshot(_pages[_currentIndexPage].gameObject);
+    }
+
+    public void SetImagePreview(Texture2D texture)
+    {
+        _pagesPreviews[_currentIndexPage].SetImage(texture);
+    }
+
     public void SetCurrentPage(int indexPage)
     {
         _pages[_currentIndexPage].gameObject.SetActive(false);
+        _pagesPreviews[_currentIndexPage].SelectedPage(false);
+
         _pages[indexPage].gameObject.SetActive(true);
+        _pagesPreviews[indexPage].SelectedPage(true);
 
         _currentIndexPage = indexPage;
     }
@@ -183,7 +216,6 @@ public class EditorBook : Singleton<EditorBook>
         Page page = _pages[beforeIndex];
         _pages[beforeIndex] = _pages[afterIndex];
         _pages[afterIndex] = page;
-
 
         _pagesPreviews[beforeIndex].SetNumberPage(beforeIndex);
         _pagesPreviews[afterIndex].SetNumberPage(afterIndex);
@@ -202,4 +234,5 @@ public class EditorBook : Singleton<EditorBook>
             _pagesPreviews[x].SetNumberPage(x);
         }
     }
+
 }

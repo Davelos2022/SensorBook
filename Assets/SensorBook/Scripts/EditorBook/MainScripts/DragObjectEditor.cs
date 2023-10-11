@@ -7,7 +7,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public class DragObjectEditor : MonoBehaviour, IBeginDragHandler, IEventSystemHandler, IEndDragHandler, IDragHandler
 {
-    private Canvas _canvas; public Canvas Canvas { set { _canvas = value; } }
+    [SerializeField] private Button _deletedObject;
+
+    private Canvas _canvas; 
 
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
@@ -23,6 +25,16 @@ public class DragObjectEditor : MonoBehaviour, IBeginDragHandler, IEventSystemHa
         _canvasGroup.alpha = 1f;
 
         _canvas = Object.FindObjectOfType<Canvas>();
+    }
+
+    private void OnEnable()
+    {
+        _deletedObject.onClick.AddListener(DeletedObject);
+    }
+
+    private void OnDisable()
+    {
+        _deletedObject.onClick.RemoveListener(DeletedObject);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -77,5 +89,10 @@ public class DragObjectEditor : MonoBehaviour, IBeginDragHandler, IEventSystemHa
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.alpha = 1f;
         OnDragEnd.Invoke();
+    }
+
+    private void DeletedObject()
+    {
+        Destroy(this.gameObject);
     }
 }

@@ -1428,10 +1428,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2460595656622717764}
+  - component: {fileID: 5189218167068898995}
   - component: {fileID: 4967618308103104692}
   - component: {fileID: 320444860821425627}
-  - component: {fileID: 5189218167068898995}
   - component: {fileID: 552884593592518127}
+  - component: {fileID: 4057925414166986002}
+  - component: {fileID: -5541720442710639891}
   - component: {fileID: 4848984284928092263}
   - component: {fileID: 4848984284928092260}
   - component: {fileID: 4848984284928092261}
@@ -1464,6 +1466,34 @@ RectTransform:
   m_AnchoredPosition: {x: -39.696068, y: 7.6814}
   m_SizeDelta: {x: 423.6214, y: 106.2521}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5189218167068898995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460595656622717767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8b66cfc630af164baa16686fdb9ba3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deletedObject: {fileID: 7495932028835130149}
+  OnDragEnd:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 552884593592518127}
+        m_TargetAssemblyTypeName: UndoRecorder, Assembly-CSharp
+        m_MethodName: Record
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4967618308103104692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1544,33 +1574,6 @@ MonoBehaviour:
   _maxPosition: {x: 0, y: 433}
   _minPosition: {x: 0, y: -433}
   _minDistance: 150
---- !u!114 &5189218167068898995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2460595656622717767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8b66cfc630af164baa16686fdb9ba3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnDragEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 552884593592518127}
-        m_TargetAssemblyTypeName: UndoRecorder, Assembly-CSharp
-        m_MethodName: Record
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &552884593592518127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1583,6 +1586,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb74a3237d4d22445b2d75d92bc2fa9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4057925414166986002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460595656622717767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 417204f886bef6949bdc73e33477ee33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fontDropdown: {fileID: 6665151917325727580}
+--- !u!114 &-5541720442710639891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460595656622717767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b752388ad6702e48abf784069ebf415, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputText: {fileID: 8223634635033440719}
 --- !u!225 &4848984284928092263
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5784,7 +5813,19 @@ MonoBehaviour:
       m_Calls: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: -5541720442710639891}
+        m_TargetAssemblyTypeName: UndoRecorder, Assembly-CSharp
+        m_MethodName: Record
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnTouchScreenKeyboardStatusChanged:
     m_PersistentCalls:
       m_Calls: []

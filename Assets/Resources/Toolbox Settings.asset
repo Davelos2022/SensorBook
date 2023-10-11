@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9830501a11270c4298c7f001a71b84f, type: 3}
   m_Name: Toolbox Settings
   m_EditorClassIdentifier: 
-  autoResolveScenesAtPlay: 0
+  autoResolveScenesAtPlay: 1

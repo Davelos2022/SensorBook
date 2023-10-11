@@ -66,6 +66,14 @@ public static class UndoController
 
         info.recorder.RestoreState(info.state);
     }
+
+    public static bool GetCountStackUndo()
+    {
+        if (_undoStack.Count > 0)
+            return true;
+        else
+            return false;
+    }
 }
 
 [Serializable]
