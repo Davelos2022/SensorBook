@@ -43,6 +43,8 @@ public class Book : MonoBehaviour
     public List<Sprite> PagesBook => _pagesBook;
     public DateTime DataTimeBook => _dateTimeCreation;
 
+    public List<Texture2D> _pagesBookTexture = new List<Texture2D>();
+
     private void OnEnable()
     {
         _bookBtn.onClick.AddListener(Book_Click);

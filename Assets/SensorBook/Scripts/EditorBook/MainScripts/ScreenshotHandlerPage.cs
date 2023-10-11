@@ -1,13 +1,15 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using UnityEditorInternal;
 
-
-public class ScreenshotHandler : MonoBehaviour
+public class ScreenshotHandlerPage : MonoBehaviour
 {
     private GameObject _screenshot;
 
     private Camera _myCamera;
     private bool _takeScreenshotOnNextFrame;
+
+    private int _indexPage;
 
     private void Awake()
     {
@@ -26,7 +28,7 @@ public class ScreenshotHandler : MonoBehaviour
             renderResult.ReadPixels(rect, 0, 0);
             renderResult.Apply();
 
-            EditorBook.Instance.SetImagePreview(renderResult);
+            EditorBook.Instance.SetImagePreview(renderResult, _indexPage);
 
             RenderTexture.ReleaseTemporary(renderTexture);
             _myCamera.targetTexture = null;
@@ -35,16 +37,15 @@ public class ScreenshotHandler : MonoBehaviour
     }
 
 
-    public  void TakeScreenshot(GameObject Screen)
+    public  void TakeScreenshot(GameObject pageObject, int indexPage)
     {
-        RectTransform sizeScreenShot = Screen.GetComponent<RectTransform>();
+        _indexPage = indexPage;
+        _screenshot = Instantiate(pageObject, transform.parent);
 
-        _screenshot = Instantiate(Screen, transform.parent);
+        Page page = _screenshot.GetComponent<Page>();
+        page.DeActiveNumberPage();
 
-        _screenshot.GetComponent<RectTransform>().sizeDelta = sizeScreenShot.sizeDelta;
-        _screenshot.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
-        _myCamera.targetTexture = RenderTexture.GetTemporary((int)sizeScreenShot.rect.width, (int)sizeScreenShot.rect.height, 24);
+        _myCamera.targetTexture = RenderTexture.GetTemporary((int)page.PageRectTransform.rect.width, (int)page.PageRectTransform.rect.height, 24);
         _takeScreenshotOnNextFrame = true;
     }
 }

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,7 +31,7 @@ public class RightPanelEditor : MonoBehaviour
 
     private void ExportBookClick()
     {
-        EditorBook.Instance.ExportBook();
+        EditorBook.Instance.SaveBook(true);
     }
 
     private void SaveBookClick()
@@ -45,7 +46,7 @@ public class RightPanelEditor : MonoBehaviour
 
     private void AddPageClick()
     {
-        EditorBook.Instance.SavePage();
+        EditorBook.Instance.TakeScreenShot();
         EditorBook.Instance.AddPage();
     }
 }

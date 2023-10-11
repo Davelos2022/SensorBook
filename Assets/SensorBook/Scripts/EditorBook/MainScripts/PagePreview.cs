@@ -15,6 +15,7 @@ public class PagePreview : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textPage;
 
     private int _indexPage;
+    public RawImage ImageBox => _imageBox;
 
     private void OnEnable()
     {

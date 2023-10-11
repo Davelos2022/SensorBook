@@ -4,14 +4,8 @@ using TMPro;
 public class Page : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _numberPage;
-
-    private RectTransform _pageRectTransform;
+    [SerializeField] private RectTransform _pageRectTransform;
     public RectTransform PageRectTransform => _pageRectTransform;
-
-    private void Start()
-    {
-        _pageRectTransform = GetComponent<RectTransform>();
-    }
 
     public void SetNumberPage(int indexPage)
     {
@@ -27,5 +21,10 @@ public class Page : MonoBehaviour
         {
             Destroy(transform.GetChild(x).gameObject);
         }
+    }
+
+    public void DeActiveNumberPage()
+    {
+        _numberPage.gameObject.SetActive(false);
     }
 }

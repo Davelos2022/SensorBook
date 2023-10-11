@@ -5,10 +5,11 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using VolumeBox.Toolbox;
+using Cysharp.Threading.Tasks;
 
 public class EditorBook : Singleton<EditorBook>
 {
-    [SerializeField] private ScreenshotHandler _screenshotHandler;
+    [SerializeField] private ScreenshotHandlerPage _screenshotHandler;
     [SerializeField] private UndoControllerComponent _undoControllerComponent;
     [Space]
     [SerializeField] private TMP_InputField _nameBook;
@@ -27,7 +28,6 @@ public class EditorBook : Singleton<EditorBook>
     private List<Page> _pages = new List<Page>();
     private List<PagePreview> _pagesPreviews = new List<PagePreview>();
     private int _currentIndexPage;
-
 
     private void Awake()
     {
@@ -65,12 +65,11 @@ public class EditorBook : Singleton<EditorBook>
     {
         RectTransform pageRectTransform = page.GetComponent<RectTransform>();
 
-        float textureWidth = texture.width / 2;
-        float textureHeight = texture.height / 2;
+        int textureWidth = texture.width / 2;
+        int textureHeight = texture.height / 2;
 
         pageRectTransform.sizeDelta = new Vector2(textureWidth, textureHeight);
     }
-
 
     public void Undo()
     {
@@ -131,15 +130,41 @@ public class EditorBook : Singleton<EditorBook>
         }
     }
 
-    public void SaveBook()
+    public async void SaveBook(bool export = false)
     {
-        Book newBook = new Book();
+        TakeScreenShot();
+        await UniTask.Delay(100);
+        string pathToSaveBook;
+
+        CreatePagesForBook();
+
+        if (export)
+        {
+            pathToSaveBook = FileManager.SavePdfFileBrowser(_nameBook.text);
+
+            if (!string.IsNullOrEmpty(pathToSaveBook))
+            {
+                CreatePagesForBook();
+            }
+            else
+            {
+                return;
+            }
+
+        }
+        else
+        {
+            CreatePagesForBook();
+        }
 
     }
 
-    public void ExportBook()
+    private void CreatePagesForBook()
     {
+        for (int x = 0; x < _pagesPreviews.Count; x++)
+        {
 
+        }
     }
 
     public async void AddCoverBook()
@@ -186,18 +211,28 @@ public class EditorBook : Singleton<EditorBook>
         RefeshPages();
     }
 
-    public void SavePage()
+    public void TakeScreenShot()
     {
-        _screenshotHandler.TakeScreenshot(_pages[_currentIndexPage].gameObject);
+        if (_undoControllerComponent.GetCountStack())
+        {
+            _screenshotHandler.TakeScreenshot(_pages[_currentIndexPage].gameObject, _currentIndexPage);
+            _undoControllerComponent.ClearHistory();
+        }
+        else
+        {
+            return;
+        }
     }
 
-    public void SetImagePreview(Texture2D texture)
+    public void SetImagePreview(Texture2D texture, int indexPage)
     {
-        _pagesPreviews[_currentIndexPage].SetImage(texture);
+        _pagesPreviews[indexPage].SetImage(texture);
     }
 
     public void SetCurrentPage(int indexPage)
     {
+        TakeScreenShot();
+
         _pages[_currentIndexPage].gameObject.SetActive(false);
         _pagesPreviews[_currentIndexPage].SelectedPage(false);
 
@@ -234,5 +269,4 @@ public class EditorBook : Singleton<EditorBook>
             _pagesPreviews[x].SetNumberPage(x);
         }
     }
-
 }
