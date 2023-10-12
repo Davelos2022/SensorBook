@@ -61,14 +61,14 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     public async void AddNewBook_in_Libary()
     {
-        string path = FileManager.SelectPdfFileBrowser();
+        string path = PdfFileManager.SelectPdfFileBrowser();
 
         if (!string.IsNullOrWhiteSpace(path))
         {
             if (DoesBookExists(Path.GetFileNameWithoutExtension(path)))
                 return;
 
-            string newPath = FileManager._bookPath + Path.GetFileName(path);
+            string newPath = PdfFileManager._bookPath + Path.GetFileName(path);
             await FileManager.CopyFileAsync(path, newPath);
 
             CreateBook(newPath);
@@ -85,11 +85,13 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     public async void ExportBook(Book book)
     {
-        string path = FileManager.SavePdfFileBrowser(book.NameBook);
+        string path = PdfFileManager.SavePdfFileBrowser(book.NameBook);
 
         if (path.Length > 0)
         {
-            await FileManager.ExportBookIn_PDF(path, book);
+            await FileManager.CopyFileAsync(book.PathToPDF, path);
+            //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирвоана");
+            Debug.Log("Книга экспортирвоана");
         }
         else
         {
@@ -99,7 +101,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     public void LoadBook_in_Libary()
     {
-        string[] allPathBook = FileManager.GetCountBookFiles();
+        string[] allPathBook = PdfFileManager.GetCountBookFiles();
 
         if (allPathBook.Length > 0)
         {
@@ -112,7 +114,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
         }
     }
 
-    private bool DoesBookExists(string nameBook)
+    public bool DoesBookExists(string nameBook)
     {
         for (int x = 0; x < _collectionBook.Count; x++)
         {
@@ -188,7 +190,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public void DeletedBook(Book book)
     {
         _collectionBook.Remove(book);
-        FileManager.DeletedFile(book.PathToPDF);
+        PdfFileManager.DeletedFile(book.PathToPDF);
 
         Destroy(book.gameObject);
 
@@ -216,6 +218,8 @@ public class MenuSceneController : Singleton<MenuSceneController>
             _currentBook = null;
 
         _fadeMenu.SetActive(true);
+        SortBook(_currentSortState);
+
         SceneManager.UnloadSceneAsync(_loaderScene);
     }
 

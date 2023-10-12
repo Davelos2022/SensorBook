@@ -11,14 +11,20 @@ public class EditorBook : Singleton<EditorBook>
 {
     [SerializeField] private ScreenshotHandlerPage _screenshotHandler;
     [SerializeField] private UndoControllerComponent _undoControllerComponent;
+    [SerializeField] private GameObject _loadingScreen;
     [Space]
     [SerializeField] private TMP_InputField _nameBook;
     [SerializeField] private RawImage _coverImageBox;
     [Space]
+    [SerializeField] private ErrorHighlighter _errorName;
+    [SerializeField] private ErrorHighlighter _errorCover;
+
+    [Header("Link to Prefabs")]
+    [Space]
     [SerializeField] private GameObject _pagePrefab;
     [SerializeField] private Transform _pageParent;
     [Space]
-    [SerializeField] private GameObject _pageInScroolViewPrefab;
+    [SerializeField] private GameObject _pagePreviewPrefab;
     [SerializeField] private ScrollRect _scrollPagesView;
     [Space]
     [SerializeField] private GameObject _textPrefab;
@@ -27,14 +33,19 @@ public class EditorBook : Singleton<EditorBook>
     public UndoControllerComponent UndoControllerComponent => _undoControllerComponent;
     private List<Page> _pages = new List<Page>();
     private List<PagePreview> _pagesPreviews = new List<PagePreview>();
+
     private int _currentIndexPage;
+    private Book _editBook = null;
+
+    private int _minPageCount = 2;
+    private bool _coverExist = false;
 
     private void Awake()
     {
         if (MenuSceneController.Instance.CurrentBook != null)
         {
-            Book editBook = MenuSceneController.Instance.CurrentBook;
-            OpenEditBook(editBook);
+            _editBook = MenuSceneController.Instance.CurrentBook;
+            OpenEditBook(_editBook);
         }
         else
         {
@@ -45,10 +56,16 @@ public class EditorBook : Singleton<EditorBook>
         SetCurrentPage(_currentIndexPage);
     }
 
+    public void LoadinScreen(bool active)
+    {
+        _loadingScreen.SetActive(active);
+    }
+
     private void OpenEditBook(Book book)
     {
         _nameBook.text = book.NameBook;
         _coverImageBox.texture = book.CoverBook.texture;
+        _coverExist = true;
         _coverImageBox.GetComponent<RawImageAspectPreserver>().SetAspect();
 
         for (int x = 0; x < book.PagesBook.Count; x++)
@@ -130,41 +147,106 @@ public class EditorBook : Singleton<EditorBook>
         }
     }
 
-    public async void SaveBook(bool export = false)
+    public async void SaveOrExportBook(bool export = false)
     {
-        TakeScreenShot();
+        TakeScreenShotCurrentPage();
         await UniTask.Delay(100);
-        string pathToSaveBook;
 
-        CreatePagesForBook();
+        if (!CheckingForCorrectnessData())
+            return;
+
+        LoadinScreen(true);
+
+        RectTransform sizePage = _pages[0].PageRectTransform;
+        List<Texture2D> pagesTexture = CreatePagesForBook();
+        string pathToBook;
 
         if (export)
         {
-            pathToSaveBook = FileManager.SavePdfFileBrowser(_nameBook.text);
+            pathToBook = PdfFileManager.SavePdfFileBrowser(_nameBook.text);
 
-            if (!string.IsNullOrEmpty(pathToSaveBook))
+            if (!string.IsNullOrEmpty(pathToBook))
             {
-                CreatePagesForBook();
-            }
-            else
-            {
-                return;
+                await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, (Texture2D)_coverImageBox.texture, sizePage);
             }
 
+            LoadinScreen(false);
+            return;
         }
         else
         {
-            CreatePagesForBook();
-        }
+            if (MenuSceneController.Instance.DoesBookExists(_nameBook.text) && _editBook == null)
+            {
+                LoadinScreen(false);
+                return;
+            }
+            else if (_editBook)
+            {
+                MenuSceneController.Instance.DeletedBook(_editBook);
+            }
 
+            pathToBook = PdfFileManager._bookPath + _nameBook.text + ".pdf";
+            await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, (Texture2D)_coverImageBox.texture, sizePage);
+
+            MenuSceneController.Instance.CreateBook(pathToBook);
+            _undoControllerComponent.ClearHistory();
+
+            LoadinScreen(false);
+            MenuSceneController.Instance.ReturnLibary();
+        }
     }
 
-    private void CreatePagesForBook()
+    private List<Texture2D> CreatePagesForBook()
     {
+        List<Texture2D> pages = new List<Texture2D>();
+
         for (int x = 0; x < _pagesPreviews.Count; x++)
         {
-
+            if (_pagesPreviews[x].ImageBox.texture != null)
+                pages.Add((Texture2D)_pagesPreviews[x].ImageBox.texture);
         }
+
+        return pages;
+    }
+
+    private bool CheckingForCorrectnessData()
+    {
+        if (_pages.Count < _minPageCount)
+        {
+            Debug.Log("Должно быть минимум две страницы!");
+            //Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
+            return false;
+        }
+        else if (string.IsNullOrWhiteSpace(_nameBook.text) && !_coverExist)
+        {
+            Debug.Log("Заполните обязательные поля");
+            //Notifier.Instance.Notify(NotifyType.Error, "Заполните обязательные поля");
+            _errorName.Highlight();
+            _errorCover.Highlight();
+            return false;
+        }
+        else if (string.IsNullOrWhiteSpace(_nameBook.text))
+        {
+            Debug.Log("Отсутствует название книги");
+            //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует название книги");
+            _errorName.Highlight();
+            return false;
+        }
+        else if (!_coverExist)
+        {
+            Debug.Log("Отсутствует обложка");
+            //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует обложка");
+            _errorCover.Highlight();
+            return false;
+        }
+        else if (_pages.Count < _minPageCount)
+        {
+            Debug.Log("Должно быть минимум две страницы!");
+            //Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
+            return false;
+        }
+
+        return true;
     }
 
     public async void AddCoverBook()
@@ -176,6 +258,8 @@ public class EditorBook : Singleton<EditorBook>
             Texture2D cover = await FileManager.LoadTextureAsync(pathToImage, false);
             _coverImageBox.texture = cover;
             _coverImageBox.GetComponent<RawImageAspectPreserver>().SetAspect();
+
+            _coverExist = true;
         }
         else
         {
@@ -185,7 +269,7 @@ public class EditorBook : Singleton<EditorBook>
 
     public void AddPage()
     {
-        GameObject pagePreviewObj = Instantiate(_pageInScroolViewPrefab, _scrollPagesView.content);
+        GameObject pagePreviewObj = Instantiate(_pagePreviewPrefab, _scrollPagesView.content);
         PagePreview pagePreview = pagePreviewObj.GetComponent<PagePreview>();
 
         _pagesPreviews.Add(pagePreview);
@@ -193,7 +277,6 @@ public class EditorBook : Singleton<EditorBook>
 
         GameObject pageObj = Instantiate(_pagePrefab, _pageParent);
         Page page = pageObj.GetComponent<Page>();
-
 
         _pages.Add(page);
         _pages[_pages.Count - 1].SetNumberPage(_pagesPreviews.Count - 1);
@@ -211,7 +294,7 @@ public class EditorBook : Singleton<EditorBook>
         RefeshPages();
     }
 
-    public void TakeScreenShot()
+    public void TakeScreenShotCurrentPage()
     {
         if (_undoControllerComponent.GetCountStack())
         {
@@ -224,15 +307,13 @@ public class EditorBook : Singleton<EditorBook>
         }
     }
 
-    public void SetImagePreview(Texture2D texture, int indexPage)
+    public void SetImagePreviewPage(Texture2D texture, int indexPage)
     {
         _pagesPreviews[indexPage].SetImage(texture);
     }
 
     public void SetCurrentPage(int indexPage)
     {
-        TakeScreenShot();
-
         _pages[_currentIndexPage].gameObject.SetActive(false);
         _pagesPreviews[_currentIndexPage].SelectedPage(false);
 

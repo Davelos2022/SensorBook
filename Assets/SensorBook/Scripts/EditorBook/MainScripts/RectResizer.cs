@@ -12,12 +12,12 @@ public class RectResizer : MonoBehaviour
     [SerializeField] private List<ResizePoint> resizePoints;
     [SerializeField] private RectTransform constraints;
     [SerializeField] private RectTransform targetRect;
-    
+
     public UnityEvent OnResizeStart;
     public UnityEvent OnResizeEnd;
 
     private Vector2 _initialRectSize;
-    private enum _typeReSize { Image, Text}
+    private enum _typeReSize { Image, Text }
 
     private float _minWidth = 100;
     private float _minHeight = 100;

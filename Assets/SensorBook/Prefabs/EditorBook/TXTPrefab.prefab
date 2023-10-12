@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 383027284326454722}
   - component: {fileID: 5620168920327337643}
   - component: {fileID: 3050247956216944983}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Template
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 3139406360366253700}
   - component: {fileID: 7552147721505854357}
   - component: {fileID: 6330907564244157754}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,8 +197,8 @@ GameObject:
   - component: {fileID: 1214261274201004351}
   - component: {fileID: 6823296540245463988}
   - component: {fileID: 7109163552492002557}
-  m_Layer: 5
-  m_Name: Up (1)
+  m_Layer: 6
+  m_Name: Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 5836425321349571479}
   - component: {fileID: 5995389271575921655}
   - component: {fileID: 2810588895217796761}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 5341529914158384276}
   - component: {fileID: 9052910363115894408}
   - component: {fileID: 395554884093985549}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Item Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -514,7 +514,7 @@ GameObject:
   - component: {fileID: 1888943174124092699}
   - component: {fileID: 2423204446543191130}
   - component: {fileID: 5926434717511318464}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 2313220912720042515}
   - component: {fileID: 6795621659674007696}
   - component: {fileID: 9046346569775200166}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -843,7 +843,7 @@ GameObject:
   - component: {fileID: 7495932028835130149}
   - component: {fileID: 1576185387893317440}
   - component: {fileID: 8202077416487965404}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Deleted_btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1134,7 +1134,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1246276513736440014}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ReSize_Buttoms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1178,7 +1178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6713416750732480637}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1215,7 +1215,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5409467520948113632}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Fonts_Settings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1261,7 +1261,7 @@ GameObject:
   - component: {fileID: 3685719028583617639}
   - component: {fileID: 5538528041279328279}
   - component: {fileID: 3851173042474615942}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: LeftFonts_pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1391,7 +1391,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8216621543212639158}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1479,6 +1479,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _deletedObject: {fileID: 7495932028835130149}
+  _selectedOnePanel: {fileID: 2460595658542674575}
+  _selectedTwoPanel: {fileID: 8228780936448746494}
   OnDragEnd:
     m_PersistentCalls:
       m_Calls:
@@ -1639,7 +1641,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 20, y: 20, z: 20, w: 20}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1674,7 +1676,7 @@ GameObject:
   - component: {fileID: 2460595656793602238}
   - component: {fileID: 2460595656793602369}
   - component: {fileID: 1949921423560556911}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1724,7 +1726,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1765,7 +1767,7 @@ GameObject:
   - component: {fileID: 2460595657053728337}
   - component: {fileID: 2460595657053728336}
   - component: {fileID: 5268697924121810514}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Right Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1815,7 +1817,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1856,7 +1858,7 @@ GameObject:
   - component: {fileID: 2460595657114229634}
   - component: {fileID: 2460595657114229637}
   - component: {fileID: 618153519540911849}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Left Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1906,7 +1908,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1947,7 +1949,7 @@ GameObject:
   - component: {fileID: 2460595657557799412}
   - component: {fileID: 2460595657557799415}
   - component: {fileID: 5944995625382203926}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Right Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1997,7 +1999,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2041,13 +2043,13 @@ GameObject:
   - component: {fileID: 4669709023843771913}
   - component: {fileID: 3531558405754347470}
   - component: {fileID: 3136226594006772892}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Resize Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2460595658542674572
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2187,7 +2189,7 @@ GameObject:
   - component: {fileID: 2460595658589305070}
   - component: {fileID: 2460595658589305073}
   - component: {fileID: 1201954040013433951}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2237,7 +2239,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2278,7 +2280,7 @@ GameObject:
   - component: {fileID: 2460595658639096869}
   - component: {fileID: 2460595658639096868}
   - component: {fileID: 7076377497969653339}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Left Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2328,7 +2330,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2368,7 +2370,7 @@ GameObject:
   - component: {fileID: 8434036660969655571}
   - component: {fileID: 335462275743597458}
   - component: {fileID: 4405523649132305800}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2444,7 +2446,7 @@ GameObject:
   - component: {fileID: 6651203125732999170}
   - component: {fileID: 4079830395737728372}
   - component: {fileID: 4262353168336958569}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Item Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2520,7 +2522,7 @@ GameObject:
   - component: {fileID: 24165782738036237}
   - component: {fileID: 7826860137178952452}
   - component: {fileID: 2961408873334334222}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2597,7 +2599,7 @@ GameObject:
   - component: {fileID: 7193001744561507333}
   - component: {fileID: 1020577698242162711}
   - component: {fileID: 7755637730036709762}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Bold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2789,7 +2791,7 @@ GameObject:
   - component: {fileID: 5691482721871052855}
   - component: {fileID: 8525512745818891534}
   - component: {fileID: 4134811890818860770}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Scrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2914,7 +2916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1210046879136914451}
   - component: {fileID: 9003005147831156317}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3002,7 +3004,7 @@ GameObject:
   - component: {fileID: 5906890204649630594}
   - component: {fileID: 5455838128216685423}
   - component: {fileID: 750578891235561842}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3078,7 +3080,7 @@ GameObject:
   - component: {fileID: 6076730581458822085}
   - component: {fileID: 1854398737342689250}
   - component: {fileID: 7497358699254541260}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3214,7 +3216,7 @@ GameObject:
   - component: {fileID: 8944241457079623544}
   - component: {fileID: 7081382353025666865}
   - component: {fileID: 5201626990893319186}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: CenterFonts_pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3344,7 +3346,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8555609134840148311}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Buttons_positonsTXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3386,8 +3388,8 @@ GameObject:
   - component: {fileID: 4840995363483408833}
   - component: {fileID: 3662363746265648250}
   - component: {fileID: 3111024539106110907}
-  m_Layer: 5
-  m_Name: Down (1)
+  m_Layer: 6
+  m_Name: Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3436,7 +3438,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: 50, y: 50, z: 50, w: 50}
   m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3475,7 +3477,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2057990680725722246}
   - component: {fileID: 8124719293757938956}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3564,7 +3566,7 @@ GameObject:
   - component: {fileID: 7319041047767899748}
   - component: {fileID: 2393360819837559461}
   - component: {fileID: 6597025884529847165}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Viewport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3652,7 +3654,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3272968559032879402}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3691,7 +3693,7 @@ GameObject:
   - component: {fileID: 3032108437552419580}
   - component: {fileID: 7606353904448388078}
   - component: {fileID: 7324780433557006212}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Item Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3767,7 +3769,7 @@ GameObject:
   - component: {fileID: 3454096452275246875}
   - component: {fileID: 4999842730025529667}
   - component: {fileID: 3140443641868527612}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3847,7 +3849,7 @@ GameObject:
   - component: {fileID: 7876425033800736644}
   - component: {fileID: 8702824458208023224}
   - component: {fileID: 3328778815191161615}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Italic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4039,7 +4041,7 @@ GameObject:
   - component: {fileID: 693220288977008538}
   - component: {fileID: 5924799121458473128}
   - component: {fileID: 573232743454933735}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Cursiv
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4232,7 +4234,7 @@ GameObject:
   - component: {fileID: 8946227076101612014}
   - component: {fileID: 6665151917325727580}
   - component: {fileID: 4942053379317183880}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Fonts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4407,7 +4409,7 @@ GameObject:
   - component: {fileID: 3948541745951565862}
   - component: {fileID: 7144210979823247594}
   - component: {fileID: 151875361924425451}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Template
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4515,7 +4517,7 @@ GameObject:
   - component: {fileID: 107884087968325097}
   - component: {fileID: 2909853792820669136}
   - component: {fileID: 9124931927538365589}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4591,7 +4593,7 @@ GameObject:
   - component: {fileID: 3713597054250520746}
   - component: {fileID: 9129132735365560400}
   - component: {fileID: 4570159435742855116}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Item Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4729,7 +4731,7 @@ GameObject:
   - component: {fileID: 1517489030258698610}
   - component: {fileID: 967210893980688707}
   - component: {fileID: 8295798737235680868}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: SizeFont
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4952,7 +4954,7 @@ GameObject:
   - component: {fileID: 8460984253681403685}
   - component: {fileID: 6057203189010948526}
   - component: {fileID: 1421751962259840285}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5029,7 +5031,7 @@ GameObject:
   - component: {fileID: 1124006071679568363}
   - component: {fileID: 2608036042381376546}
   - component: {fileID: 3386365036963026346}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Scrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5158,7 +5160,7 @@ GameObject:
   - component: {fileID: 7510771271564113380}
   - component: {fileID: 6854055030676175633}
   - component: {fileID: 8437501021631236234}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: PanelSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5337,7 +5339,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7222672006462616725}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5533,7 +5535,7 @@ GameObject:
   - component: {fileID: 2593808797258812564}
   - component: {fileID: 805033498166428718}
   - component: {fileID: 5863202870633984225}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: RightFonts_pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}

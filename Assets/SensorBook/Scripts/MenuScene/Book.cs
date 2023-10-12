@@ -34,7 +34,7 @@ public class Book : MonoBehaviour
     private List<Sprite> _pagesBook = new List<Sprite>();
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
-    private enum _stateBook { Show, Edit, Export };
+    private enum _stateBook { Show, Edit};
 
     public RawImage CoverBook => _coverBook;
     public string NameBook => _nameBookTMP.text;
@@ -42,8 +42,6 @@ public class Book : MonoBehaviour
     public bool FavoriteBook => _favoriteBook;
     public List<Sprite> PagesBook => _pagesBook;
     public DateTime DataTimeBook => _dateTimeCreation;
-
-    public List<Texture2D> _pagesBookTexture = new List<Texture2D>();
 
     private void OnEnable()
     {
@@ -78,28 +76,29 @@ public class Book : MonoBehaviour
         _nameBookTMP.text = Path.GetFileNameWithoutExtension(PathToBook);
         _coverBook.texture = CoverTexture;
         _pathToPDF = PathToBook;
-        _dateTimeCreation = FileManager.
+        _dateTimeCreation = PdfFileManager.
             GetDateCreation(PathToBook);
     }
 
     private void Book_Click()
     {
-        StartCoroutine(LoadPagesBook(_stateBook.Show));
+        StartCoroutine(LoadBook(_stateBook.Show));
     }
 
     private void ExportBook_Click()
     {
-        StartCoroutine(LoadPagesBook(_stateBook.Export));
+        MenuSceneController.Instance.ExportBook(this);
     }
 
     private void EditBook_Click()
     {
-        StartCoroutine(LoadPagesBook(_stateBook.Edit));
+        StartCoroutine(LoadBook(_stateBook.Edit));
     }
 
     private void DeletedBook_Click()
     {
-        Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?", DeletedBook, null, null, "Удалить книгу", "Отмена");
+        Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?", 
+            DeletedBook, null, null, "Удалить книгу", "Отмена");
     }
 
     private void DeletedBook()
@@ -133,12 +132,12 @@ public class Book : MonoBehaviour
         _exportBTN.gameObject.SetActive(active);
     }
 
-    private IEnumerator LoadPagesBook(_stateBook stateBook)
+    private IEnumerator LoadBook(_stateBook stateBook)
     {
         _loadingScreen.SetActive(true);
 
         yield return new WaitForSeconds(1f);
-        _pagesBook = FileManager.OpenPDF_file(_pathToPDF);
+        _pagesBook = PdfFileManager.OpenPDFfile(_pathToPDF);
 
         _loadingScreen.SetActive(false);
 
@@ -151,10 +150,6 @@ public class Book : MonoBehaviour
             case _stateBook.Edit:
                 MenuSceneController.Instance.
                     EditorBook(this);
-                break;
-            case _stateBook.Export:
-                MenuSceneController.Instance.
-                    ExportBook(this);
                 break;
             default:
                 break;

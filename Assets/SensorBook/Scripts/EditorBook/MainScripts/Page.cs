@@ -1,10 +1,12 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Page : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _numberPage;
     [SerializeField] private RectTransform _pageRectTransform;
+    [SerializeField] private Image _imageBox;
     public RectTransform PageRectTransform => _pageRectTransform;
 
     public void SetNumberPage(int indexPage)
@@ -23,8 +25,9 @@ public class Page : MonoBehaviour
         }
     }
 
-    public void DeActiveNumberPage()
+    public void DeActiveElemetnsForScreen()
     {
+        _imageBox.sprite = null;
         _numberPage.gameObject.SetActive(false);
     }
 }

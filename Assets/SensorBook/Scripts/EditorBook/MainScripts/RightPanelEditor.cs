@@ -31,12 +31,12 @@ public class RightPanelEditor : MonoBehaviour
 
     private void ExportBookClick()
     {
-        EditorBook.Instance.SaveBook(true);
+        EditorBook.Instance.SaveOrExportBook(true);
     }
 
     private void SaveBookClick()
     {
-        EditorBook.Instance.SaveBook();
+        EditorBook.Instance.SaveOrExportBook();
     }
 
     private void AddCoverBookClick()
@@ -46,7 +46,7 @@ public class RightPanelEditor : MonoBehaviour
 
     private void AddPageClick()
     {
-        EditorBook.Instance.TakeScreenShot();
+        EditorBook.Instance.TakeScreenShotCurrentPage();
         EditorBook.Instance.AddPage();
     }
 }

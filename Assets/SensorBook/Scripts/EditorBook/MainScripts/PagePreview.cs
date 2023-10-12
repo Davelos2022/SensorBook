@@ -41,17 +41,21 @@ public class PagePreview : MonoBehaviour
         _textPage.text = $"{_indexPage + 1}";
 
         transform.SetSiblingIndex(index);
+
+        CheckingForFirstPage();
+    }
+
+    private void CheckingForFirstPage()
+    {
+        if (_indexPage == 0)
+            _deletedBTN.gameObject.SetActive(false);
+        else if (_indexPage > 0 && !_deletedBTN.gameObject.activeSelf)
+            _deletedBTN.gameObject.SetActive(true);
     }
 
     public void ClearPreviewPage()
     {
         SetImage(null);
-    }
-
-    private void MessageInfoForDeletedPage()
-    {
-        Info.Instance.ShowBox($"Вы действительно хотите удалить страницу?", 
-            DeletedPage, DeletedPage, null, "Удалить", "Отмена");
     }
 
     private void DeletedPage()
@@ -60,12 +64,19 @@ public class PagePreview : MonoBehaviour
     }
 
     private void ClickPage()
-    {      
+    {
+        EditorBook.Instance.TakeScreenShotCurrentPage();
         EditorBook.Instance.SetCurrentPage(_indexPage);
     }
 
     public void SelectedPage(bool active)
     {
         _selectedPanel.SetActive(active);
+    }
+
+    private void MessageInfoForDeletedPage()
+    {
+        Info.Instance.ShowBox($"Вы действительно хотите удалить страницу?",
+            DeletedPage, DeletedPage, null, "Удалить", "Отмена");
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ResizePoint: MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class ResizePoint : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     [SerializeField] private Vector2 normalizedPoint;
     [SerializeField] private bool cornerPoint;
@@ -28,7 +28,7 @@ public class ResizePoint: MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         }
     }
 
- 
+
 
     public void Initialize(RectResizer resizer)
     {
@@ -44,7 +44,7 @@ public class ResizePoint: MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
     public void OnDrag(PointerEventData eventData)
     {
         //(transform as RectTransform).anchoredPosition += eventData.delta / _screenRatio;
-        
+
         _data = eventData;
         _resizer.DragHandle(this);
 

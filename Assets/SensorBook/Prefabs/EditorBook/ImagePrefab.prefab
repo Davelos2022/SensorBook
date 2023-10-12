@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7226349419950898503}
   - component: {fileID: 1816391117102745398}
   - component: {fileID: 2419236859576447130}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Deleted_btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,9 +134,9 @@ GameObject:
   - component: {fileID: 4848984284928092262}
   - component: {fileID: 4967618308103104692}
   - component: {fileID: 7337389213577232580}
+  - component: {fileID: 2048273210207622087}
   - component: {fileID: 4848984284928092261}
   - component: {fileID: 4848984284928092263}
-  - component: {fileID: 2048273210207622087}
   m_Layer: 5
   m_Name: ImagePrefab
   m_TagString: Untagged
@@ -207,6 +207,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _deletedObject: {fileID: 2419236859576447130}
+  _selectedOnePanel: {fileID: 3105153146199201721}
+  _selectedTwoPanel: {fileID: 2460595658542674575}
   OnDragEnd:
     m_PersistentCalls:
       m_Calls:
@@ -277,6 +279,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb74a3237d4d22445b2d75d92bc2fa9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2048273210207622087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460595656622717767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b820ec2a530e241b4eb48b5a22eebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  processIfInactiveSelf: 0
+  processIfInactiveInHierarchy: 0
+  fill: 0
+  setInUpdate: 0
 --- !u!222 &4848984284928092261
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -297,22 +315,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2048273210207622087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2460595656622717767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2b820ec2a530e241b4eb48b5a22eebe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  processIfInactiveSelf: 0
-  processIfInactiveInHierarchy: 0
-  fill: 0
-  setInUpdate: 0
 --- !u!1 &2460595656793602370
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +327,7 @@ GameObject:
   - component: {fileID: 2460595656793602238}
   - component: {fileID: 2460595656793602369}
   - component: {fileID: 1949921423560556911}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -416,7 +418,7 @@ GameObject:
   - component: {fileID: 2460595656825550316}
   - component: {fileID: 2460595656825550319}
   - component: {fileID: 3763927968160993838}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -553,7 +555,7 @@ GameObject:
   - component: {fileID: 2460595657053728337}
   - component: {fileID: 2460595657053728336}
   - component: {fileID: 5268697924121810514}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Right Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -644,7 +646,7 @@ GameObject:
   - component: {fileID: 2460595657114229634}
   - component: {fileID: 2460595657114229637}
   - component: {fileID: 618153519540911849}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Left Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -735,7 +737,7 @@ GameObject:
   - component: {fileID: 2460595657557799412}
   - component: {fileID: 2460595657557799415}
   - component: {fileID: 5944995625382203926}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Right Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -874,13 +876,13 @@ GameObject:
   - component: {fileID: 2647794740332609898}
   - component: {fileID: 6536281302074521449}
   - component: {fileID: 2560388774923130189}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Resize Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2460595658542674572
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1020,7 +1022,7 @@ GameObject:
   - component: {fileID: 2460595658589305070}
   - component: {fileID: 2460595658589305073}
   - component: {fileID: 1201954040013433951}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1111,7 +1113,7 @@ GameObject:
   - component: {fileID: 2460595658639096869}
   - component: {fileID: 2460595658639096868}
   - component: {fileID: 7076377497969653339}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Left Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1202,7 +1204,7 @@ GameObject:
   - component: {fileID: 2460595658683700452}
   - component: {fileID: 2460595658683700455}
   - component: {fileID: 6671144954740763949}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1292,13 +1294,13 @@ GameObject:
   - component: {fileID: 5815696984213481016}
   - component: {fileID: 2797671703542863564}
   - component: {fileID: 8971749593796305797}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Rotation_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5815696984213481016
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1371,7 +1373,7 @@ GameObject:
   - component: {fileID: 4298476719400139626}
   - component: {fileID: 7015711300135692222}
   - component: {fileID: 6572047882826782285}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Rotation_btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1460,7 +1462,7 @@ GameObject:
   - component: {fileID: 6608911342458599961}
   - component: {fileID: 2908699728515771123}
   - component: {fileID: 1957753010140245811}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: lebel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1534,7 +1536,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4688177045481549679}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: ReSizeButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}

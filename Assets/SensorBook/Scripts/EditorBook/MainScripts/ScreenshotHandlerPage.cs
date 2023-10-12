@@ -1,6 +1,5 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using UnityEditorInternal;
 
 public class ScreenshotHandlerPage : MonoBehaviour
 {
@@ -28,7 +27,7 @@ public class ScreenshotHandlerPage : MonoBehaviour
             renderResult.ReadPixels(rect, 0, 0);
             renderResult.Apply();
 
-            EditorBook.Instance.SetImagePreview(renderResult, _indexPage);
+            EditorBook.Instance.SetImagePreviewPage(renderResult, _indexPage);
 
             RenderTexture.ReleaseTemporary(renderTexture);
             _myCamera.targetTexture = null;
@@ -43,9 +42,10 @@ public class ScreenshotHandlerPage : MonoBehaviour
         _screenshot = Instantiate(pageObject, transform.parent);
 
         Page page = _screenshot.GetComponent<Page>();
-        page.DeActiveNumberPage();
+        page.DeActiveElemetnsForScreen();
+        page.PageRectTransform.anchoredPosition = Vector2.zero;
 
-        _myCamera.targetTexture = RenderTexture.GetTemporary((int)page.PageRectTransform.rect.width, (int)page.PageRectTransform.rect.height, 24);
+        _myCamera.targetTexture = RenderTexture.GetTemporary((int)page.PageRectTransform.rect.width, (int)page.PageRectTransform.rect.height, 0);
         _takeScreenshotOnNextFrame = true;
     }
 }
