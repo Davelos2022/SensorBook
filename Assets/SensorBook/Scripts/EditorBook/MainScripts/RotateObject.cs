@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class RotateUI : MonoBehaviour, IBeginDragHandler, IDragHandler
+public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
     [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private float rotationSpeed = 1f;
 
     private Vector2 pivotPosition;
     private Vector2 initialMousePosition;
@@ -20,8 +21,6 @@ public class RotateUI : MonoBehaviour, IBeginDragHandler, IDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        float rotationSpeed = 2f; 
-
         float mouseX = eventData.position.x - initialMousePosition.x;
 
         float rotationAngle = -mouseX * rotationSpeed;

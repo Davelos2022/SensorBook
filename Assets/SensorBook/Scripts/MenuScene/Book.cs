@@ -34,7 +34,7 @@ public class Book : MonoBehaviour
     private List<Sprite> _pagesBook = new List<Sprite>();
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
-    private enum _stateBook { Show, Edit};
+    private enum _stateBook { Show, Edit };
 
     public RawImage CoverBook => _coverBook;
     public string NameBook => _nameBookTMP.text;
@@ -78,6 +78,8 @@ public class Book : MonoBehaviour
         _pathToPDF = PathToBook;
         _dateTimeCreation = PdfFileManager.
             GetDateCreation(PathToBook);
+
+        CheckFavoriteBook(_nameBookTMP.text);
     }
 
     private void Book_Click()
@@ -97,7 +99,7 @@ public class Book : MonoBehaviour
 
     private void DeletedBook_Click()
     {
-        Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?", 
+        Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?",
             DeletedBook, null, null, "Удалить книгу", "Отмена");
     }
 
@@ -111,8 +113,26 @@ public class Book : MonoBehaviour
         _favoriteBook = !_favoriteBook;
         _selectionFavoriteBTN.SetActive(_favoriteBook);
 
+        SaveAndDeletedFavoriteBook(_favoriteBook, _nameBookTMP.text);
+
         if (MenuSceneController.Instance.FavoriteShowNow)
             gameObject.SetActive(_favoriteBook);
+    }
+
+    private void CheckFavoriteBook(string nameBook)
+    {
+        if (PlayerPrefs.HasKey($"Favorite_{nameBook}"))
+            FavoriteBook_CLick();
+        else
+            return;
+    }
+
+    private void SaveAndDeletedFavoriteBook(bool favorite, string nameBook)
+    {
+        if (favorite && !PlayerPrefs.HasKey($"Favorite_{nameBook}"))
+            PlayerPrefs.SetString($"Favorite_{nameBook}", nameBook);
+        else
+            PlayerPrefs.DeleteKey($"Favorite_{nameBook}");
     }
 
     private void ActivateAdminPanel()
