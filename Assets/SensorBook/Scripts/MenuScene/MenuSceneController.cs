@@ -8,8 +8,6 @@ using System.Linq;
 using System;
 using VolumeBox.Toolbox;
 
-
-
 public class MenuSceneController : Singleton<MenuSceneController>
 {
     [SerializeField]

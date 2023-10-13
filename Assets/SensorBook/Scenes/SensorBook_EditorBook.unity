@@ -1944,12 +1944,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c77149c27859ec479e6aaad9a212c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvas: {fileID: 1295369146}
   _screenshotHandler: {fileID: 3052799183359735751}
   _undoControllerComponent: {fileID: 2030624415}
   _loadingScreen: {fileID: 1392732411}
   _nameBook: {fileID: 5590911907268172314}
-  _coverImageBox: {fileID: 7841446219425154665}
+  _coverBook: {fileID: 6966176125775654696}
   _errorName: {fileID: 1739750474}
   _errorCover: {fileID: 2108578361}
   _pagePrefab: {fileID: 1870503711235373722, guid: 3d62c28d30b40114e9b2e376f727d47b, type: 3}
@@ -6766,7 +6765,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2273232836429747902}
   m_HandleRect: {fileID: 2273232836429747903}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -9126,6 +9125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6966176125775654695}
   - component: {fileID: 3859466678385648390}
+  - component: {fileID: 6966176125775654696}
   m_Layer: 5
   m_Name: Cover_btn
   m_TagString: Untagged
@@ -9156,6 +9156,25 @@ RectTransform:
   m_AnchoredPosition: {x: -100.2, y: -256.3}
   m_SizeDelta: {x: 167.7, y: 182.797}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6966176125775654696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6865034731512162222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b19b8dc9e7fb848938fda312166331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _typePreview: 1
+  _pageBTN: {fileID: 0}
+  _deletedBTN: {fileID: 0}
+  _imageBox: {fileID: 7841446219425154665}
+  _rawImageAspect: {fileID: 7841446219425154666}
+  _selectedPanel: {fileID: 0}
+  _textPage: {fileID: 0}
 --- !u!1 &7411520062103796858
 GameObject:
   m_ObjectHideFlags: 0

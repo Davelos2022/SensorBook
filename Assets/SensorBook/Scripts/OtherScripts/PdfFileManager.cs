@@ -13,6 +13,7 @@ using UnityEngine;
 public abstract class PdfFileManager : FileManager
 {
     public static string _bookPath = Application.streamingAssetsPath + "/Books/";
+    private static string _pathRecovery = _bookPath + "Recovery/";
 
     public static string[] GetCountBookFiles()
     {
@@ -104,87 +105,86 @@ public abstract class PdfFileManager : FileManager
         catch (Exception e)
         {
             //Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при открытие файла");
-            Debug.LogWarning($"Failed to open book: {e.Message}");
+            Debug.LogWarning($"Failed to save book: {e.Message}");
             return null;
         }
     }
 
-    public async static UniTask<bool> SaveBookInPDF(string path, List<Texture2D> pagesTexture, Texture2D coverTex, RectTransform sizePage, bool export = false)
+    public async static UniTask SaveBookInPDF(string path, List<Texture2D> pagesTexture, RectTransform sizePage)
     {
-        try
+        await RecoveryImagePage(pagesTexture);
+        await CreateDocumentPDF((int)sizePage.rect.width, (int)sizePage.rect.height, path);
+        await DeletedRecoveryImage();
+    }
+
+    private static async UniTask RecoveryImagePage(List<Texture2D> texturePages)
+    {
+        if (!Directory.Exists(_pathRecovery))
+            Directory.CreateDirectory(_pathRecovery);
+
+        for (int x = 0; x < texturePages.Count; x++)
+            await SaveTexture(texturePages[x], _pathRecovery + $"{x}.png");
+    }
+
+    private static async UniTask CreateDocumentPDF(int width, int height, string pathToSave)
+    {
+        Rectangle sizeDocPage = new Rectangle(width, height);
+        Document document = new Document(sizeDocPage);
+        PdfWriter.GetInstance(document, new FileStream($"{pathToSave}", FileMode.Create));
+
+        await AddPageInDocument(document);
+    }
+
+    private static async UniTask AddPageInDocument(Document document)
+    {
+        Paragraph paragraph = CreateCenterAlignedParagraph();
+        var info = new DirectoryInfo(_pathRecovery);
+        var files = info.GetFiles().Where(x => x.Extension.ToLower() == ".png").
+            OrderBy(f => f.CreationTime).ToList().ConvertAll(x => x.FullName).ToArray();
+
+        document.Open();
+
+        foreach (var page in files)
         {
-
-            //Path recovery
-            string pathRecovery = _bookPath + "Recovery/";
-
-            if (!Directory.Exists(pathRecovery))
-                Directory.CreateDirectory(pathRecovery);
-
-            //Create recovery Image
-            pagesTexture.Insert(0, coverTex);
-
-            for (int x = 0; x < pagesTexture.Count; x++)
+            await UniTask.RunOnThreadPool(() =>
             {
-                var tex = pagesTexture[x];
-                var texBytes = tex.EncodeToPNG();
-                await SaveTexture(tex, pathRecovery + $"{x}.png");
-            }
-
-            //Save PDF
-            Rectangle sizeDocPage = new Rectangle(sizePage.rect.width, sizePage.rect.height);
-            var doc = new Document(sizeDocPage);
-            PdfWriter.GetInstance(doc, new FileStream($"{path}", FileMode.Create));
-
-            //PDF proccesing
-            doc.Open();
-            var info = new DirectoryInfo(pathRecovery);
-            var files = info.GetFiles().Where(x => x.Extension.ToLower() == ".png").OrderBy(f => f.CreationTime).ToList().ConvertAll(x => x.FullName).ToArray();
-
-            foreach (var page in files)
-            {
-                await UniTask.RunOnThreadPool(() =>
-                {
-                    var image = iTextSharp.text.Image.GetInstance(page);
-                    image.Alignment = Element.ALIGN_CENTER -60;
-
-                    doc.Add(image);
-                });
-            }
-
-            doc.Close();
-
-            //Clear recovery Iamege
-            if (Directory.Exists(pathRecovery))
-            {
-                DirectoryInfo di = new DirectoryInfo(pathRecovery);
-
-                foreach (FileInfo file in di.GetFiles())
-                {
-                    await UniTask.RunOnThreadPool(() => file.Delete());
-                }
-
-                Directory.Delete(pathRecovery);
-            }
-
-            //Message info
-            if (export)
-            {
-                //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирована");
-                Debug.Log("Книга экспортирована");
-            }
-            else
-            {
-                //Notifier.Instance.Notify(NotifyType.Success, "Книга сохранена");
-                Debug.Log("Книга сохранена");
-            }
-
-            return true;
+                var image = LoadAndScaleImage(page, document);
+                paragraph.Add(image);
+            });
         }
-        catch (Exception e)
+
+        document.Add(paragraph);
+        document.Close();
+    }
+    private static Paragraph CreateCenterAlignedParagraph()
+    {
+        Paragraph paragraph = new Paragraph();
+        paragraph.Alignment = Element.ALIGN_CENTER;
+        return paragraph;
+    }
+
+    private static Image LoadAndScaleImage(string imagePath, Document document)
+    {
+        Image image = Image.GetInstance(imagePath);
+
+        float imageWidth = image.Width;
+        float documentWidth = document.PageSize.Width - document.LeftMargin - document.RightMargin;
+        float scaleRatio = documentWidth / imageWidth;
+        image.ScalePercent(scaleRatio * 100);
+
+        return image;
+    }
+
+    private async static UniTask DeletedRecoveryImage()
+    {
+        if (Directory.Exists(_pathRecovery))
         {
-            //Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при экспорте файла");
-            Debug.LogWarning($"Failed to save book: {e.Message}");
-            return false;
+            DirectoryInfo di = new DirectoryInfo(_pathRecovery);
+
+            foreach (FileInfo file in di.GetFiles())
+                await UniTask.RunOnThreadPool(() => file.Delete());
+
+            Directory.Delete(_pathRecovery);
         }
     }
 
@@ -195,6 +195,4 @@ public abstract class PdfFileManager : FileManager
         else
             return;
     }
-
-
 }

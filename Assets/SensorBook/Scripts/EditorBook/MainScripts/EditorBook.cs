@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
 using VolumeBox.Toolbox;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class EditorBook : Singleton<EditorBook>
 {
@@ -14,7 +13,7 @@ public class EditorBook : Singleton<EditorBook>
     [SerializeField] private GameObject _loadingScreen;
     [Space]
     [SerializeField] private TMP_InputField _nameBook;
-    [SerializeField] private RawImage _coverImageBox;
+    [SerializeField] private PagePreview _coverBook;
     [Space]
     [SerializeField] private ErrorHighlighter _errorName;
     [SerializeField] private ErrorHighlighter _errorCover;
@@ -64,9 +63,8 @@ public class EditorBook : Singleton<EditorBook>
     private void OpenEditBook(Book book)
     {
         _nameBook.text = book.NameBook;
-        _coverImageBox.texture = book.CoverBook.texture;
+        _coverBook.SetImage((Texture2D)book.CoverBook.texture);
         _coverExist = true;
-        _coverImageBox.GetComponent<RawImageAspectPreserver>().SetAspect();
 
         for (int x = 0; x < book.PagesBook.Count; x++)
         {
@@ -149,56 +147,57 @@ public class EditorBook : Singleton<EditorBook>
 
     public async void SaveOrExportBook(bool export = false)
     {
-        TakeScreenShotCurrentPage();
-        await UniTask.Delay(100);
-
         if (!CheckingForCorrectnessData())
             return;
 
+        TakeScreenShotCurrentPage();
+        await UniTask.Delay(100);
+
         LoadinScreen(true);
 
-        RectTransform sizePage = _pages[0].PageRectTransform;
-        List<Texture2D> pagesTexture = CreatePagesForBook();
-        string pathToBook;
-
-        if (export)
+        try
         {
-            pathToBook = PdfFileManager.SavePdfFileBrowser(_nameBook.text);
+            RectTransform sizePage = _pages[0].PageRectTransform;
+            List<Texture2D> pagesTexture = CreatePagesForBook();
+            string pathToBook;
 
-            if (!string.IsNullOrEmpty(pathToBook))
+            if (export)
             {
-                await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, (Texture2D)_coverImageBox.texture, sizePage);
-            }
+                pathToBook = PdfFileManager.SavePdfFileBrowser(_nameBook.text);
 
-            LoadinScreen(false);
-            return;
+                if (!string.IsNullOrEmpty(pathToBook))
+                    await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, sizePage);
+
+                //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирована");
+                Debug.Log("Книга экспортирована");
+            }
+            else
+            {
+                pathToBook = PdfFileManager._bookPath + _nameBook.text + ".pdf";
+                await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, sizePage);
+
+                MenuSceneController.Instance.CreateBook(pathToBook);
+                _undoControllerComponent.ClearHistory();
+
+                //Notifier.Instance.Notify(NotifyType.Success, "Книга cохранена");
+                Debug.Log("Книга сохранена");
+                MenuSceneController.Instance.ReturnLibary();
+            }
         }
-        else
+        catch (Exception e)
         {
-            if (MenuSceneController.Instance.DoesBookExists(_nameBook.text) && _editBook == null)
-            {
-                LoadinScreen(false);
-                return;
-            }
-            else if (_editBook)
-            {
-                MenuSceneController.Instance.DeletedBook(_editBook);
-            }
-
-            pathToBook = PdfFileManager._bookPath + _nameBook.text + ".pdf";
-            await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, (Texture2D)_coverImageBox.texture, sizePage);
-
-            MenuSceneController.Instance.CreateBook(pathToBook);
-            _undoControllerComponent.ClearHistory();
-
-            LoadinScreen(false);
-            MenuSceneController.Instance.ReturnLibary();
+            //Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при сохранение файла");
+            Debug.LogWarning($"Failed to save book: {e.Message}");
         }
+
+        LoadinScreen(false);
     }
 
     private List<Texture2D> CreatePagesForBook()
     {
         List<Texture2D> pages = new List<Texture2D>();
+
+        _pagesPreviews.Insert(0, _coverBook);
 
         for (int x = 0; x < _pagesPreviews.Count; x++)
         {
@@ -239,11 +238,15 @@ public class EditorBook : Singleton<EditorBook>
             _errorCover.Highlight();
             return false;
         }
-        else if (_pages.Count < _minPageCount)
+
+
+        if (MenuSceneController.Instance.DoesBookExists(_nameBook.text) && _editBook == null)
         {
-            Debug.Log("Должно быть минимум две страницы!");
-            //Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
             return false;
+        }
+        else if (_editBook)
+        {
+            MenuSceneController.Instance.DeletedBook(_editBook);
         }
 
         return true;
@@ -256,9 +259,7 @@ public class EditorBook : Singleton<EditorBook>
         if (!string.IsNullOrWhiteSpace(pathToImage))
         {
             Texture2D cover = await FileManager.LoadTextureAsync(pathToImage, false);
-            _coverImageBox.texture = cover;
-            _coverImageBox.GetComponent<RawImageAspectPreserver>().SetAspect();
-
+            _coverBook.SetImage(cover);
             _coverExist = true;
         }
         else

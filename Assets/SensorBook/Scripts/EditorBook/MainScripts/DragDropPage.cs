@@ -7,7 +7,6 @@ public class DragDropPage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     [SerializeField] 
     private float _distance = 15f;
 
-
     private RectTransform _pageTransform;
     private CanvasGroup _canvasGroup;
 
@@ -56,8 +55,6 @@ public class DragDropPage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
                     break;
                 }
-
-
             }
             else
             {
@@ -65,7 +62,5 @@ public class DragDropPage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
                 break;
             }
         }
-
-
     }
 }

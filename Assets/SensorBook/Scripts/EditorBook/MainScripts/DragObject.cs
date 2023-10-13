@@ -44,6 +44,7 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
 
     private void OnDisable()
     {
+        DisableSelection(false);
         _deletedObject.onClick.RemoveListener(DeletedObject);
     }
 

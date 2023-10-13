@@ -3,8 +3,15 @@ using UnityEngine.UI;
 using TMPro;
 using VolumeBox.Toolbox.UIInformer;
 
+public enum TypePreview
+{
+    Page, 
+    Cover
+}
+
 public class PagePreview : MonoBehaviour
 {
+    [SerializeField] private TypePreview _typePreview;
     [SerializeField] private Button _pageBTN;
     [SerializeField] private Button _deletedBTN;
     [Space]
@@ -19,14 +26,20 @@ public class PagePreview : MonoBehaviour
 
     private void OnEnable()
     {
-        _pageBTN.onClick.AddListener(ClickPage);
-        _deletedBTN.onClick.AddListener(MessageInfoForDeletedPage);
+        if (_typePreview == TypePreview.Page)
+        {
+            _pageBTN.onClick.AddListener(ClickPage);
+            _deletedBTN.onClick.AddListener(MessageInfoForDeletedPage);
+        }
     }
 
     private void OnDisable()
     {
-        _pageBTN.onClick.RemoveListener(ClickPage);
-        _deletedBTN.onClick.RemoveListener(MessageInfoForDeletedPage);
+        if (_typePreview == TypePreview.Page)
+        {
+            _pageBTN.onClick.RemoveListener(ClickPage);
+            _deletedBTN.onClick.RemoveListener(MessageInfoForDeletedPage);
+        }
     }
 
     public void SetImage(Texture2D texture)
