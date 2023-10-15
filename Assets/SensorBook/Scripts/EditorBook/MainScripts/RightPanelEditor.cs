@@ -1,6 +1,3 @@
-using Cysharp.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +8,6 @@ public class RightPanelEditor : MonoBehaviour
     [SerializeField] private Button _saveBookBTN;
     [SerializeField] private Button _addCoverBook;
     [SerializeField] private Button _addPage;
-
 
     private void OnEnable()
     {
@@ -46,7 +42,6 @@ public class RightPanelEditor : MonoBehaviour
 
     private void AddPageClick()
     {
-        EditorBook.Instance.TakeScreenShotCurrentPage();
         EditorBook.Instance.AddPage();
     }
 }

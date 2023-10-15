@@ -349,9 +349,10 @@ public abstract class FileManager : Singleton<FileManager>
         else
         {
             return null;
+  
         }
     }
-
+    
 
     public static async UniTask SaveTexture(Texture2D tex, string savePath, CancellationToken token = default)
     {

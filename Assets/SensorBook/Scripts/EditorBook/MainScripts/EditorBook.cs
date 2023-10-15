@@ -10,7 +10,6 @@ public class EditorBook : Singleton<EditorBook>
 {
     [SerializeField] private ScreenshotHandlerPage _screenshotHandler;
     [SerializeField] private UndoControllerComponent _undoControllerComponent;
-    [SerializeField] private GameObject _loadingScreen;
     [Space]
     [SerializeField] private TMP_InputField _nameBook;
     [SerializeField] private PagePreview _coverBook;
@@ -29,18 +28,17 @@ public class EditorBook : Singleton<EditorBook>
     [SerializeField] private GameObject _textPrefab;
     [SerializeField] private GameObject _imagePrefab;
 
-    public UndoControllerComponent UndoControllerComponent => _undoControllerComponent;
     private List<Page> _pages = new List<Page>();
     private List<PagePreview> _pagesPreviews = new List<PagePreview>();
 
     private int _currentIndexPage;
     private Book _editBook = null;
-
-    private int _minPageCount = 2;
     private bool _coverExist = false;
 
     private void Awake()
     {
+        _nameBook.onValueChanged.AddListener(OnInputValueChanged);
+
         if (MenuSceneController.Instance.CurrentBook != null)
         {
             _editBook = MenuSceneController.Instance.CurrentBook;
@@ -55,9 +53,12 @@ public class EditorBook : Singleton<EditorBook>
         SetCurrentPage(_currentIndexPage);
     }
 
-    public void LoadinScreen(bool active)
+    private void OnInputValueChanged(string value)
     {
-        _loadingScreen.SetActive(active);
+        value = value.Replace("/", "").Replace("\\", "").
+            Replace(".", "").Replace(",", "");
+
+        _nameBook.text = value;
     }
 
     private void OpenEditBook(Book book)
@@ -96,6 +97,11 @@ public class EditorBook : Singleton<EditorBook>
         _undoControllerComponent.Redo();
     }
 
+    public bool ExistsUndo()
+    {
+        return _undoControllerComponent.ExistsUndo();
+    }
+
     public async void AddImage()
     {
         string pathToImage = FileManager.SelectImageInBrowser();
@@ -126,7 +132,6 @@ public class EditorBook : Singleton<EditorBook>
     {
         GameObject text = Instantiate(_textPrefab, _pages[_currentIndexPage].transform);
         text.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-
         text.GetComponentInChildren<TMP_InputField>().Select();
     }
 
@@ -137,7 +142,8 @@ public class EditorBook : Singleton<EditorBook>
         if (countObjectInPage > 1)
         {
             _pages[_currentIndexPage].ClearPage();
-            _pagesPreviews[_currentIndexPage].ClearPreviewPage();
+            _pagesPreviews[_currentIndexPage].SetImage(null);
+            _undoControllerComponent.ClearHistory();
         }
         else
         {
@@ -150,14 +156,19 @@ public class EditorBook : Singleton<EditorBook>
         if (!CheckingForCorrectnessData())
             return;
 
+        if (MenuSceneController.Instance.DoesBookExists(_nameBook.text) && _editBook == null)
+            return;
+        else if (_editBook != null)
+            MenuSceneController.Instance.DeletedBook(_editBook);
+
         TakeScreenShotCurrentPage();
         await UniTask.Delay(100);
 
-        LoadinScreen(true);
+        MenuSceneController.Instance.LoadScreen(true, "Создаем книгу...");
 
         try
         {
-            RectTransform sizePage = _pages[0].PageRectTransform;
+            RectTransform sizePage = _pagePrefab.GetComponent<RectTransform>();
             List<Texture2D> pagesTexture = CreatePagesForBook();
             string pathToBook;
 
@@ -166,10 +177,12 @@ public class EditorBook : Singleton<EditorBook>
                 pathToBook = PdfFileManager.SavePdfFileBrowser(_nameBook.text);
 
                 if (!string.IsNullOrEmpty(pathToBook))
+                {
                     await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, sizePage);
 
-                //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирована");
-                Debug.Log("Книга экспортирована");
+                    //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирована");
+                    Debug.Log("Книга экспортирована");
+                }
             }
             else
             {
@@ -177,11 +190,10 @@ public class EditorBook : Singleton<EditorBook>
                 await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, sizePage);
 
                 MenuSceneController.Instance.CreateBook(pathToBook);
-                _undoControllerComponent.ClearHistory();
+                MenuSceneController.Instance.ReturnLibary();
 
                 //Notifier.Instance.Notify(NotifyType.Success, "Книга cохранена");
                 Debug.Log("Книга сохранена");
-                MenuSceneController.Instance.ReturnLibary();
             }
         }
         catch (Exception e)
@@ -190,7 +202,7 @@ public class EditorBook : Singleton<EditorBook>
             Debug.LogWarning($"Failed to save book: {e.Message}");
         }
 
-        LoadinScreen(false);
+        MenuSceneController.Instance.LoadScreen(false);
     }
 
     private List<Texture2D> CreatePagesForBook()
@@ -210,50 +222,42 @@ public class EditorBook : Singleton<EditorBook>
 
     private bool CheckingForCorrectnessData()
     {
-        if (_pages.Count < _minPageCount)
-        {
-            Debug.Log("Должно быть минимум две страницы!");
-            //Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
-            return false;
-        }
-        else if (string.IsNullOrWhiteSpace(_nameBook.text) && !_coverExist)
-        {
-            Debug.Log("Заполните обязательные поля");
-            //Notifier.Instance.Notify(NotifyType.Error, "Заполните обязательные поля");
-            _errorName.Highlight();
-            _errorCover.Highlight();
-            return false;
-        }
-        else if (string.IsNullOrWhiteSpace(_nameBook.text))
-        {
-            Debug.Log("Отсутствует название книги");
-            //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует название книги");
-            _errorName.Highlight();
-            return false;
-        }
-        else if (!_coverExist)
-        {
-            Debug.Log("Отсутствует обложка");
-            //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует обложка");
-            _errorCover.Highlight();
-            return false;
-        }
+        CorrectnessData.Cheeck cheeckInput = CorrectnessData.
+            CheckData(_pages.Count, _coverExist, _nameBook.text);
 
-
-        if (MenuSceneController.Instance.DoesBookExists(_nameBook.text) && _editBook == null)
+        switch (cheeckInput)
         {
-            return false;
+            case CorrectnessData.Cheeck.NotMinPage:
+                Debug.Log("Должно быть минимум две страницы!");
+                //Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
+                return false;
+            case CorrectnessData.Cheeck.NullAll:
+                Debug.Log("Заполните обязательные поля");
+                //Notifier.Instance.Notify(NotifyType.Error, "Заполните обязательные поля");
+                _errorName.Highlight();
+                _errorCover.Highlight();
+                return false;
+            case CorrectnessData.Cheeck.NullName:
+                Debug.Log("Отсутствует название книги");
+                //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует название книги");
+                _errorName.Highlight();
+                return false;
+            case CorrectnessData.Cheeck.NotCover:
+                Debug.Log("Отсутствует обложка");
+                //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует обложка");
+                _errorCover.Highlight();
+                return false;
+            case CorrectnessData.Cheeck.Completed:
+                return true;
+            default:
+                return false;
         }
-        else if (_editBook)
-        {
-            MenuSceneController.Instance.DeletedBook(_editBook);
-        }
-
-        return true;
     }
 
     public async void AddCoverBook()
     {
+        TakeScreenShotCurrentPage();
+
         string pathToImage = FileManager.SelectImageInBrowser();
 
         if (!string.IsNullOrWhiteSpace(pathToImage))
@@ -295,9 +299,9 @@ public class EditorBook : Singleton<EditorBook>
         RefeshPages();
     }
 
-    public void TakeScreenShotCurrentPage()
+    private void TakeScreenShotCurrentPage()
     {
-        if (_undoControllerComponent.GetCountStack())
+        if (_undoControllerComponent.ExistsUndo())
         {
             _screenshotHandler.TakeScreenshot(_pages[_currentIndexPage].gameObject, _currentIndexPage);
             _undoControllerComponent.ClearHistory();
@@ -315,6 +319,8 @@ public class EditorBook : Singleton<EditorBook>
 
     public void SetCurrentPage(int indexPage)
     {
+        TakeScreenShotCurrentPage();
+
         _pages[_currentIndexPage].gameObject.SetActive(false);
         _pagesPreviews[_currentIndexPage].SelectedPage(false);
 

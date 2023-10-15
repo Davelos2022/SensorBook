@@ -19,8 +19,6 @@ public class Book : MonoBehaviour
     private Button _favoriteBookBTN;
     [SerializeField]
     private GameObject _selectionFavoriteBTN;
-    [SerializeField]
-    private GameObject _loadingScreen;
     [Space]
     [Header("Admin Panel")]
     [SerializeField]
@@ -154,12 +152,10 @@ public class Book : MonoBehaviour
 
     private IEnumerator LoadBook(_stateBook stateBook)
     {
-        _loadingScreen.SetActive(true);
+        MenuSceneController.Instance.LoadScreen(true, "Загружаем страницы книги..");
 
         yield return new WaitForSeconds(1f);
         _pagesBook = PdfFileManager.OpenPDFfile(_pathToPDF);
-
-        _loadingScreen.SetActive(false);
 
         switch (stateBook)
         {

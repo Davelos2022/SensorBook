@@ -405,7 +405,6 @@ GameObject:
   - component: {fileID: 8897571863576982947}
   - component: {fileID: 3339918637989116290}
   - component: {fileID: 9200497633488555411}
-  - component: {fileID: 2310204842554646573}
   - component: {fileID: 2536839921102033696}
   m_Layer: 5
   m_Name: PagePreviewPrefab
@@ -457,19 +456,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2310204842554646573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4941524697195904298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d38ab1b13deda49b01fa5877420d70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _distance: 15
 --- !u!114 &2536839921102033696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,6 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2b19b8dc9e7fb848938fda312166331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _typePreview: 0
   _pageBTN: {fileID: 6018923388777807293}
   _deletedBTN: {fileID: 6511285646532381844}
   _imageBox: {fileID: 7500681711004767069}

@@ -33,7 +33,7 @@ public class LeftPanelEditor : MonoBehaviour
 
     private void BackCLick()
     {
-        if (EditorBook.Instance.UndoControllerComponent.GetCountStack())
+        if (EditorBook.Instance.ExistsUndo())
             Info.Instance.ShowBox("Вы точно хотите выйти, внесенные изменения будут потеряны?", 
                 ReturnInLibbary, null, null, "Да, выйти", "Отмена");
         else
@@ -73,7 +73,6 @@ public class LeftPanelEditor : MonoBehaviour
 
     private void ReturnInLibbary()
     {
-        EditorBook.Instance.UndoControllerComponent.ClearHistory();
         MenuSceneController.Instance.ReturnLibary();
     }
 }

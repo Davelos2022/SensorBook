@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System;
 using VolumeBox.Toolbox;
+using Cysharp.Threading.Tasks;
+using TMPro;
 
 public class MenuSceneController : Singleton<MenuSceneController>
 {
@@ -18,6 +20,11 @@ public class MenuSceneController : Singleton<MenuSceneController>
     private GameObject _imageIfNullBook;
     [SerializeField]
     private GameObject _fadeMenu;
+    [Space]
+    [SerializeField]
+    private GameObject _loadScreen;
+    [SerializeField]
+    private TextMeshProUGUI _loadText;
 
     private Scene _loaderScene;
 
@@ -196,18 +203,18 @@ public class MenuSceneController : Singleton<MenuSceneController>
             _imageIfNullBook.SetActive(true);
     }
 
-    public void EditorBook(Book editBook = null)
+    public async void EditorBook(Book editBook = null)
     {
         if (editBook != null)
             _currentBook = editBook;
 
-        StartCoroutine(LoadSceneAsync("SensorBook_EditorBook"));
+        await LoadSceneAsync("SensorBook_EditorBook");
     }
 
-    public void BookMode(Book book)
+    public async void BookMode(Book book)
     {
         _currentBook = book;
-        StartCoroutine(LoadSceneAsync("SensorBook_BookMode"));
+        await LoadSceneAsync("SensorBook_BookMode");
     }
 
     public void ReturnLibary()
@@ -221,7 +228,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
         SceneManager.UnloadSceneAsync(_loaderScene);
     }
 
-    private IEnumerator LoadSceneAsync(string sceneName)
+    private async UniTask LoadSceneAsync(string sceneName)
     {
         _fadeMenu.SetActive(false);
         AsyncOperation asyncLoad = SceneManager.
@@ -229,9 +236,16 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
         while (!asyncLoad.isDone)
         {
-            yield return null;
+            await UniTask.Yield();
         }
 
         _loaderScene = SceneManager.GetSceneByName(sceneName);
+        LoadScreen(false);
+    }
+
+    public void LoadScreen(bool active, string textLoad = null)
+    {
+        _loadScreen.SetActive(active);
+        _loadText.text = textLoad;
     }
 }

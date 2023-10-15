@@ -22,7 +22,7 @@ public class UndoControllerComponent : MonoBehaviour
         UndoController.ClearHistory();
     }
 
-    public bool GetCountStack()
+    public bool ExistsUndo()
     {
         if (UndoController.GetCountStackUndo())
             return true;

@@ -113,7 +113,8 @@ public abstract class PdfFileManager : FileManager
     public async static UniTask SaveBookInPDF(string path, List<Texture2D> pagesTexture, RectTransform sizePage)
     {
         await RecoveryImagePage(pagesTexture);
-        await CreateDocumentPDF((int)sizePage.rect.width, (int)sizePage.rect.height, path);
+        await CreateDocumentPDF((int)sizePage.rect.width
+            , (int)sizePage.rect.height, path);
         await DeletedRecoveryImage();
     }
 
@@ -129,7 +130,7 @@ public abstract class PdfFileManager : FileManager
     private static async UniTask CreateDocumentPDF(int width, int height, string pathToSave)
     {
         Rectangle sizeDocPage = new Rectangle(width, height);
-        Document document = new Document(sizeDocPage);
+        Document document = new Document(sizeDocPage, 0,0,0,0);
         PdfWriter.GetInstance(document, new FileStream($"{pathToSave}", FileMode.Create));
 
         await AddPageInDocument(document);
@@ -142,6 +143,7 @@ public abstract class PdfFileManager : FileManager
         var files = info.GetFiles().Where(x => x.Extension.ToLower() == ".png").
             OrderBy(f => f.CreationTime).ToList().ConvertAll(x => x.FullName).ToArray();
 
+        document.SetMargins(0, 0, 0, 0);
         document.Open();
 
         foreach (var page in files)
@@ -160,6 +162,8 @@ public abstract class PdfFileManager : FileManager
     {
         Paragraph paragraph = new Paragraph();
         paragraph.Alignment = Element.ALIGN_CENTER;
+        paragraph.SpacingAfter = 0;
+        paragraph.SpacingBefore = 0;
         return paragraph;
     }
 

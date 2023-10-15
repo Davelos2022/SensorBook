@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using VolumeBox.Toolbox;
 
+
 [RequireComponent(typeof(CanvasGroup))]
 public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler, IEndDragHandler, IDragHandler, IPointerClickHandler
 {
