@@ -28,8 +28,6 @@ public class ResizePoint : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
         }
     }
 
-
-
     public void Initialize(RectResizer resizer)
     {
         _resizer = resizer;
@@ -47,8 +45,6 @@ public class ResizePoint : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
 
         _data = eventData;
         _resizer.DragHandle(this);
-
-
     }
 
     public void OnEndDrag(PointerEventData eventData)

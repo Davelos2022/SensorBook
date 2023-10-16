@@ -102,13 +102,12 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
         _canvasGroup.alpha = 1f;
         OnDragEnd.Invoke();
 
-
         EditorBook.Instance.TakeScreenShotCurrentPage();
     }
 
     private void DeletedObject()
     {
-        Destroy(this.gameObject);
+        EditorBook.Instance.DeletedObject(this.gameObject);
     }
 
     public void DisableSelection(bool active)
@@ -122,6 +121,7 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
         DisableSelection(true);
         Messager.Instance.Send(new SetActiveSelectionFrameMessage { exception = this });
     }
+
 }
 
 public class SetActiveSelectionFrameMessage : Message

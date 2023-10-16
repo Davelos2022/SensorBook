@@ -82,7 +82,6 @@ public class TextSettingsPanel : MonoBehaviour
         screenPosition = Camera.main.WorldToScreenPoint(Vector3.zero);
     }
 
-
     private void OnDisable()
     {
         _boldText.onClick.RemoveListener(SetBoldText);

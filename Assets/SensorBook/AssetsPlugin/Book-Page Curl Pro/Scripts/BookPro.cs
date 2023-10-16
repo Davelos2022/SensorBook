@@ -306,18 +306,18 @@ public class BookPro : MonoBehaviour
             //Show the back page of all previous papers
             for (int i = 0; i <= previousPaper; i++)
             {
-                BookUtility.ShowPage(papers[i].Back);
+                BookUtility.ShowPage(papers[i].Front);
                 papers[i].Back.transform.SetParent(PegesRectTransdorm.transform);
                 papers[i].Back.transform.SetSiblingIndex(i);
-                BookUtility.CopyTransform(LeftPageTransform.transform, papers[i].Back.transform);
+                BookUtility.CopyTransform(LeftPageTransform.transform, papers[i].Front.transform);
             }
 
             //Show the front page of all next papers
             for (int i = papers.Count - 1; i >= currentPaper; i--)
             {
-                BookUtility.ShowPage(papers[i].Front);
+                BookUtility.ShowPage(papers[i].Back);
                 papers[i].Front.transform.SetSiblingIndex(papers.Count - i + previousPaper);
-                BookUtility.CopyTransform(RightPageTransform.transform, papers[i].Front.transform);
+                BookUtility.CopyTransform(RightPageTransform.transform, papers[i].Back.transform);
             }
 
         }

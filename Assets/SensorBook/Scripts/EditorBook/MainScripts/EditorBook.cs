@@ -31,8 +31,8 @@ public class EditorBook : Singleton<EditorBook>
     private List<Page> _pages = new List<Page>();
     private List<PagePreview> _pagesPreviews = new List<PagePreview>();
 
-    private int _currentIndexPage;
     private Book _editBook = null;
+    private int _currentIndexPage;
     private bool _coverExist = false;
 
     private void Awake()
@@ -143,12 +143,20 @@ public class EditorBook : Singleton<EditorBook>
         {
             _pages[_currentIndexPage].ClearPage();
             _pagesPreviews[_currentIndexPage].SetImage(null);
+
             _undoControllerComponent.ClearHistory();
+            TakeScreenShotCurrentPage();
         }
         else
         {
             return;
         }
+    }
+
+    public void DeletedObject(GameObject gameObject)
+    {
+        Destroy(gameObject);
+        TakeScreenShotCurrentPage();
     }
 
     public async void SaveOrExportBook(bool export = false)
@@ -296,15 +304,7 @@ public class EditorBook : Singleton<EditorBook>
 
     public void TakeScreenShotCurrentPage()
     {
-        if (_undoControllerComponent.ExistsUndo())
-        {
-            _screenshotHandler.TakeScreenshot(_pages[_currentIndexPage].gameObject, _currentIndexPage);
-            _undoControllerComponent.ClearHistory();
-        }
-        else
-        {
-            return;
-        }
+        _screenshotHandler.TakeScreenshot(_pages[_currentIndexPage].gameObject, _currentIndexPage);
     }
 
     public void SetImagePreviewPage(Texture2D texture, int indexPage)
@@ -314,7 +314,7 @@ public class EditorBook : Singleton<EditorBook>
 
     public void SetCurrentPage(int indexPage)
     {
-        TakeScreenShotCurrentPage();
+        _undoControllerComponent.ClearHistory();
 
         _pages[_currentIndexPage].gameObject.SetActive(false);
         _pagesPreviews[_currentIndexPage].SelectedPage(false);
