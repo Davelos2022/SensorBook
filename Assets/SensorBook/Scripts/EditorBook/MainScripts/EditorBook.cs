@@ -161,9 +161,6 @@ public class EditorBook : Singleton<EditorBook>
         else if (_editBook != null)
             MenuSceneController.Instance.DeletedBook(_editBook);
 
-        TakeScreenShotCurrentPage();
-        await UniTask.Delay(100);
-
         MenuSceneController.Instance.LoadScreen(true, "Создаем книгу...");
 
         try
@@ -256,8 +253,6 @@ public class EditorBook : Singleton<EditorBook>
 
     public async void AddCoverBook()
     {
-        TakeScreenShotCurrentPage();
-
         string pathToImage = FileManager.SelectImageInBrowser();
 
         if (!string.IsNullOrWhiteSpace(pathToImage))
@@ -299,7 +294,7 @@ public class EditorBook : Singleton<EditorBook>
         RefeshPages();
     }
 
-    private void TakeScreenShotCurrentPage()
+    public void TakeScreenShotCurrentPage()
     {
         if (_undoControllerComponent.ExistsUndo())
         {

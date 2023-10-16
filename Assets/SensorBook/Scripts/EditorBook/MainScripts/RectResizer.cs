@@ -68,8 +68,8 @@ public class RectResizer : MonoBehaviour
 
         var aspect = targetRect.rect.width / targetRect.rect.height;
 
-        scaleDiff.x *= point.NormalizedPoint.x;
-        scaleDiff.y *= point.NormalizedPoint.y;
+        scaleDiff.x *= point.NormalizedPoint.x * 2;
+        scaleDiff.y *= point.NormalizedPoint.y * 2;
 
         setHeight += scaleDiff.y;
         setWidth += scaleDiff.x;
@@ -80,6 +80,8 @@ public class RectResizer : MonoBehaviour
         {
             _text.fontSize += scaleDiff.y / 5f;
             _text.fontSize = Mathf.Clamp(_text.fontSize, _minTextSize, _maxTextSize);
+
+            transform.GetComponent<TextSettingsPanel>().SetSizeInPanel((int)_text.fontSize);
         }
 
         setHeight = Mathf.Clamp(setHeight, _minHeight, float.MaxValue);

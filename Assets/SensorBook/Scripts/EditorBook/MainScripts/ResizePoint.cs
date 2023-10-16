@@ -55,5 +55,6 @@ public class ResizePoint : MonoBehaviour, IBeginDragHandler, IEndDragHandler, ID
     {
         _dragging = false;
         _resizer.DragEndHandle(eventData);
+        EditorBook.Instance.TakeScreenShotCurrentPage();
     }
 }

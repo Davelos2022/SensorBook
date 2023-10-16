@@ -101,6 +101,9 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.alpha = 1f;
         OnDragEnd.Invoke();
+
+
+        EditorBook.Instance.TakeScreenShotCurrentPage();
     }
 
     private void DeletedObject()

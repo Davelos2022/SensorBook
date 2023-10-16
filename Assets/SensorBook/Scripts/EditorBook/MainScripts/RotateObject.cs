@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler
 {
     [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private float rotationSpeed = 1f;
+    [SerializeField] private float rotationSpeed = 15f;
 
     private Vector2 pivotPosition;
     private Vector2 initialMousePosition;
@@ -23,7 +23,7 @@ public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler
     {
         float mouseX = eventData.position.x - initialMousePosition.x;
 
-        float rotationAngle = -mouseX * rotationSpeed;
+        float rotationAngle = -mouseX / rotationSpeed;
 
         rectTransform.pivot = pivotPosition; 
         rectTransform.localRotation = Quaternion.Euler(0f, 0f, rotationAngle);

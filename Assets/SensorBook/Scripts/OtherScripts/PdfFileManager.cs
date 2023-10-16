@@ -4,7 +4,6 @@ using iTextSharp.text.pdf;
 using Paroxe.PdfRenderer;
 using SFB;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
