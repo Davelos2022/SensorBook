@@ -9,6 +9,8 @@ public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     private Vector2 pivotPosition;
     private Vector2 initialMousePosition;
     private float speed = 0.2f;
+
+    private Quaternion _startRotation;
     private void OnEnable()
     {
         pivotPosition = rectTransform.pivot;
@@ -17,6 +19,8 @@ public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         initialMousePosition = eventData.position;
+
+        _startRotation = rectTransform.rotation;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -31,7 +35,14 @@ public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        SaveStepRotation();
         EditorBook.Instance.TakeScreenShotCurrentPage();
+
+    }
+
+    private void SaveStepRotation()
+    {
+        UndoRedoSystem.Instance.AddAction(new RotationObjectAction(rectTransform, _startRotation, rectTransform.rotation));
     }
 }
 

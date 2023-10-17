@@ -33,21 +33,25 @@ public class LeftPanelEditor : MonoBehaviour
 
     private void BackCLick()
     {
-        if (EditorBook.Instance.ExistsUndo())
-            Info.Instance.ShowBox("Вы точно хотите выйти, внесенные изменения будут потеряны?", 
+        if (UndoRedoSystem.Instance.GetCountUndo() > 0)
+        {
+            Info.Instance.ShowBox("Вы точно хотите выйти, внесенные изменения будут потеряны?",
                 ReturnInLibbary, null, null, "Да, выйти", "Отмена");
+        }
         else
+        {
             ReturnInLibbary();
+        }
     }
 
     private void UndoCLick()
     {
-        EditorBook.Instance.Undo();
+        UndoRedoSystem.Instance.Undo();
     }
 
     private void RedoClick()
     {
-        EditorBook.Instance.Redo();
+        UndoRedoSystem.Instance.Redo();
     }
 
     private void AddTextClick()
@@ -62,7 +66,7 @@ public class LeftPanelEditor : MonoBehaviour
 
     private void ClearPageClick()
     {
-        Info.Instance.ShowBox("Вы действительно хотите очистить страницу?", 
+        Info.Instance.ShowBox("Вы действительно хотите очистить страницу?",
             ClearPage, null, null, "Очистить страницу", "Отмена");
     }
 

@@ -24,6 +24,10 @@ public class RectResizer : MonoBehaviour
     private float _minTextSize = 20f;
     private float _maxTextSize = 70f;
 
+    
+    private float _currentWidth;
+    private float _currentHeight;
+
     private Vector2 _screenRatio
     {
         get
@@ -47,6 +51,9 @@ public class RectResizer : MonoBehaviour
     {
         _initialRectSize.x = targetRect.sizeDelta.x;
         _initialRectSize.y = targetRect.sizeDelta.y;
+
+        _currentWidth = targetRect.sizeDelta.x;
+        _currentHeight = targetRect.sizeDelta.y;
 
         OnResizeStart.Invoke();
     }
@@ -81,7 +88,7 @@ public class RectResizer : MonoBehaviour
             _text.fontSize += scaleDiff.y / 5f;
             _text.fontSize = Mathf.Clamp(_text.fontSize, _minTextSize, _maxTextSize);
 
-            transform.GetComponent<TextSettingsPanel>().SetSizeInPanel((int)_text.fontSize);
+            transform.GetComponent<TextSettingsPanel>().SetSizeFontDropDown((int)_text.fontSize);
         }
 
         setHeight = Mathf.Clamp(setHeight, _minHeight, float.MaxValue);
@@ -101,10 +108,9 @@ public class RectResizer : MonoBehaviour
 
         SetPivot(targetRect, oppositePoint);
 
+
         targetRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, setWidth);
         targetRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, setHeight);
-
-
     }
 
     private void SetPivot(RectTransform rectTransform, Vector2 pivot)
@@ -123,7 +129,16 @@ public class RectResizer : MonoBehaviour
         OnResizeEnd.Invoke();
 
         SetPivot(targetRect, Vector2.one * 0.5f);
+
+        SaveStepScale();
     }
+
+    private void SaveStepScale()
+    {
+        UndoRedoSystem.Instance.AddAction(new ScaleObjectAction
+            (targetRect, _currentWidth, _currentHeight, targetRect.sizeDelta.x, targetRect.sizeDelta.y));
+    }
+
 
     public Vector2 PointerDeltaToCanvas(Vector2 point)
     {

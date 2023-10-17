@@ -973,6 +973,7 @@ RectTransform:
   - {fileID: 1876387080}
   - {fileID: 2030624413}
   - {fileID: 1339170491}
+  - {fileID: 1942051307}
   - {fileID: 8219988668860442038}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1162,7 +1163,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1793292624}
-  - component: {fileID: 1793292625}
   - component: {fileID: 1793292626}
   - component: {fileID: 1793292628}
   - component: {fileID: 1793292627}
@@ -1198,18 +1198,6 @@ RectTransform:
   m_AnchoredPosition: {x: -249.66762, y: -37.870987}
   m_SizeDelta: {x: 526.36, y: 87.14258}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1793292625
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793292623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb83967a9596e7c4ebf7df36b013784b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1793292626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1348,6 +1336,55 @@ Transform:
   m_Father: {fileID: 1295369147}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1942051306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1942051307}
+  - component: {fileID: 1942051308}
+  m_Layer: 5
+  m_Name: '[UndoRedoSystem]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1942051307
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942051306}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1295369147}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1942051308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942051306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ba8dc457c38b4a4184a5569203d87ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2004856781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,7 +1565,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2030624413}
   - component: {fileID: 2030624414}
-  - component: {fileID: 2030624415}
   m_Layer: 5
   m_Name: '[EDITOR]'
   m_TagString: Untagged
@@ -1571,7 +1607,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _screenshotHandler: {fileID: 3052799183359735751}
-  _undoControllerComponent: {fileID: 2030624415}
   _nameBook: {fileID: 5590911907268172314}
   _coverBook: {fileID: 6966176125775654696}
   _errorName: {fileID: 1739750474}
@@ -1582,18 +1617,6 @@ MonoBehaviour:
   _scrollPagesView: {fileID: 2273232835102064381}
   _textPrefab: {fileID: 2460595656622717767, guid: 99eae41f6337c7d4994b328a954abb9b, type: 3}
   _imagePrefab: {fileID: 2460595656622717767, guid: fe7bd32209b59b848b8a2738dce781cc, type: 3}
---- !u!114 &2030624415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2030624412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb83967a9596e7c4ebf7df36b013784b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2040203629
 GameObject:
   m_ObjectHideFlags: 0
@@ -8861,7 +8884,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1295369147}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

@@ -2,12 +2,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
+
 
 public class TextSettingsPanel : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _currentText;
-    [SerializeField] private RectTransform _rectTransformText;
     [SerializeField] private TextMeshProUGUI _placeholderText;
 
     [Header("Text Settings")]
@@ -20,30 +19,23 @@ public class TextSettingsPanel : MonoBehaviour
     [Header("UI Setting textPanel")]
     [SerializeField] private Button _boldText;
     [SerializeField] private GameObject _selectedBold;
+    [Space]
     [SerializeField] private Button _italicText;
     [SerializeField] private GameObject _selectedItalic;
+    [Space]
     [SerializeField] private Button _underLineText;
     [SerializeField] private GameObject _selectedUnderLine;
+    [Space]
     [SerializeField] private Button _colorButton;
     [Space]
     [SerializeField] private Button _centerTextPositon;
     [SerializeField] private GameObject _selectedCenter;
+    [Space]
     [SerializeField] private Button _leftTextPosition;
     [SerializeField] private GameObject _selectedLeftText;
+    [Space]
     [SerializeField] private Button _rightTextPosition;
     [SerializeField] private GameObject _selectedRightText;
-
-    [Header("FontSettingsPanel")]
-    [SerializeField] private RectTransform _panelSettings;
-    [SerializeField] private GameObject _downPanel;
-    [SerializeField] private GameObject _upPanel;
-    [SerializeField] private Transform _upPosition;
-    [SerializeField] private Transform _downPosition;
-
-    private Vector3 screenPosition;
-    private float _offset = 150f;
-    private bool _isMoveUp;
-    private bool _isMoveDown;
 
     private List<string> _fontsOptionsDropdown = new List<string>();
     private List<string> _fontsSizeOptionsDropdown = new List<string>();
@@ -52,6 +44,8 @@ public class TextSettingsPanel : MonoBehaviour
     private bool _isBold;
     private bool _isItalic;
     private bool _isUnderLine;
+
+    private string _beforeText;
 
     private void OnEnable()
     {
@@ -63,6 +57,9 @@ public class TextSettingsPanel : MonoBehaviour
         _leftTextPosition.onClick.AddListener(LeftPositionText);
         _rightTextPosition.onClick.AddListener(RightPostionText);
         _colorButton.onClick.AddListener(OpenColorSettings);
+
+        _fontSizeDropDown.onValueChanged.AddListener(SetSizeFontText);
+        _fontsDropDown.onValueChanged.AddListener(SetFontText);
 
         for (int x = 0; x < _fonts.Length; x++)
         {
@@ -78,8 +75,6 @@ public class TextSettingsPanel : MonoBehaviour
 
         _fontSizeDropDown.AddOptions(_fontsSizeOptionsDropdown);
         _fontsDropDown.AddOptions(_fontsOptionsDropdown);
-
-        screenPosition = Camera.main.WorldToScreenPoint(Vector3.zero);
     }
 
     private void OnDisable()
@@ -93,47 +88,11 @@ public class TextSettingsPanel : MonoBehaviour
         _rightTextPosition.onClick.RemoveListener(RightPostionText);
         _colorButton.onClick.RemoveListener(OpenColorSettings);
 
+        _fontSizeDropDown.onValueChanged.RemoveListener(SetSizeFontText);
+        _fontsDropDown.onValueChanged.RemoveListener(SetFontText);
+
         _fontsOptionsDropdown.Clear();
-        _fontsDropDown.ClearOptions(); 
-    }
-
-    private void Update()
-    {
-        if (_rectTransformText.anchoredPosition.y > (screenPosition.y - _offset) && !_isMoveUp)
-        {
-            MovePanelToPosition(_downPosition);
-            _isMoveDown = false;
-            _isMoveUp = true;
-
-            _downPanel.SetActive(false);
-            _upPanel.SetActive(true);
-        }
-
-        if (_rectTransformText.anchoredPosition.y < screenPosition.y - (Screen.height - _offset) && !_isMoveDown && _isMoveUp)
-        {
-            MovePanelToPosition(_upPosition);
-            _isMoveUp = false;
-            _isMoveDown = true;
-
-            _downPanel.SetActive(true);
-            _upPanel.SetActive(false);
-        }
-    }
-
-    private void MovePanelToPosition(Transform target)
-    {
-        _panelSettings.DOMove(target.position, 0.2f);
-    }
-    public void OnSizeValueChanged(int value)
-    {
-        _currentText.fontSize = float.Parse(_fontSizeDropDown.options[value].text);
-        _fontSizeDropDown.value = value;
-    }
-
-    public void OnFontValueChanged(int value)
-    {
-        _currentText.font = _fonts[value];
-        _placeholderText.font = _fonts[value];
+        _fontsDropDown.ClearOptions();
     }
 
     private void SetBoldText()
@@ -142,9 +101,14 @@ public class TextSettingsPanel : MonoBehaviour
         _selectedBold.SetActive(_isBold);
 
         if (_isBold)
+        {
+            SaveStepFontStyle(FontStyles.Bold, _selectedBold);
             _currentText.fontStyle = _currentText.fontStyle | FontStyles.Bold;
+        }
         else
+        {
             _currentText.fontStyle = _currentText.fontStyle -= FontStyles.Bold;
+        }
 
         _placeholderText.fontStyle = _currentText.fontStyle;
     }
@@ -155,9 +119,14 @@ public class TextSettingsPanel : MonoBehaviour
         _selectedItalic.SetActive(_isItalic);
 
         if (_isItalic)
+        {
+            SaveStepFontStyle(FontStyles.Italic, _selectedItalic);
             _currentText.fontStyle = _currentText.fontStyle | FontStyles.Italic;
+        }
         else
+        {
             _currentText.fontStyle = _currentText.fontStyle -= FontStyles.Italic;
+        }
 
         _placeholderText.fontStyle = _currentText.fontStyle;
     }
@@ -165,14 +134,33 @@ public class TextSettingsPanel : MonoBehaviour
     private void SetUnderLineText()
     {
         _isUnderLine = !_isUnderLine;
-        _selectedUnderLine.SetActive(_isUnderLine);
+        _selectedUnderLine.SetActive(_selectedUnderLine);
 
         if (_isUnderLine)
+        {
+            SaveStepFontStyle(FontStyles.Underline, _selectedUnderLine);
             _currentText.fontStyle = _currentText.fontStyle | FontStyles.Underline;
+        }
         else
+        {
             _currentText.fontStyle = _currentText.fontStyle -= FontStyles.Underline;
+        }
 
         _placeholderText.fontStyle = _currentText.fontStyle;
+    }
+
+    private void SetSizeFontText(int indexSizeFont)
+    {
+        float currentSize = _currentText.fontSize;
+
+        _currentText.fontSize = _fontSize[indexSizeFont];
+
+        SaveStepValueSize(currentSize, _fontSize[indexSizeFont], _fontSizeDropDown);
+    }
+
+    private void SetFontText(int fontsIndex)
+    {
+        _currentText.font = _fonts[fontsIndex];
     }
 
     private void LeftPositionText()
@@ -202,19 +190,45 @@ public class TextSettingsPanel : MonoBehaviour
         _currentText.alignment = TextAlignmentOptions.Center;
     }
 
-    public void SetColor(Color color)
-    {
-        _currentText.color = color;
-    }
-
     public void OpenColorSettings()
     {
         _colorMode = !_colorMode;
         _flexibleColorPicker.gameObject.SetActive(_colorMode);
     }
 
-    public void SetSizeInPanel(int size)
+
+    public void SetColorText(Color color)
     {
+        _currentText.color = color;
+    }
+
+    public void SetSizeFontDropDown(int size)
+    {
+        float currentSize = _currentText.fontSize;
+
         _fontSizeDropDown.captionText.text = size.ToString();
+
+        SaveStepValueSize(currentSize, size, _fontSizeDropDown);
+    }
+
+    private void SaveStepFontStyle(FontStyles styles, GameObject selected)
+    {
+        UndoRedoSystem.Instance.AddAction(new ChangeTextPropertiesAction
+            (_currentText, _currentText.fontStyle, _currentText.fontStyle | styles, selected));
+    }
+
+    private void SaveStepValueText()
+    {
+        UndoRedoSystem.Instance.AddAction(new ChangeTextValueAction(_currentText, _beforeText, _currentText.text));
+    }
+
+    public void SaveStepValueSize(float oldSizeFont, float newSizeFont, TMP_Dropdown panelFontSize)
+    {
+        UndoRedoSystem.Instance.AddAction(new TextSizeFontAction(_currentText, oldSizeFont, newSizeFont, panelFontSize));
+    }
+
+    public void SaveStepValueFont(TMP_FontAsset oldFont, TMP_FontAsset newFont, TMP_Dropdown panelFonts)
+    {
+
     }
 }

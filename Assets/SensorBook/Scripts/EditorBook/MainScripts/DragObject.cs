@@ -17,8 +17,8 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
 
     private RectTransform _rectTransform;
     private CanvasGroup _canvasGroup;
-
-    public UnityEvent OnDragEnd;
+    private Vector3 _originalPosition;
+    
 
     private void Awake()
     {
@@ -55,6 +55,8 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
 
         _canvasGroup.alpha = 0.7f;
         _canvasGroup.blocksRaycasts = false;
+
+        _originalPosition = _rectTransform.anchoredPosition;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -100,9 +102,16 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
     {
         _canvasGroup.blocksRaycasts = true;
         _canvasGroup.alpha = 1f;
-        OnDragEnd.Invoke();
+
+        SaveUndoStack();
 
         EditorBook.Instance.TakeScreenShotCurrentPage();
+    }
+
+    private void SaveUndoStack()
+    {
+        UndoRedoSystem.Instance.AddAction(new MoveObjectAction
+            (_rectTransform, _originalPosition, _rectTransform.anchoredPosition));
     }
 
     private void DeletedObject()
@@ -121,7 +130,6 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
         DisableSelection(true);
         Messager.Instance.Send(new SetActiveSelectionFrameMessage { exception = this });
     }
-
 }
 
 public class SetActiveSelectionFrameMessage : Message

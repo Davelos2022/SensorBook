@@ -9,7 +9,6 @@ using System;
 public class EditorBook : Singleton<EditorBook>
 {
     [SerializeField] private ScreenshotHandlerPage _screenshotHandler;
-    [SerializeField] private UndoControllerComponent _undoControllerComponent;
     [Space]
     [SerializeField] private TMP_InputField _nameBook;
     [SerializeField] private PagePreview _coverBook;
@@ -87,20 +86,6 @@ public class EditorBook : Singleton<EditorBook>
         pageRectTransform.sizeDelta = new Vector2(textureWidth, textureHeight);
     }
 
-    public void Undo()
-    {
-        _undoControllerComponent.Undo();
-    }
-
-    public void Redo()
-    {
-        _undoControllerComponent.Redo();
-    }
-
-    public bool ExistsUndo()
-    {
-        return _undoControllerComponent.ExistsUndo();
-    }
 
     public async void AddImage()
     {
@@ -117,7 +102,7 @@ public class EditorBook : Singleton<EditorBook>
         }
     }
 
-    private void CreateImage(Texture2D texture, int indexPage)
+    private void CreateImage(Texture2D texture, int indexPage, bool openEdit = false)
     {
         GameObject image = Instantiate(_imagePrefab, _pages[indexPage].transform);
         image.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -126,6 +111,9 @@ public class EditorBook : Singleton<EditorBook>
         rawImage.texture = texture;
 
         rawImage.GetComponent<RawImageAspectPreserver>().SetAspect();
+
+        if (!openEdit)
+            UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(image));
     }
 
     public void AddText()
@@ -133,6 +121,8 @@ public class EditorBook : Singleton<EditorBook>
         GameObject text = Instantiate(_textPrefab, _pages[_currentIndexPage].transform);
         text.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         text.GetComponentInChildren<TMP_InputField>().Select();
+
+        UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(text));
     }
 
     public void ClearPage()
@@ -144,7 +134,7 @@ public class EditorBook : Singleton<EditorBook>
             _pages[_currentIndexPage].ClearPage();
             _pagesPreviews[_currentIndexPage].SetImage(null);
 
-            _undoControllerComponent.ClearHistory();
+            UndoRedoSystem.Instance.ClearHistory();
             TakeScreenShotCurrentPage();
         }
         else
@@ -155,7 +145,10 @@ public class EditorBook : Singleton<EditorBook>
 
     public void DeletedObject(GameObject gameObject)
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(gameObject,true));
+        gameObject.SetActive(false);
+
         TakeScreenShotCurrentPage();
     }
 
@@ -314,8 +307,6 @@ public class EditorBook : Singleton<EditorBook>
 
     public void SetCurrentPage(int indexPage)
     {
-        _undoControllerComponent.ClearHistory();
-
         _pages[_currentIndexPage].gameObject.SetActive(false);
         _pagesPreviews[_currentIndexPage].SelectedPage(false);
 
