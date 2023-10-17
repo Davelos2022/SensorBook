@@ -1157,8 +1157,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1209,7 +1209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1246276513736440014}
   m_Layer: 6
-  m_Name: ReSize_Buttoms
+  m_Name: ReSizeButtoms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1566,7 +1566,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _text: {fileID: 8223634635033440719}
-  _TypeRe: 1
+  _type: 1
   resizePoints:
   - {fileID: 618153519540911849}
   - {fileID: 7076377497969653339}
@@ -2074,7 +2074,7 @@ GameObject:
   - component: {fileID: 3531558405754347470}
   - component: {fileID: 3136226594006772892}
   m_Layer: 6
-  m_Name: Resize Points
+  m_Name: SelectedPanhel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2101,7 +2101,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.00012207031, y: -2.3519897}
-  m_SizeDelta: {x: 0, y: 37.844604}
+  m_SizeDelta: {x: 0, y: 45.104607}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1651546441288870406
 CanvasRenderer:
@@ -5089,19 +5089,7 @@ MonoBehaviour:
     m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 320444860821425627}
-        m_TargetAssemblyTypeName: TextSettings, Assembly-CSharp
-        m_MethodName: OnFontValueChanged
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_AlphaFadeSpeed: 0.35
 --- !u!1 &6613877620525086628
 GameObject:
@@ -5690,19 +5678,7 @@ MonoBehaviour:
     m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 320444860821425627}
-        m_TargetAssemblyTypeName: TextSettings, Assembly-CSharp
-        m_MethodName: OnSizeValueChanged
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_AlphaFadeSpeed: 0.35
 --- !u!1 &8066010026996964297
 GameObject:
@@ -6328,8 +6304,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20
-  m_fontSizeBase: 20
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8198,7 +8174,7 @@ GameObject:
   - component: {fileID: 5784437923396102791}
   - component: {fileID: 2874565539672264859}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8223,7 +8199,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.50579834, y: 0.292511}
+  m_AnchoredPosition: {x: 0.5057984, y: 0.29251075}
   m_SizeDelta: {x: -46.5388, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7033556525689314909
@@ -8331,34 +8307,10 @@ MonoBehaviour:
       m_Calls: []
   m_OnSelect:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 320444860821425627}
-        m_TargetAssemblyTypeName: TextSettingsPanel, Assembly-CSharp
-        m_MethodName: OnStartInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_OnDeselect:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 320444860821425627}
-        m_TargetAssemblyTypeName: TextSettingsPanel, Assembly-CSharp
-        m_MethodName: OnEndInput
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_OnTextSelection:
     m_PersistentCalls:
       m_Calls: []

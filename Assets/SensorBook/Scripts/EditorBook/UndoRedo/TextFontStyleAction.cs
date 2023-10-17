@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ChangeTextPropertiesAction : UndoRedoAction
+public class TextFontStyleAction : UndoRedoAction
 {
     private TextMeshProUGUI _textComponent;
     private GameObject _selectedButton;
@@ -11,7 +11,7 @@ public class ChangeTextPropertiesAction : UndoRedoAction
     private FontStyles _originalStyle;
     private FontStyles _newStyle;
 
-    public ChangeTextPropertiesAction(TextMeshProUGUI text, FontStyles original, FontStyles newStyle, GameObject selected)
+    public TextFontStyleAction(TextMeshProUGUI text, FontStyles original, FontStyles newStyle, GameObject selected)
     {
         _textComponent = text;
         _originalStyle = original;

@@ -3,15 +3,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UIElements;
 
 public class RectResizer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
     [Space]
-    [SerializeField] private _typeReSize _TypeRe;
+    [SerializeField] private _typeReSize _type;
     [SerializeField] private List<ResizePoint> resizePoints;
     [SerializeField] private RectTransform constraints;
     [SerializeField] private RectTransform targetRect;
+
+    private TextSettingsPanel TextSettingsPanel;
 
     public UnityEvent OnResizeStart;
     public UnityEvent OnResizeEnd;
@@ -27,6 +30,8 @@ public class RectResizer : MonoBehaviour
     
     private float _currentWidth;
     private float _currentHeight;
+
+    
 
     private Vector2 _screenRatio
     {
@@ -45,7 +50,11 @@ public class RectResizer : MonoBehaviour
         {
             resizePoints[i].Initialize(this);
         }
+
+        if (_type == _typeReSize.Text)
+            TextSettingsPanel = transform.GetComponent<TextSettingsPanel>();
     }
+
 
     public void DragStartHandle(PointerEventData eventData)
     {
@@ -83,12 +92,12 @@ public class RectResizer : MonoBehaviour
 
         var oppositePoint = targetRect.pivot;
 
-        if (_TypeRe == _typeReSize.Text && scaleDiff.x != 0 && scaleDiff.y != 0)
+        if (_type == _typeReSize.Text && scaleDiff.x != 0 && scaleDiff.y != 0)
         {
             _text.fontSize += scaleDiff.y / 5f;
             _text.fontSize = Mathf.Clamp(_text.fontSize, _minTextSize, _maxTextSize);
 
-            transform.GetComponent<TextSettingsPanel>().SetSizeFontDropDown((int)_text.fontSize);
+            TextSettingsPanel.SetSizeFontDropDown((int)_text.fontSize);
         }
 
         setHeight = Mathf.Clamp(setHeight, _minHeight, float.MaxValue);

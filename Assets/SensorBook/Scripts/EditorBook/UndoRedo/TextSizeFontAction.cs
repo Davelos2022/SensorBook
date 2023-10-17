@@ -14,8 +14,8 @@ public class TextSizeFontAction : UndoRedoAction
     public TextSizeFontAction(TextMeshProUGUI text, float oldSize, float newSize, TMP_Dropdown tMP)
     {
         _text = text;
-        _oldSize = oldSize;
-        _newSize = newSize;
+        _oldSize = (int)oldSize;
+        _newSize = (int)newSize;
         tMP_Dropdown = tMP;
     }
 

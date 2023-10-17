@@ -47,7 +47,7 @@ public class TextSettingsPanel : MonoBehaviour
 
     private string _beforeText;
 
-    private void OnEnable()
+    private void Start()
     {
         _boldText.onClick.AddListener(SetBoldText);
         _italicText.onClick.AddListener(SetItalicText);
@@ -77,7 +77,7 @@ public class TextSettingsPanel : MonoBehaviour
         _fontsDropDown.AddOptions(_fontsOptionsDropdown);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _boldText.onClick.RemoveListener(SetBoldText);
         _italicText.onClick.RemoveListener(SetItalicText);
@@ -160,7 +160,11 @@ public class TextSettingsPanel : MonoBehaviour
 
     private void SetFontText(int fontsIndex)
     {
+        TMP_FontAsset currentFont = _currentText.font;
+
         _currentText.font = _fonts[fontsIndex];
+
+        SaveStepValueFont(currentFont, _fonts[fontsIndex], _fontsDropDown);
     }
 
     private void LeftPositionText()
@@ -213,22 +217,18 @@ public class TextSettingsPanel : MonoBehaviour
 
     private void SaveStepFontStyle(FontStyles styles, GameObject selected)
     {
-        UndoRedoSystem.Instance.AddAction(new ChangeTextPropertiesAction
+        UndoRedoSystem.Instance.AddAction(new TextFontStyleAction
             (_currentText, _currentText.fontStyle, _currentText.fontStyle | styles, selected));
-    }
-
-    private void SaveStepValueText()
-    {
-        UndoRedoSystem.Instance.AddAction(new ChangeTextValueAction(_currentText, _beforeText, _currentText.text));
     }
 
     public void SaveStepValueSize(float oldSizeFont, float newSizeFont, TMP_Dropdown panelFontSize)
     {
-        UndoRedoSystem.Instance.AddAction(new TextSizeFontAction(_currentText, oldSizeFont, newSizeFont, panelFontSize));
+        UndoRedoSystem.Instance.AddAction(new TextSizeFontAction
+            (_currentText, oldSizeFont, newSizeFont, panelFontSize));
     }
 
     public void SaveStepValueFont(TMP_FontAsset oldFont, TMP_FontAsset newFont, TMP_Dropdown panelFonts)
     {
-
+        UndoRedoSystem.Instance.AddAction(new TextFontValueAction(_currentText, oldFont, newFont, panelFonts));
     }
 }
