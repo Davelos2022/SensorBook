@@ -452,6 +452,7 @@ MonoBehaviour:
   _pageBTN: {fileID: 6018923388777807293}
   _deletedBTN: {fileID: 6511285646532381844}
   _imageBox: {fileID: 7500681711004767069}
+  _basicImage: {fileID: 2800000, guid: cc8d68749c544fb4aa93122a7d2d0aba, type: 3}
   _rawImageAspect: {fileID: 4436397768688605688}
   _selectedPanel: {fileID: 8641446201046146376}
   _textPage: {fileID: 4597972976816310868}

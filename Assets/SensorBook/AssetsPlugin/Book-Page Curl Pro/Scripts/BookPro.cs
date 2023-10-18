@@ -16,6 +16,7 @@ public class BookPro : MonoBehaviour
     public GameObject PagePrefab;
     public RectTransform BookObject;
     public RectTransform PegesRectTransdorm;
+    public BookModeMenu BookModeMenu;
     [Space]
     public Image ClippingPlane;
     public Image Shadow;
@@ -284,6 +285,14 @@ public class BookPro : MonoBehaviour
 
     }
 
+
+
+    public void NavigationBook(int navigation)
+    {
+        CurrentPaper += navigation;
+        UpdatePages();
+    }
+
     /// <summary>
     /// Update page orders
     /// This function should be called whenever the current page changed, the dragging of the page started or the page has been flipped
@@ -384,6 +393,9 @@ public class BookPro : MonoBehaviour
             RightPageShadow.transform.SetParent(PegesRectTransdorm, true);
 
         }
+
+        //BookModeMenu.SetNumberPage(currentPaper);
+        BookModeMenu.RefechInteractableButton();
         #endregion
     }
 

@@ -17,6 +17,7 @@ public class PagePreview : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     [SerializeField] private Button _deletedBTN;
     [Space]
     [SerializeField] private RawImage _imageBox;
+    [SerializeField] private Texture2D _basicImage;
     [SerializeField] private RawImageAspectPreserver _rawImageAspect;
     [Space]
     [SerializeField] private GameObject _selectedPanel;
@@ -60,7 +61,11 @@ public class PagePreview : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     public void SetImage(Texture2D texture)
     {
-        _imageBox.texture = texture;
+        if (texture == null)
+            _imageBox.texture = _basicImage;
+        else
+            _imageBox.texture = texture;
+
         _rawImageAspect.SetAspect();
     }
 
@@ -75,11 +80,11 @@ public class PagePreview : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private void CheckingFirstPage()
     {
-        if (_indexPage == 0)
+        if (EditorBook.Instance.PagePreviews.Count <= 1)
         {
             _deletedBTN.gameObject.SetActive(false);
         }
-        else if (_indexPage > 0 && !_deletedBTN.gameObject.activeSelf)
+        else if (EditorBook.Instance.PagePreviews.Count > 1 && !_deletedBTN.gameObject.activeSelf)
         {
             _deletedBTN.gameObject.SetActive(true);
         }
@@ -87,7 +92,7 @@ public class PagePreview : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
     private void DeletedPage()
     {
-        EditorBook.Instance.DeletedPage(_indexPage);
+        EditorBook.Instance.DeletePage(_indexPage);
     }
 
     private void ClickPage()

@@ -45,8 +45,6 @@ public class TextSettingsPanel : MonoBehaviour
     private bool _isItalic;
     private bool _isUnderLine;
 
-    private string _beforeText;
-
     private void Start()
     {
         _boldText.onClick.AddListener(SetBoldText);
@@ -56,10 +54,12 @@ public class TextSettingsPanel : MonoBehaviour
         _centerTextPositon.onClick.AddListener(CenterPositonText);
         _leftTextPosition.onClick.AddListener(LeftPositionText);
         _rightTextPosition.onClick.AddListener(RightPostionText);
-        _colorButton.onClick.AddListener(OpenColorSettings);
+        _colorButton.onClick.AddListener(OpenCloseColorSettings);
 
         _fontSizeDropDown.onValueChanged.AddListener(SetSizeFontText);
         _fontsDropDown.onValueChanged.AddListener(SetFontText);
+
+        _flexibleColorPicker.onColorChange.AddListener(SetColorText);
 
         for (int x = 0; x < _fonts.Length; x++)
         {
@@ -77,6 +77,11 @@ public class TextSettingsPanel : MonoBehaviour
         _fontsDropDown.AddOptions(_fontsOptionsDropdown);
     }
 
+    private void OnDisable()
+    {
+        OpenCloseColorSettings();
+    }
+
     private void OnDestroy()
     {
         _boldText.onClick.RemoveListener(SetBoldText);
@@ -86,11 +91,14 @@ public class TextSettingsPanel : MonoBehaviour
         _centerTextPositon.onClick.RemoveListener(CenterPositonText);
         _leftTextPosition.onClick.RemoveListener(LeftPositionText);
         _rightTextPosition.onClick.RemoveListener(RightPostionText);
-        _colorButton.onClick.RemoveListener(OpenColorSettings);
+        _colorButton.onClick.RemoveListener(OpenCloseColorSettings);
 
         _fontSizeDropDown.onValueChanged.RemoveListener(SetSizeFontText);
         _fontsDropDown.onValueChanged.RemoveListener(SetFontText);
 
+        _flexibleColorPicker.onColorChange.RemoveListener(SetColorText);
+
+        
         _fontsOptionsDropdown.Clear();
         _fontsDropDown.ClearOptions();
     }
@@ -134,7 +142,7 @@ public class TextSettingsPanel : MonoBehaviour
     private void SetUnderLineText()
     {
         _isUnderLine = !_isUnderLine;
-        _selectedUnderLine.SetActive(_selectedUnderLine);
+        _selectedUnderLine.SetActive(_isUnderLine);
 
         if (_isUnderLine)
         {
@@ -163,6 +171,7 @@ public class TextSettingsPanel : MonoBehaviour
         TMP_FontAsset currentFont = _currentText.font;
 
         _currentText.font = _fonts[fontsIndex];
+        _placeholderText.font = _fonts[fontsIndex];
 
         SaveStepValueFont(currentFont, _fonts[fontsIndex], _fontsDropDown);
     }
@@ -194,7 +203,7 @@ public class TextSettingsPanel : MonoBehaviour
         _currentText.alignment = TextAlignmentOptions.Center;
     }
 
-    public void OpenColorSettings()
+    public void OpenCloseColorSettings()
     {
         _colorMode = !_colorMode;
         _flexibleColorPicker.gameObject.SetActive(_colorMode);
@@ -203,7 +212,11 @@ public class TextSettingsPanel : MonoBehaviour
 
     public void SetColorText(Color color)
     {
+        Color oldColor = _currentText.color;
+
         _currentText.color = color;
+
+        SaveStepValueColor(oldColor, color);
     }
 
     public void SetSizeFontDropDown(int size)
@@ -211,8 +224,6 @@ public class TextSettingsPanel : MonoBehaviour
         float currentSize = _currentText.fontSize;
 
         _fontSizeDropDown.captionText.text = size.ToString();
-
-        SaveStepValueSize(currentSize, size, _fontSizeDropDown);
     }
 
     private void SaveStepFontStyle(FontStyles styles, GameObject selected)
@@ -223,12 +234,25 @@ public class TextSettingsPanel : MonoBehaviour
 
     public void SaveStepValueSize(float oldSizeFont, float newSizeFont, TMP_Dropdown panelFontSize)
     {
-        UndoRedoSystem.Instance.AddAction(new TextSizeFontAction
+        if (_currentText.text.Length > 0)
+        {
+            UndoRedoSystem.Instance.AddAction(new TextSizeFontAction
             (_currentText, oldSizeFont, newSizeFont, panelFontSize));
+        }
+        else
+        {
+            UndoRedoSystem.Instance.AddAction(new TextSizeFontAction
+                (_placeholderText, oldSizeFont, newSizeFont, panelFontSize));
+        }
     }
 
     public void SaveStepValueFont(TMP_FontAsset oldFont, TMP_FontAsset newFont, TMP_Dropdown panelFonts)
     {
         UndoRedoSystem.Instance.AddAction(new TextFontValueAction(_currentText, oldFont, newFont, panelFonts));
+    }
+
+    public void SaveStepValueColor(Color oldColor, Color newColor)
+    {
+        UndoRedoSystem.Instance.AddAction(new TextColorValueAction(_currentText, oldColor, newColor));
     }
 }

@@ -10,8 +10,7 @@ using VolumeBox.Toolbox;
 public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler, IEndDragHandler, IDragHandler, IPointerClickHandler
 {
     [SerializeField] private Button _deletedObject;
-    [SerializeField] private GameObject _selectedOnePanel;
-    [SerializeField] private GameObject _selectedTwoPanel;
+    [SerializeField] private GameObject _selectedPanel;
 
     private Canvas _canvas;
 
@@ -121,8 +120,10 @@ public class DragObject : MonoBehaviour, IBeginDragHandler, IEventSystemHandler,
 
     public void DisableSelection(bool active)
     {
-        _selectedOnePanel.SetActive(active);
-        _selectedTwoPanel.SetActive(active);
+        if (_selectedPanel == null)
+            return;
+
+        _selectedPanel.SetActive(active);
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -28,7 +28,7 @@ public class EditorBook : Singleton<EditorBook>
     [SerializeField] private GameObject _imagePrefab;
 
     private List<Page> _pages = new List<Page>();
-    private List<PagePreview> _pagesPreviews = new List<PagePreview>();
+    private List<PagePreview> _pagesPreviews = new List<PagePreview>(); public List<PagePreview> PagePreviews => _pagesPreviews;
 
     private Book _editBook = null;
     private int _currentIndexPage;
@@ -71,7 +71,7 @@ public class EditorBook : Singleton<EditorBook>
             AddPage();
             ResizeAreaPageForTexture(book.PagesBook[x].texture, _pages[x].transform);
 
-            CreateImage(book.PagesBook[x].texture, x);
+            CreateImage(book.PagesBook[x].texture, x, true);
             _pagesPreviews[x].SetImage(book.PagesBook[x].texture);
         }
     }
@@ -95,6 +95,7 @@ public class EditorBook : Singleton<EditorBook>
         {
             Texture2D image = await FileManager.LoadTextureAsync(pathToImage, false);
             CreateImage(image, _currentIndexPage);
+            TakeScreenShotCurrentPage();
         }
         else
         {
@@ -114,6 +115,7 @@ public class EditorBook : Singleton<EditorBook>
 
         if (!openEdit)
             UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(image));
+
     }
 
     public void AddText()
@@ -121,6 +123,7 @@ public class EditorBook : Singleton<EditorBook>
         GameObject text = Instantiate(_textPrefab, _pages[_currentIndexPage].transform);
         text.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         text.GetComponentInChildren<TMP_InputField>().Select();
+        TakeScreenShotCurrentPage();
 
         UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(text));
     }
@@ -207,11 +210,13 @@ public class EditorBook : Singleton<EditorBook>
     {
         List<Texture2D> pages = new List<Texture2D>();
 
-        _pagesPreviews.Insert(0, _coverBook);
+        pages.Add((Texture2D)_coverBook.ImageBox.texture);
 
         for (int x = 0; x < _pagesPreviews.Count; x++)
         {
-            if (_pagesPreviews[x].ImageBox.texture != null)
+            if (_pagesPreviews[x].ImageBox.texture = null)
+                _pagesPreviews[x].SetImage(null);
+
                 pages.Add((Texture2D)_pagesPreviews[x].ImageBox.texture);
         }
 
@@ -280,11 +285,12 @@ public class EditorBook : Singleton<EditorBook>
         Page page = pageObj.GetComponent<Page>();
 
         _pages.Add(page);
-        _pages[_pages.Count - 1].SetNumberPage(_pagesPreviews.Count - 1);
+        //_pages[_pages.Count - 1].SetNumberPage(_pagesPreviews.Count - 1);
         _pages[_pages.Count - 1].gameObject.SetActive(false);
+        RefeshPages();
     }
 
-    public void DeletedPage(int indexPage)
+    public void DeletePage(int indexPage)
     {
         Destroy(_pages[indexPage]);
         Destroy(_pagesPreviews[indexPage].gameObject);

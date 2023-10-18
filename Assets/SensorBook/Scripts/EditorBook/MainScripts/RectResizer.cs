@@ -31,8 +31,6 @@ public class RectResizer : MonoBehaviour
     private float _currentWidth;
     private float _currentHeight;
 
-    
-
     private Vector2 _screenRatio
     {
         get

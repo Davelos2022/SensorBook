@@ -461,7 +461,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1636608918}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -784,42 +784,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &629922080
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 629922081}
-  m_Layer: 5
-  m_Name: '[MESSAGE_BOX]'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &629922081
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629922080}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1636608918}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &647262405
 GameObject:
   m_ObjectHideFlags: 0
@@ -2007,6 +1971,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bookPrefab: {fileID: 5238923504317657831, guid: 7f773c9e57281a04b84ba7319efe9249, type: 3}
+  _nameBookDefault:
+  - "\u0411\u0438\u0442\u0432\u044B"
+  - "\u0413\u0435\u0440\u043E\u0438"
+  - "\u041E\u0440\u0443\u0436\u0438\u0435 \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430"
+  - "\u0421\u0442\u0438\u0445\u0438"
+  - "\u041F\u043E\u043B\u043A\u043E\u0432\u043E\u0434\u0446\u044B"
+  - "\u0424\u043E\u0442\u043E\u0433\u0430\u043B\u0435\u0440\u0435\u044F"
   _parentBook: {fileID: 647262406}
   _imageIfNullBook: {fileID: 1205395249}
   _fadeMenu: {fileID: 163043778}
@@ -2591,7 +2562,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1817152420}
-  - {fileID: 629922081}
   - {fileID: 7206840350615717662}
   - {fileID: 163043779}
   m_Father: {fileID: 0}
@@ -4769,7 +4739,7 @@ RectTransform:
   m_Children:
   - {fileID: 7206840351991358071}
   m_Father: {fileID: 1636608918}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4912,7 +4882,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.0068, y: -8.1618}
+  m_AnchoredPosition: {x: 2.006775, y: -8.161804}
   m_SizeDelta: {x: 108.3608, y: 76.524}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7206840351991358074
@@ -5717,7 +5687,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041F\u043E \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044E: \u0410\u044F-Az"
+  m_text: "\u041F\u043E \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044E: Az-\u0410\u044F"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e2b95bb3373478340a0864536a4b8de8, type: 2}
   m_sharedMaterial: {fileID: -8008896587825001916, guid: e2b95bb3373478340a0864536a4b8de8, type: 2}
@@ -5985,7 +5955,7 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: "\u041F\u043E \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044E: \u0410\u044F-Az"
+    - m_Text: "\u041F\u043E \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044E: Az-\u0410\u044F"
       m_Image: {fileID: 0}
     - m_Text: "\u041F\u043E \u0414\u0430\u0442\u0435 \u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u044F"
       m_Image: {fileID: 0}

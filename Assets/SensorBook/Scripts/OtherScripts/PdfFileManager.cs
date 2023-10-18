@@ -70,7 +70,7 @@ public abstract class PdfFileManager : FileManager
         }
     }
 
-    public static List<Sprite> OpenPDFfile(string pathToPDF)
+    public static List<Sprite> OpenPdfFile(string pathToPDF)
     {
         try
         {
@@ -114,7 +114,7 @@ public abstract class PdfFileManager : FileManager
         await RecoveryImagePage(pagesTexture);
         await CreateDocumentPDF((int)sizePage.rect.width
             , (int)sizePage.rect.height, path);
-        await DeletedRecoveryImage();
+        await DeleteRecoveryImage();
     }
 
     private static async UniTask RecoveryImagePage(List<Texture2D> texturePages)
@@ -178,7 +178,7 @@ public abstract class PdfFileManager : FileManager
         return image;
     }
 
-    private async static UniTask DeletedRecoveryImage()
+    private async static UniTask DeleteRecoveryImage()
     {
         if (Directory.Exists(_pathRecovery))
         {
@@ -191,7 +191,7 @@ public abstract class PdfFileManager : FileManager
         }
     }
 
-    public static void DeletedFile(string pathToFile)
+    public static void DeleteFile(string pathToFile)
     {
         if (File.Exists(pathToFile))
             File.Delete(pathToFile);

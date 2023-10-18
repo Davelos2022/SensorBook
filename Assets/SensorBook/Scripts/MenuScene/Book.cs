@@ -28,12 +28,14 @@ public class Book : MonoBehaviour
     [SerializeField]
     private Button _editBookBTN;
 
+    private bool _defaultBook;
     private string _pathToPDF;
     private List<Sprite> _pagesBook = new List<Sprite>();
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
     private enum _stateBook { Show, Edit };
 
+    public bool DefaultBook => _defaultBook;
     public RawImage CoverBook => _coverBook;
     public string NameBook => _nameBookTMP.text;
     public string PathToPDF => _pathToPDF;
@@ -77,6 +79,7 @@ public class Book : MonoBehaviour
         _dateTimeCreation = PdfFileManager.
             GetDateCreation(PathToBook);
 
+        _defaultBook = MenuSceneController.Instance.CheckDefaultBook(_nameBookTMP.text);
         CheckFavoriteBook(_nameBookTMP.text);
     }
 
@@ -145,17 +148,21 @@ public class Book : MonoBehaviour
 
     private void AdminPanel(bool active)
     {
-        _deletedBTN.gameObject.SetActive(active);
-        _editBookBTN.gameObject.SetActive(active);
-        _exportBTN.gameObject.SetActive(active);
+        if (!_defaultBook)
+        {
+            _deletedBTN.gameObject.SetActive(active);
+            //_editBookBTN.gameObject.SetActive(active);
+            //_exportBTN.gameObject.SetActive(active);
+        }
     }
+
 
     private IEnumerator LoadBook(_stateBook stateBook)
     {
         MenuSceneController.Instance.LoadScreen(true, "Загружаем страницы книги..");
 
         yield return new WaitForSeconds(1f);
-        _pagesBook = PdfFileManager.OpenPDFfile(_pathToPDF);
+        _pagesBook = PdfFileManager.OpenPdfFile(_pathToPDF);
 
         switch (stateBook)
         {

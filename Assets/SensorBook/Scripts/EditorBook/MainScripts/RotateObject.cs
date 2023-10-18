@@ -8,7 +8,7 @@ public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     private Vector2 pivotPosition;
     private Vector2 initialMousePosition;
-    private float speed = 0.2f;
+    private float speed = 0.3f;
 
     private Quaternion _startRotation;
     private void OnEnable()
@@ -18,31 +18,29 @@ public class RotateObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        initialMousePosition = eventData.position;
-
+        initialMousePosition = eventData.pressPosition;
         _startRotation = rectTransform.rotation;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        float mouseX = eventData.position.x - initialMousePosition.x;
+        Vector2 dragVector = eventData.position - initialMousePosition;
+        float rotationAngle = -Mathf.Atan2(dragVector.y, dragVector.x) * Mathf.Rad2Deg;
 
-        float rotationAngle = mouseX * rotationSpeed * speed;
-
-        rectTransform.pivot = pivotPosition; 
-        rectTransform.localRotation = Quaternion.Euler(0f, 0f, -rotationAngle);
+        rectTransform.pivot = pivotPosition;
+        rectTransform.rotation = _startRotation * Quaternion.Euler(0f, 0f, rotationAngle * rotationSpeed * speed);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         SaveStepRotation();
         EditorBook.Instance.TakeScreenShotCurrentPage();
-
     }
 
     private void SaveStepRotation()
     {
-        UndoRedoSystem.Instance.AddAction(new RotationObjectAction(rectTransform, _startRotation, rectTransform.rotation));
+        UndoRedoSystem.Instance.AddAction(new RotationObjectAction
+            (rectTransform, _startRotation, rectTransform.rotation));
     }
 }
 

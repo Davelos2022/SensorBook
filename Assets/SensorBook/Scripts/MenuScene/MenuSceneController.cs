@@ -15,6 +15,8 @@ public class MenuSceneController : Singleton<MenuSceneController>
     [SerializeField]
     private GameObject _bookPrefab;
     [SerializeField]
+    private string[] _nameBookDefault;
+    [SerializeField]
     private Transform _parentBook;
     [SerializeField]
     private GameObject _imageIfNullBook;
@@ -64,6 +66,18 @@ public class MenuSceneController : Singleton<MenuSceneController>
             _adminOff.Invoke();
     }
 
+    public bool CheckDefaultBook(string nameBook)
+    {
+        for (int x = 0; x < _nameBookDefault.Length; x++)
+        {
+            if (_nameBookDefault[x].ToLower() == nameBook.ToLower())
+                return true;
+        }
+
+        return false;
+    }
+ 
+
     public async void AddNewBook_in_Libary()
     {
         string path = PdfFileManager.SelectPdfFileBrowser();
@@ -107,11 +121,14 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public void LoadBook_in_Libary()
     {
         string[] allPathBook = PdfFileManager.GetCountBookFiles();
+        _currentSortState = SortMode.sortAz;
 
         if (allPathBook.Length > 0)
         {
             for (int x = 0; x < allPathBook.Length; x++)
                 CreateBook(allPathBook[x]);
+
+            SortBook(_currentSortState);
         }
         else
         {
@@ -142,6 +159,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
         Book newBook = bookObj.GetComponent<Book>();
         Texture2D coverBook = bookPDF.Renderer.RenderPageToTexture(bookPDF.GetPage(0));
 
+   
         newBook.SetupPreviewBook(pathToBook, coverBook);
         _collectionBook.Add(newBook);
 
@@ -195,7 +213,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public void DeletedBook(Book book)
     {
         _collectionBook.Remove(book);
-        PdfFileManager.DeletedFile(book.PathToPDF);
+        PdfFileManager.DeleteFile(book.PathToPDF);
 
         Destroy(book.gameObject);
 
