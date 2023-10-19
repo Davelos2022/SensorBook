@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LeftPanel : MonoBehaviour
+public class LeftPanelMenuScene : MonoBehaviour
 {
     [Header("All_btn")]
     [SerializeField] private Button _allBook;

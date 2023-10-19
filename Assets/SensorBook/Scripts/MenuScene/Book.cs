@@ -6,7 +6,12 @@ using TMPro;
 using UnityEngine.UI;
 using System.IO;
 using VolumeBox.Toolbox.UIInformer;
+using Cysharp.Threading.Tasks;
 
+
+
+
+[Serializable]
 public class Book : MonoBehaviour
 {
     [SerializeField]
@@ -30,7 +35,7 @@ public class Book : MonoBehaviour
 
     private bool _defaultBook;
     private string _pathToPDF;
-    private List<Sprite> _pagesBook = new List<Sprite>();
+    private List<Texture2D> _pagesBook = new List<Texture2D>();
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
     private enum _stateBook { Show, Edit };
@@ -40,8 +45,9 @@ public class Book : MonoBehaviour
     public string NameBook => _nameBookTMP.text;
     public string PathToPDF => _pathToPDF;
     public bool FavoriteBook => _favoriteBook;
-    public List<Sprite> PagesBook => _pagesBook;
+    public List<Texture2D> PagesBook => _pagesBook;
     public DateTime DataTimeBook => _dateTimeCreation;
+
 
     private void OnEnable()
     {
@@ -67,8 +73,7 @@ public class Book : MonoBehaviour
         MenuSceneController.Instance._adminOff -= DeActiveAdminPanel;
     }
 
-
-    public void SetupPreviewBook(string PathToBook, Texture2D CoverTexture)
+    public void SetupPreviewBook(string nameBook, string PathToBook, Texture2D CoverTexture, bool defaultBook)
     {
         if (MenuSceneController.Instance.AdminStatus)
             AdminPanel(true);
@@ -76,26 +81,25 @@ public class Book : MonoBehaviour
         _nameBookTMP.text = Path.GetFileNameWithoutExtension(PathToBook);
         _coverBook.texture = CoverTexture;
         _pathToPDF = PathToBook;
-        _dateTimeCreation = PdfFileManager.
-            GetDateCreation(PathToBook);
+        _dateTimeCreation = PdfFileManager. GetDateCreation(PathToBook);
+        _defaultBook = defaultBook;
 
-        _defaultBook = MenuSceneController.Instance.CheckDefaultBook(_nameBookTMP.text);
         CheckFavoriteBook(_nameBookTMP.text);
     }
 
-    private void Book_Click()
+    private async void Book_Click()
     {
-        StartCoroutine(LoadBook(_stateBook.Show));
+        await LoadPages(_stateBook.Show);
+    }
+
+    private async void EditBook_Click()
+    {
+        await LoadPages(_stateBook.Edit);
     }
 
     private void ExportBook_Click()
     {
         MenuSceneController.Instance.ExportBook(this);
-    }
-
-    private void EditBook_Click()
-    {
-        StartCoroutine(LoadBook(_stateBook.Edit));
     }
 
     private void DeletedBook_Click()
@@ -156,13 +160,10 @@ public class Book : MonoBehaviour
         }
     }
 
-
-    private IEnumerator LoadBook(_stateBook stateBook)
+    private async UniTask LoadPages(_stateBook stateBook)
     {
         MenuSceneController.Instance.LoadScreen(true, "Загружаем страницы книги..");
-
-        yield return new WaitForSeconds(1f);
-        _pagesBook = PdfFileManager.OpenPdfFile(_pathToPDF);
+        _pagesBook = await PdfFileManager.OpenPdfFile(_pathToPDF);
 
         switch (stateBook)
         {

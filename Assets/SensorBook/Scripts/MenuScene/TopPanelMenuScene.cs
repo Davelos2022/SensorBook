@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TopPanel : MonoBehaviour
+public class TopPanelMenuScene : MonoBehaviour
 {
     [SerializeField]
     private Button _createBook;
@@ -62,7 +62,7 @@ public class TopPanel : MonoBehaviour
     }
     private void AdminPanel(bool active)
     {
-        _createBook.gameObject.SetActive(active);
+        //_createBook.gameObject.SetActive(active);
         _addNewBook.gameObject.SetActive(active);
     }
 }

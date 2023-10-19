@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Paroxe.PdfRenderer;
+using Paroxe.PdfRenderer.WebGL;
 using SFB;
 using System;
 using System.Collections.Generic;
@@ -52,13 +53,13 @@ public abstract class PdfFileManager : FileManager
         }
     }
 
-    public static string SavePdfFileBrowser(string nameBook)
+    public static string SavePdfFileBrowser(string defaultName)
     {
         ExtensionFilter[] extensions = {
             new("PDF Files", "pdf"),
         };
 
-        var mediaPaths = StandaloneFileBrowser.SaveFilePanel("Сохранить книгу", "", nameBook, extensions);
+        var mediaPaths = StandaloneFileBrowser.SaveFilePanel("Сохранить книгу", "", defaultName, extensions);
 
         if (mediaPaths.Length > 0)
         {
@@ -70,40 +71,36 @@ public abstract class PdfFileManager : FileManager
         }
     }
 
-    public static List<Sprite> OpenPdfFile(string pathToPDF)
+    public async static UniTask<List<Texture2D>> OpenPdfFile(string filePath)
     {
         try
         {
-            PDFDocument pdfDocument = new PDFDocument(pathToPDF, "");
-            List<Sprite> pdfPages = new List<Sprite>();
+            List<Texture2D> pagesTextures = new List<Texture2D>();
 
-            PDFRenderer.RenderSettings m_RenderSettings = new PDFRenderer.RenderSettings();
-            m_RenderSettings.optimizeTextForLCDDisplay = true;
+            PDFJS_Promise<Texture2D> pDFJS_Promise = new PDFJS_Promise<Texture2D>();
+            Texture2D texture;
 
-            Texture2D tex;
-            int countPage = pdfDocument.GetPageCount();
+            var document = new PDFDocument(filePath);
 
-            for (int x = 1; x < countPage; x++)
+            for (int pageNumber = 1; pageNumber < document.GetPageCount(); pageNumber++)
             {
-                PDFPage page = pdfDocument.GetPage(x);
-                int pageWidth = pdfDocument.GetPageWidth(x) * 2;
-                int pageHeight = pdfDocument.GetPageHeight(x) * 2;
+                PDFPage page = document.GetPage(pageNumber);
 
-                tex = pdfDocument.Renderer.RenderPageToTexture
-                    (page, pageWidth, pageHeight, null, m_RenderSettings);
+                texture = new Texture2D(document.GetPageWidth(pageNumber) * 2, document.GetPageHeight(pageNumber) * 2, TextureFormat.RGBA32, false);
+                texture.filterMode = FilterMode.Trilinear;
 
-                tex.filterMode = FilterMode.Bilinear;
-                tex.anisoLevel = 10;
-                Sprite sprite = CreateSprite(tex);
+                pDFJS_Promise = PDFRenderer.RenderPageToExistingTextureAsync(page, texture);    
+                await UniTask.RunOnThreadPool(() => pDFJS_Promise.HasFinished);
 
-                pdfPages.Add(sprite);
+                pagesTextures.Add(texture);
             }
 
-            return pdfPages;
+
+            return pagesTextures;
         }
         catch (Exception e)
         {
-            //Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при открытие файла");
+            Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при открытие файла");
             Debug.LogWarning($"Failed to save book: {e.Message}");
             return null;
         }
@@ -129,7 +126,7 @@ public abstract class PdfFileManager : FileManager
     private static async UniTask CreateDocumentPDF(int width, int height, string pathToSave)
     {
         Rectangle sizeDocPage = new Rectangle(width, height);
-        Document document = new Document(sizeDocPage, 0,0,0,0);
+        Document document = new Document(sizeDocPage, 0, 0, 0, 0);
         PdfWriter.GetInstance(document, new FileStream($"{pathToSave}", FileMode.Create));
 
         await AddPageInDocument(document);

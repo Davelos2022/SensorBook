@@ -69,10 +69,10 @@ public class EditorBook : Singleton<EditorBook>
         for (int x = 0; x < book.PagesBook.Count; x++)
         {
             AddPage();
-            ResizeAreaPageForTexture(book.PagesBook[x].texture, _pages[x].transform);
+            ResizeAreaPageForTexture(book.PagesBook[x], _pages[x].transform);
 
-            CreateImage(book.PagesBook[x].texture, x, true);
-            _pagesPreviews[x].SetImage(book.PagesBook[x].texture);
+            CreateImage(book.PagesBook[x], x, true);
+            _pagesPreviews[x].SetImage(book.PagesBook[x]);
         }
     }
 
@@ -181,7 +181,7 @@ public class EditorBook : Singleton<EditorBook>
                 {
                     await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, sizePage);
 
-                    //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирована");
+                    Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирована");
                     Debug.Log("Книга экспортирована");
                 }
             }
@@ -193,13 +193,13 @@ public class EditorBook : Singleton<EditorBook>
                 MenuSceneController.Instance.CreateBook(pathToBook);
                 MenuSceneController.Instance.ReturnLibary();
 
-                //Notifier.Instance.Notify(NotifyType.Success, "Книга cохранена");
+                Notifier.Instance.Notify(NotifyType.Success, "Книга cохранена");
                 Debug.Log("Книга сохранена");
             }
         }
         catch (Exception e)
         {
-            //Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при сохранение файла");
+            Notifier.Instance.Notify(NotifyType.Error, "Произошла ошибка при сохранение файла");
             Debug.LogWarning($"Failed to save book: {e.Message}");
         }
 
@@ -232,22 +232,22 @@ public class EditorBook : Singleton<EditorBook>
         {
             case CorrectnessData.Cheeck.NotMinPage:
                 Debug.Log("Должно быть минимум две страницы!");
-                //Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
+                Notifier.Instance.Notify(NotifyType.Error, "Должно быть минимум две страницы!");
                 return false;
             case CorrectnessData.Cheeck.NullAll:
                 Debug.Log("Заполните обязательные поля");
-                //Notifier.Instance.Notify(NotifyType.Error, "Заполните обязательные поля");
+                Notifier.Instance.Notify(NotifyType.Error, "Заполните обязательные поля");
                 _errorName.Highlight();
                 _errorCover.Highlight();
                 return false;
             case CorrectnessData.Cheeck.NullName:
                 Debug.Log("Отсутствует название книги");
-                //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует название книги");
+                Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует название книги");
                 _errorName.Highlight();
                 return false;
             case CorrectnessData.Cheeck.NotCover:
                 Debug.Log("Отсутствует обложка");
-                //Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует обложка");
+                Notifier.Instance.Notify(NotifyType.Error, "Отсутсвует обложка");
                 _errorCover.Highlight();
                 return false;
             case CorrectnessData.Cheeck.Completed:

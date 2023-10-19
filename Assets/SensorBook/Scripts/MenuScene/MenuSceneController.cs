@@ -29,7 +29,6 @@ public class MenuSceneController : Singleton<MenuSceneController>
     private TextMeshProUGUI _loadText;
 
     private Scene _loaderScene;
-
     private List<Book> _collectionBook = new List<Book>();  //<--- ARRAY!!!! Why? if I need to controll collection (replenish it and delete it book) 
     private Book _currentBook;
 
@@ -50,6 +49,11 @@ public class MenuSceneController : Singleton<MenuSceneController>
         LoadBook_in_Libary();
     }
 
+    private void OnDisable()
+    {
+        SaveBooks();
+    }
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.F5))
@@ -66,18 +70,6 @@ public class MenuSceneController : Singleton<MenuSceneController>
             _adminOff.Invoke();
     }
 
-    public bool CheckDefaultBook(string nameBook)
-    {
-        for (int x = 0; x < _nameBookDefault.Length; x++)
-        {
-            if (_nameBookDefault[x].ToLower() == nameBook.ToLower())
-                return true;
-        }
-
-        return false;
-    }
- 
-
     public async void AddNewBook_in_Libary()
     {
         string path = PdfFileManager.SelectPdfFileBrowser();
@@ -93,7 +85,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
             CreateBook(newPath);
             SortBook(_currentSortState);
 
-            //Notifier.Instance.Notify(NotifyType.Success, "Книга добавлена");
+            Notifier.Instance.Notify(NotifyType.Success, "Книга добавлена");
             Debug.Log("Книга добавлена");
         }
         else
@@ -109,7 +101,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
         if (path.Length > 0)
         {
             await FileManager.CopyFileAsync(book.PathToPDF, path);
-            //Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирвоана");
+            Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирвоана");
             Debug.Log("Книга экспортирвоана");
         }
         else
@@ -142,7 +134,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
         {
             if (_collectionBook[x].NameBook == nameBook)
             {
-                //Notifier.Instance.Notify(NotifyType.Error, "Книга с таким названием уже имеется!");
+                Notifier.Instance.Notify(NotifyType.Error, "Книга с таким названием уже имеется!");
                 Debug.Log("Книга с таким названием уже имеется!");
                 return true;
             }
@@ -151,16 +143,29 @@ public class MenuSceneController : Singleton<MenuSceneController>
         return false;
     }
 
+    private bool CheckDefaultBook(string nameBook)
+    {
+        for (int x = 0; x < _nameBookDefault.Length; x++)
+        {
+            if (_nameBookDefault[x].ToLower() == nameBook.ToLower())
+                return true;
+        }
+
+        return false;
+    }
+
     public void CreateBook(string pathToBook)
     {
+        string nameBook = Path.GetFileNameWithoutExtension(pathToBook);
+        bool defaultBook = CheckDefaultBook(nameBook);
+
         PDFDocument bookPDF = new PDFDocument(pathToBook, "");
         GameObject bookObj = Instantiate(_bookPrefab, _parentBook);
-
+        
         Book newBook = bookObj.GetComponent<Book>();
         Texture2D coverBook = bookPDF.Renderer.RenderPageToTexture(bookPDF.GetPage(0));
+        newBook.SetupPreviewBook(nameBook, pathToBook, coverBook, defaultBook);
 
-   
-        newBook.SetupPreviewBook(pathToBook, coverBook);
         _collectionBook.Add(newBook);
 
         if (_imageIfNullBook.activeSelf)
@@ -215,6 +220,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
         _collectionBook.Remove(book);
         PdfFileManager.DeleteFile(book.PathToPDF);
 
+        Notifier.Instance.Notify(NotifyType.Success, $"Книга {book.NameBook} удалена!");
         Destroy(book.gameObject);
 
         if (_collectionBook.Count <= 0)
@@ -266,4 +272,23 @@ public class MenuSceneController : Singleton<MenuSceneController>
         _loadScreen.SetActive(active);
         _loadText.text = textLoad;
     }
+
+    private void SaveBooks()
+    {
+        Books books = new Books();
+        books.books = _collectionBook;
+        string json = JsonUtility.ToJson(books);
+        File.WriteAllText(PdfFileManager._bookPath + "BookFavorite.json", json);
+    }
+
+    public void ExitApp()
+    {
+        Application.Quit();
+    }
+}
+
+[SerializeField]
+public class Books
+{
+    public List<Book> books;
 }

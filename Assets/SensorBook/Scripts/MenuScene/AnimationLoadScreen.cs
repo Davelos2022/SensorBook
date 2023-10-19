@@ -5,74 +5,45 @@ using UnityEngine.UI;
 
 public class AnimationLoadScreen : MonoBehaviour
 {
-    public Sprite[] frames;
-    public float frameRate = 10f;
-    public Image ImageBox;
+    [SerializeField] private Sprite[] _frames;
+    [SerializeField] private float _frameRate = 10f;
+    [SerializeField] private Image _ImageBox;
 
-    private int currentFrameIndex;
-    private bool isPlayingForward = false;
-    private bool isPlayingBacklward = false;
-    private float timer = 0f;
+    private int _currentFrameIndex;
+    private bool _isPlayingForward;
+    private float _timer = 0f;
 
 
     private void OnEnable()
     {
-        currentFrameIndex = 0;
-        isPlayingForward = true;
-
+        _currentFrameIndex = 0;
+        _isPlayingForward = true;
     }
 
     void Update()
     {
-        if (isPlayingForward && !isPlayingBacklward)
+        if (_isPlayingForward)
         {
             PlayAnimationForward();
-        }
-
-
-        if (isPlayingBacklward && !isPlayingForward)
-        {
-            PlayAnimationBackward();
         }
     }
 
     void PlayAnimationForward()
     {
-        timer += Time.deltaTime;
+        _timer += Time.deltaTime;
 
-        if (timer >= 1f / frameRate)
+        if (_timer >= 1f / _frameRate)
         {
-            timer = 0f;
-            currentFrameIndex++;
+            _timer = 0f;
+            _currentFrameIndex++;
 
-            if (currentFrameIndex >= frames.Length)
+            if (_currentFrameIndex >= _frames.Length)
             {
-                currentFrameIndex = frames.Length - 1;
-                isPlayingForward = false;
+                _currentFrameIndex = _frames.Length - 1;
+                _currentFrameIndex = 0;
             }
 
-            ImageBox.sprite = frames[currentFrameIndex];
-        }
-    }
-
-    void PlayAnimationBackward()
-    {
-        timer += Time.deltaTime;
-
-        if (timer >= 1f / frameRate)
-        {
-            timer = 0f;
-
-            currentFrameIndex--;
-
-            if (currentFrameIndex < 0)
-            {
-                currentFrameIndex = 0;
-                isPlayingForward = false;
-                isPlayingBacklward = false;
-            }
-
-            ImageBox.sprite = frames[currentFrameIndex];
+            _ImageBox.sprite = _frames[_currentFrameIndex];
         }
     }
 }

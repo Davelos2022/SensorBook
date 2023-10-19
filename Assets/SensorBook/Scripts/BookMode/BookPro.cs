@@ -14,6 +14,8 @@ public enum FlipMode
 public class BookPro : MonoBehaviour
 {
     public GameObject PagePrefab;
+    public float SpeedPageMove = 15;
+    [Space]
     public RectTransform BookObject;
     public RectTransform PegesRectTransdorm;
     public BookModeMenu BookModeMenu;
@@ -45,38 +47,42 @@ public class BookPro : MonoBehaviour
 
     private Canvas canvas;
     private Book _currentBook; public Book CurrentBook { set { _currentBook = value; } }
-    public void Create(Sprite Front = null, Sprite Back = null)
+    public void Create(Texture2D FrontTexture = null, Texture2D BackTexture = null)
     {
-        GameObject rightPage = Instantiate(PagePrefab) as GameObject;
-        rightPage.transform.SetParent(this.transform, true);
-        rightPage.GetComponent<RectTransform>().sizeDelta = this.RightPageTransform.GetComponent<RectTransform>().sizeDelta;
-        rightPage.GetComponent<RectTransform>().pivot = this.RightPageTransform.GetComponent<RectTransform>().pivot;
-        rightPage.GetComponent<RectTransform>().anchoredPosition = this.RightPageTransform.GetComponent<RectTransform>().anchoredPosition;
-        rightPage.GetComponent<RectTransform>().localScale = this.RightPageTransform.GetComponent<RectTransform>().localScale;
+        GameObject leftPage = Instantiate(PagePrefab);
+        RectTransform _leftPageRectTransform = leftPage.GetComponent<RectTransform>();
+        leftPage.transform.SetParent(transform, true);
+        _leftPageRectTransform.sizeDelta = LeftPageTransform.sizeDelta;
+        _leftPageRectTransform.pivot = LeftPageTransform.pivot;
+        _leftPageRectTransform.anchoredPosition = LeftPageTransform.anchoredPosition;
+        _leftPageRectTransform.localScale = LeftPageTransform.localScale;
+
+        leftPage.name = "Page";
+        leftPage.AddComponent<RawImage>();
+        leftPage.AddComponent<Mask>().showMaskGraphic = true;
+        leftPage.AddComponent<CanvasGroup>();
+
+
+        GameObject rightPage = Instantiate(PagePrefab);
+        RectTransform _rightPageRectTransform = rightPage.GetComponent<RectTransform>();
+        rightPage.transform.SetParent(transform, true);
+        _rightPageRectTransform.sizeDelta = RightPageTransform.sizeDelta;
+        _rightPageRectTransform.pivot = RightPageTransform.pivot;
+        _rightPageRectTransform.anchoredPosition = RightPageTransform.anchoredPosition;
+        _rightPageRectTransform.localScale = RightPageTransform.localScale;
+
         rightPage.name = "Page";
-        rightPage.AddComponent<Image>();
+        rightPage.AddComponent<RawImage>();
         rightPage.AddComponent<Mask>().showMaskGraphic = true;
         rightPage.AddComponent<CanvasGroup>();
 
 
-        GameObject leftPage = Instantiate(PagePrefab) as GameObject;
-        leftPage.transform.SetParent(this.transform, true);
-        leftPage.GetComponent<RectTransform>().sizeDelta = this.LeftPageTransform.GetComponent<RectTransform>().sizeDelta;
-        leftPage.GetComponent<RectTransform>().pivot = this.LeftPageTransform.GetComponent<RectTransform>().pivot;
-        leftPage.GetComponent<RectTransform>().anchoredPosition = this.LeftPageTransform.GetComponent<RectTransform>().anchoredPosition;
-        leftPage.GetComponent<RectTransform>().localScale = this.LeftPageTransform.GetComponent<RectTransform>().localScale;
-        leftPage.name = "Page";
-        leftPage.AddComponent<Image>();
-        leftPage.AddComponent<Mask>().showMaskGraphic = true;
-        leftPage.AddComponent<CanvasGroup>();
-
         papers.Add(new Paper());
-
         papers[papers.Count - 1].Front = leftPage;
         papers[papers.Count - 1].Back = rightPage;
 
-        papers[papers.Count - 1].Front.GetComponent<Image>().sprite = Front;
-        papers[papers.Count - 1].Back.GetComponent<Image>().sprite = Back;
+        papers[papers.Count - 1].Front.GetComponent<RawImage>().texture = FrontTexture;
+        papers[papers.Count - 1].Back.GetComponent<RawImage>().texture = BackTexture;
     }
 
 
@@ -118,8 +124,8 @@ public class BookPro : MonoBehaviour
         }
     }
 
-    Image Left;
-    Image Right;
+    RawImage Left;
+    RawImage Right;
 
     //current flip mode
     FlipMode mode;
@@ -181,7 +187,7 @@ public class BookPro : MonoBehaviour
         if (MenuSceneController.Instance.CurrentBook != null)
         {
             _currentBook = MenuSceneController.Instance.CurrentBook;
-            List<Sprite> pages = _currentBook.PagesBook;
+            List<Texture2D> pages = _currentBook.PagesBook;
 
             for (int x = 0; x < pages.Count; x++)
             {
@@ -210,7 +216,7 @@ public class BookPro : MonoBehaviour
         }
     }
 
-    private void CheckAndSetSizeBook(Sprite leftPage, Sprite rightPage)
+    private void CheckAndSetSizeBook(Texture2D leftPage, Texture2D rightPage)
     {
         float restrictiveIndicator = 1.45f;
         float reSacle_x = 0.8f;
@@ -218,10 +224,10 @@ public class BookPro : MonoBehaviour
         if (leftPage != null && rightPage != null)
         {
             // Левая страница
-            int spriteWidtLeft = leftPage.texture.width;
+            int spriteWidtLeft = leftPage.width;
 
             // Правая страница
-            int spriteWidtRight = rightPage.texture.width;
+            int spriteWidtRight = rightPage.width;
 
             // Получаем размеры экрана сцены в пикселях
             float pageWidth = PegesRectTransdorm.rect.width;
@@ -422,13 +428,13 @@ public class BookPro : MonoBehaviour
 
         UpdatePages();
 
-        Left = papers[currentPaper - 1].Front.GetComponent<Image>();
+        Left = papers[currentPaper - 1].Front.GetComponent<RawImage>();
         BookUtility.ShowPage(Left.gameObject);
         Left.rectTransform.pivot = new Vector2(0, 0);
         Left.transform.position = RightPageTransform.transform.position;
         Left.transform.localEulerAngles = new Vector3(0, 0, 0);
 
-        Right = papers[currentPaper - 1].Back.GetComponent<Image>();
+        Right = papers[currentPaper - 1].Back.GetComponent<RawImage>();
         BookUtility.ShowPage(Right.gameObject);
         Right.transform.position = RightPageTransform.transform.position;
         Right.transform.localEulerAngles = new Vector3(0, 0, 0);
@@ -458,13 +464,13 @@ public class BookPro : MonoBehaviour
 
         ClippingPlane.rectTransform.pivot = new Vector2(0, 0.35f);
 
-        Right = papers[currentPaper - 1].Back.GetComponent<Image>();
+        Right = papers[currentPaper - 1].Back.GetComponent<RawImage>();
         BookUtility.ShowPage(Right.gameObject);
         Right.transform.position = LeftPageTransform.transform.position;
         Right.transform.localEulerAngles = new Vector3(0, 0, 0);
         Right.transform.SetAsFirstSibling();
 
-        Left = papers[currentPaper - 1].Front.GetComponent<Image>();
+        Left = papers[currentPaper - 1].Front.GetComponent<RawImage>();
         BookUtility.ShowPage(Left.gameObject);
         Left.gameObject.SetActive(true);
         Left.rectTransform.pivot = new Vector2(1, 0);
@@ -507,7 +513,7 @@ public class BookPro : MonoBehaviour
     }
     public void UpdateBook()
     {
-        f = Vector3.Lerp(f, transformPointMousePosition(Input.mousePosition), Time.deltaTime * 10);
+        f = Vector3.Lerp(f, transformPointMousePosition(Input.mousePosition), Time.deltaTime * SpeedPageMove);
         if (mode == FlipMode.RightToLeft)
             UpdateBookRTLToPoint(f);
         else

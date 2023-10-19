@@ -7,6 +7,7 @@ public class BookModeMenu : MonoBehaviour
 {
     [SerializeField] private Transform _panel;
     [SerializeField] private BookPro _book;
+    [SerializeField] private Transform _targetPosition;
     [Space]
     [SerializeField] private Button _menuButton;
     [SerializeField] private Button _returMenu;
@@ -16,16 +17,14 @@ public class BookModeMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _leftTextPage;
     [SerializeField] private TextMeshProUGUI _rightTextPage;
 
-    private float animationDuration = 1f;
-    private Transform targetPosition;
-    private Vector3 initialPosition;
+    private float _animationDuration = 1f;
+    private Vector3 _initialPosition;
 
     private bool _showMenuPanel;
 
     private void Start()
     {
-        initialPosition = _panel.position;
-        targetPosition = transform;
+        _initialPosition = _panel.position;
     }
 
     private void OnEnable()
@@ -53,9 +52,9 @@ public class BookModeMenu : MonoBehaviour
         _showMenuPanel = !_showMenuPanel;
 
         if (_showMenuPanel)
-            _panel.DOMove(targetPosition.position, animationDuration);
+            _panel.DOMove(_targetPosition.position, _animationDuration);
         else
-            _panel.DOMove(initialPosition, animationDuration);
+            _panel.DOMove(_initialPosition, _animationDuration);
     }
 
     private void NextPageClick()
