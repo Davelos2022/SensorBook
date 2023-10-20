@@ -17,11 +17,11 @@ public class AutoFlip : MonoBehaviour
     float nextPageCountDown = 0;
     // Use this for initialization
     void Start () {
-        if (!ControledBook)
-            ControledBook = GetComponent<BookPro>();
-        ControledBook.interactable = false;
-        if (AutoStartFlip)
-            StartFlipping();
+        //if (!ControledBook)
+        //    ControledBook = GetComponent<BookPro>();
+        //ControledBook.interactable = false;
+        //if (AutoStartFlip)
+        //    StartFlipping();
     }
     public void FlipRightPage()
     {

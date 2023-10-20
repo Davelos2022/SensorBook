@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Paroxe.PdfRenderer;
 using UnityEngine.SceneManagement;
-using System.Collections;
 using System.IO;
 using System.Linq;
 using System;
 using VolumeBox.Toolbox;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using VolumeBox.Toolbox.UIInformer;
 
 public class MenuSceneController : Singleton<MenuSceneController>
 {
@@ -28,13 +28,14 @@ public class MenuSceneController : Singleton<MenuSceneController>
     [SerializeField]
     private TextMeshProUGUI _loadText;
 
-    private Scene _loaderScene;
     private List<Book> _collectionBook = new List<Book>();  //<--- ARRAY!!!! Why? if I need to controll collection (replenish it and delete it book) 
+    private BookFavorite _bookFavorite;
     private Book _currentBook;
 
     public enum SortMode { sortDate, sortAz }
     private SortMode _currentSortState;
     private bool _favoriteShow = false;
+    private Scene _loaderScene;
 
     private bool _adminStatus = false;
     public Action _adminOn;
@@ -44,14 +45,15 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public bool FavoriteShowNow => _favoriteShow;
     public bool AdminStatus => _adminStatus;
 
-    private void OnEnable()
+    private void Awake()
     {
-        LoadBook_in_Libary();
+        if (HasInstance)  //The conflict with the Singleton is due to the Main scene, when it closes, it reverts and creates a scene and launches this method
+            LoadBookInLibary();
     }
 
     private void OnDisable()
     {
-        SaveBooks();
+        SaveFavoriteBooksToFile();
     }
 
     private void Update()
@@ -98,7 +100,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
     {
         string path = PdfFileManager.SavePdfFileBrowser(book.NameBook);
 
-        if (path.Length > 0)
+        if (!string.IsNullOrWhiteSpace(path))
         {
             await FileManager.CopyFileAsync(book.PathToPDF, path);
             Notifier.Instance.Notify(NotifyType.Success, "Книга экспортирвоана");
@@ -110,9 +112,11 @@ public class MenuSceneController : Singleton<MenuSceneController>
         }
     }
 
-    public void LoadBook_in_Libary()
+    public void LoadBookInLibary()
     {
         string[] allPathBook = PdfFileManager.GetCountBookFiles();
+
+        LoadFileFavoriteBook();
         _currentSortState = SortMode.sortAz;
 
         if (allPathBook.Length > 0)
@@ -126,6 +130,38 @@ public class MenuSceneController : Singleton<MenuSceneController>
         {
             return;
         }
+    }
+
+    private void LoadFileFavoriteBook()
+    {
+        string pathToJson = PdfFileManager._bookPath + "BookFavorite.json";
+
+        if (File.Exists(pathToJson))
+        {
+            string json = File.ReadAllText(pathToJson);
+            _bookFavorite = JsonUtility.FromJson<BookFavorite>(json);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    private void SaveFavoriteBooksToFile()
+    {
+        if (_bookFavorite != null)
+            _bookFavorite.NameBook.Clear();
+        else
+            _bookFavorite = new BookFavorite();
+
+        foreach (var book in _collectionBook)
+        {
+            if (book.Favorite)
+                _bookFavorite.NameBook.Add(book.NameBook);
+        }
+
+        string json = JsonUtility.ToJson(_bookFavorite);
+        File.WriteAllText(PdfFileManager._bookPath + "BookFavorite.json", json);
     }
 
     public bool DoesBookExists(string nameBook)
@@ -145,26 +181,48 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     private bool CheckDefaultBook(string nameBook)
     {
-        for (int x = 0; x < _nameBookDefault.Length; x++)
+        if (_nameBookDefault != null)
         {
-            if (_nameBookDefault[x].ToLower() == nameBook.ToLower())
-                return true;
+            for (int x = 0; x < _nameBookDefault.Length; x++)
+            {
+                if (_nameBookDefault[x].ToLower() == nameBook.ToLower())
+                    return true;
+            }
         }
 
         return false;
+    }
+
+    private bool CheckFavoriteBook(string NameBook)
+    {
+        if (_bookFavorite != null)
+        {
+            foreach (var book in _bookFavorite.NameBook)
+            {
+                if (book == NameBook)
+                    return true;
+            }
+
+            return false;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void CreateBook(string pathToBook)
     {
         string nameBook = Path.GetFileNameWithoutExtension(pathToBook);
         bool defaultBook = CheckDefaultBook(nameBook);
+        bool favoriteBook = CheckFavoriteBook(nameBook);
 
         PDFDocument bookPDF = new PDFDocument(pathToBook, "");
         GameObject bookObj = Instantiate(_bookPrefab, _parentBook);
-        
+
         Book newBook = bookObj.GetComponent<Book>();
         Texture2D coverBook = bookPDF.Renderer.RenderPageToTexture(bookPDF.GetPage(0));
-        newBook.SetupPreviewBook(nameBook, pathToBook, coverBook, defaultBook);
+        newBook.SetupPreviewBook(nameBook, pathToBook, coverBook, defaultBook, favoriteBook);
 
         _collectionBook.Add(newBook);
 
@@ -201,7 +259,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
         foreach (var book in _collectionBook)
         {
-            book.gameObject.SetActive(book.FavoriteBook);
+            book.gameObject.SetActive(book.Favorite);
         }
     }
 
@@ -244,7 +302,10 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public void ReturnLibary()
     {
         if (_currentBook != null)
+        {
+            _currentBook.ClearPages();
             _currentBook = null;
+        }
 
         _fadeMenu.SetActive(true);
         SortBook(_currentSortState);
@@ -273,22 +334,17 @@ public class MenuSceneController : Singleton<MenuSceneController>
         _loadText.text = textLoad;
     }
 
-    private void SaveBooks()
-    {
-        Books books = new Books();
-        books.books = _collectionBook;
-        string json = JsonUtility.ToJson(books);
-        File.WriteAllText(PdfFileManager._bookPath + "BookFavorite.json", json);
-    }
-
     public void ExitApp()
     {
         Application.Quit();
     }
+
 }
 
-[SerializeField]
-public class Books
+[Serializable]
+public class BookFavorite
 {
-    public List<Book> books;
+    public List<string> NameBook = new List<string>();
 }
+
+

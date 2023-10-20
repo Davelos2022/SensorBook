@@ -38,66 +38,67 @@ public class Book : MonoBehaviour
     private List<Texture2D> _pagesBook = new List<Texture2D>();
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
-    private enum _stateBook { Show, Edit };
+    private enum _stateBook { ShowBook, EditBook };
 
     public bool DefaultBook => _defaultBook;
     public RawImage CoverBook => _coverBook;
     public string NameBook => _nameBookTMP.text;
     public string PathToPDF => _pathToPDF;
-    public bool FavoriteBook => _favoriteBook;
+    public bool Favorite => _favoriteBook;
     public List<Texture2D> PagesBook => _pagesBook;
     public DateTime DataTimeBook => _dateTimeCreation;
 
 
-    private void OnEnable()
+    private void Start()
     {
-        _bookBtn.onClick.AddListener(Book_Click);
-        _favoriteBookBTN.onClick.AddListener(FavoriteBook_CLick);
+        _bookBtn.onClick.AddListener(ShowBook);
+        _favoriteBookBTN.onClick.AddListener(FavoriteBook);
         _deletedBTN.onClick.AddListener(DeletedBook_Click);
-        _exportBTN.onClick.AddListener(ExportBook_Click);
-        _editBookBTN.onClick.AddListener(EditBook_Click);
+        _exportBTN.onClick.AddListener(ExportBook);
+        _editBookBTN.onClick.AddListener(EditBook);
 
         MenuSceneController.Instance._adminOn += ActivateAdminPanel;
         MenuSceneController.Instance._adminOff += DeActiveAdminPanel;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        _bookBtn.onClick.RemoveListener(Book_Click);
-        _favoriteBookBTN.onClick.RemoveListener(FavoriteBook_CLick);
+        _bookBtn.onClick.RemoveListener(ShowBook);
+        _favoriteBookBTN.onClick.RemoveListener(FavoriteBook);
         _deletedBTN.onClick.RemoveListener(DeletedBook_Click);
-        _exportBTN.onClick.RemoveListener(ExportBook_Click);
-        _editBookBTN.onClick.RemoveListener(EditBook_Click);
+        _exportBTN.onClick.RemoveListener(ExportBook);
+        _editBookBTN.onClick.RemoveListener(EditBook);
 
         MenuSceneController.Instance._adminOn -= ActivateAdminPanel;
         MenuSceneController.Instance._adminOff -= DeActiveAdminPanel;
     }
 
-    public void SetupPreviewBook(string nameBook, string PathToBook, Texture2D CoverTexture, bool defaultBook)
+    public void SetupPreviewBook(string nameBook, string pathToBook, Texture2D coverTexture, bool defaultBook, bool favoriteBook)
     {
         if (MenuSceneController.Instance.AdminStatus)
             AdminPanel(true);
 
-        _nameBookTMP.text = Path.GetFileNameWithoutExtension(PathToBook);
-        _coverBook.texture = CoverTexture;
-        _pathToPDF = PathToBook;
-        _dateTimeCreation = PdfFileManager. GetDateCreation(PathToBook);
+        if (favoriteBook)
+            FavoriteBook();
+
+        _nameBookTMP.text = nameBook;
+        _coverBook.texture = coverTexture;
+        _pathToPDF = pathToBook;
+        _dateTimeCreation = PdfFileManager.GetDateCreation(pathToBook);
         _defaultBook = defaultBook;
-
-        CheckFavoriteBook(_nameBookTMP.text);
     }
 
-    private async void Book_Click()
+    private async void ShowBook()
     {
-        await LoadPages(_stateBook.Show);
+        await LoadPages(_stateBook.ShowBook);
     }
 
-    private async void EditBook_Click()
+    private async void EditBook()
     {
-        await LoadPages(_stateBook.Edit);
+        await LoadPages(_stateBook.EditBook);
     }
 
-    private void ExportBook_Click()
+    private void ExportBook()
     {
         MenuSceneController.Instance.ExportBook(this);
     }
@@ -113,31 +114,13 @@ public class Book : MonoBehaviour
         MenuSceneController.Instance.DeletedBook(this);
     }
 
-    private void FavoriteBook_CLick()
+    private void FavoriteBook()
     {
         _favoriteBook = !_favoriteBook;
         _selectionFavoriteBTN.SetActive(_favoriteBook);
 
-        SaveAndDeletedFavoriteBook(_favoriteBook, _nameBookTMP.text);
-
         if (MenuSceneController.Instance.FavoriteShowNow)
             gameObject.SetActive(_favoriteBook);
-    }
-
-    private void CheckFavoriteBook(string nameBook)
-    {
-        if (PlayerPrefs.HasKey($"Favorite_{nameBook}"))
-            FavoriteBook_CLick();
-        else
-            return;
-    }
-
-    private void SaveAndDeletedFavoriteBook(bool favorite, string nameBook)
-    {
-        if (favorite && !PlayerPrefs.HasKey($"Favorite_{nameBook}"))
-            PlayerPrefs.SetString($"Favorite_{nameBook}", nameBook);
-        else
-            PlayerPrefs.DeleteKey($"Favorite_{nameBook}");
     }
 
     private void ActivateAdminPanel()
@@ -162,21 +145,29 @@ public class Book : MonoBehaviour
 
     private async UniTask LoadPages(_stateBook stateBook)
     {
-        MenuSceneController.Instance.LoadScreen(true, "Загружаем страницы книги..");
+        MenuSceneController.Instance.LoadScreen(true, "Загружаем страницы книги...");
         _pagesBook = await PdfFileManager.OpenPdfFile(_pathToPDF);
 
         switch (stateBook)
         {
-            case _stateBook.Show:
+            case _stateBook.ShowBook:
                 MenuSceneController.Instance.
                     BookMode(this);
                 break;
-            case _stateBook.Edit:
+            case _stateBook.EditBook:
                 MenuSceneController.Instance.
                     EditorBook(this);
                 break;
             default:
                 break;
         }
+    }
+
+    public void ClearPages()
+    {
+        foreach (var pageTexture in _pagesBook)
+            Destroy(pageTexture);
+
+        _pagesBook.Clear();
     }
 }

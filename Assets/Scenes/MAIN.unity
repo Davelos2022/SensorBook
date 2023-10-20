@@ -1098,6 +1098,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1095772119 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2028941466325706708, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
+  m_PrefabInstance: {fileID: 174589748095471584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1124052202
 GameObject:
   m_ObjectHideFlags: 0
@@ -1493,7 +1498,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3417128029399316396, guid: f62e0c0befa186c43b1c702b9a3065c9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 75.885
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3417128029399316396, guid: f62e0c0befa186c43b1c702b9a3065c9, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1525,7 +1530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3417128029927551184, guid: f62e0c0befa186c43b1c702b9a3065c9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 300
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3417128029927551184, guid: f62e0c0befa186c43b1c702b9a3065c9, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2002,6 +2007,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2028941466960645949, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2028941467725395478, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2108,15 +2117,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5302090801909448352, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5302090801909448352, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5302090801909448352, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
@@ -2130,12 +2139,41 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8134219050849500147, guid: 2894a49b19de71640a1535c536751f3a, type: 3}
   m_PrefabInstance: {fileID: 174589748095471584}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1095772119}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67afd8097b77b9546ae5527088aba3a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8254756522513314840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1095772119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8254756522513314835}
+          m_TargetAssemblyTypeName: VolumeBox.Toolbox.UIInformer.BoxBase, VolumeBox.Toolbox
+          m_MethodName: Close
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &8261018282305991168 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8127110739589397984, guid: 2894a49b19de71640a1535c536751f3a, type: 3}

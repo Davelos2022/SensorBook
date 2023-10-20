@@ -95,7 +95,6 @@ public abstract class PdfFileManager : FileManager
                 pagesTextures.Add(texture);
             }
 
-
             return pagesTextures;
         }
         catch (Exception e)

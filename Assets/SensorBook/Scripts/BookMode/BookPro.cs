@@ -291,14 +291,6 @@ public class BookPro : MonoBehaviour
 
     }
 
-
-
-    public void NavigationBook(int navigation)
-    {
-        CurrentPaper += navigation;
-        UpdatePages();
-    }
-
     /// <summary>
     /// Update page orders
     /// This function should be called whenever the current page changed, the dragging of the page started or the page has been flipped
@@ -401,7 +393,6 @@ public class BookPro : MonoBehaviour
         }
 
         //BookModeMenu.SetNumberPage(currentPaper);
-        BookModeMenu.RefechInteractableButton();
         #endregion
     }
 
@@ -411,7 +402,6 @@ public class BookPro : MonoBehaviour
     {
         if (interactable && !tweening)
         {
-
             DragRightPageToPoint(transformPointMousePosition(Input.mousePosition));
         }
 
@@ -489,14 +479,16 @@ public class BookPro : MonoBehaviour
     }
     public void ReleasePage()
     {
+        float offSet = 1380f;
+
         if (pageDragging)
         {
             pageDragging = false;
             float distanceToLeft = Vector2.Distance(c, ebl);
             float distanceToRight = Vector2.Distance(c, ebr);
-            if (distanceToRight < distanceToLeft && mode == FlipMode.RightToLeft)
+            if (distanceToRight < distanceToLeft - offSet  && mode == FlipMode.RightToLeft)
                 TweenBack();
-            else if (distanceToRight > distanceToLeft && mode == FlipMode.LeftToRight)
+            else if (distanceToRight > distanceToLeft + offSet && mode == FlipMode.LeftToRight)
                 TweenBack();
             else
                 TweenForward();

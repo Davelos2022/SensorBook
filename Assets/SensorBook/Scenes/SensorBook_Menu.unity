@@ -631,7 +631,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1352461195}
+      - m_Target: {fileID: 1352461197}
         m_TargetAssemblyTypeName: MenuSceneController, Assembly-CSharp
         m_MethodName: ExitApp
         m_Mode: 1
@@ -2083,7 +2083,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1352461196}
-  - component: {fileID: 1352461195}
+  - component: {fileID: 1352461197}
   m_Layer: 0
   m_Name: MenuSceneController
   m_TagString: Untagged
@@ -2091,31 +2091,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1352461195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1352461194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6edec305d67c48d4f8db5a0c2f256d7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bookPrefab: {fileID: 5238923504317657831, guid: 7f773c9e57281a04b84ba7319efe9249, type: 3}
-  _nameBookDefault:
-  - "\u0411\u0438\u0442\u0432\u044B"
-  - "\u0413\u0435\u0440\u043E\u0438"
-  - "\u041E\u0440\u0443\u0436\u0438\u0435 \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430"
-  - "\u0421\u0442\u0438\u0445\u0438"
-  - "\u041F\u043E\u043B\u043A\u043E\u0432\u043E\u0434\u0446\u044B"
-  - "\u0424\u043E\u0442\u043E\u0433\u0430\u043B\u0435\u0440\u0435\u044F"
-  _parentBook: {fileID: 647262406}
-  _imageIfNullBook: {fileID: 1205395249}
-  _fadeMenu: {fileID: 163043778}
-  _loadScreen: {fileID: 7206840350615717657}
-  _loadText: {fileID: 1362876756}
 --- !u!4 &1352461196
 Transform:
   m_ObjectHideFlags: 0
@@ -2131,6 +2106,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1352461197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352461194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5657fc119372b4ab77075f6f9558e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bookPrefab: {fileID: 5238923504317657831, guid: 7f773c9e57281a04b84ba7319efe9249, type: 3}
+  _nameBookDefault:
+  - "\u0411\u0438\u0442\u0432\u044B"
+  - "\u041F\u043E\u043B\u043A\u043E\u0432\u043E\u0434\u0446\u044B"
+  - "\u0413\u0435\u0440\u043E\u0438"
+  - "\u041E\u0440\u0443\u0436\u0438\u0435 \u0438 \u0442\u0435\u0445\u043D\u0438\u043A\u0430"
+  - "\u0421\u0442\u0438\u0445\u0438"
+  - "\u0424\u043E\u0442\u043E\u0433\u0430\u043B\u0435\u0440\u0435\u044F"
+  _parentBook: {fileID: 647262406}
+  _imageIfNullBook: {fileID: 1205395249}
+  _fadeMenu: {fileID: 163043778}
+  _loadScreen: {fileID: 7206840350615717657}
+  _loadText: {fileID: 1362876756}
 --- !u!1 &1362876755
 GameObject:
   m_ObjectHideFlags: 0

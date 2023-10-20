@@ -11,7 +11,7 @@ public class TopPanelMenuScene : MonoBehaviour
     [SerializeField]
     private TMP_Dropdown _sortBook;
 
-    private void OnEnable()
+    private void Start()
     {
         _createBook.onClick.AddListener(ClickCreateBTN);
         _addNewBook.onClick.AddListener(ClickAddNewBookBTN);
@@ -21,7 +21,7 @@ public class TopPanelMenuScene : MonoBehaviour
         MenuSceneController.Instance._adminOff += DeActivateAdminPanel;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         _createBook.onClick.RemoveListener(ClickCreateBTN);
         _addNewBook.onClick.RemoveListener(ClickAddNewBookBTN);
