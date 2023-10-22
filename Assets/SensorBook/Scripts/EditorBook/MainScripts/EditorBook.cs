@@ -165,7 +165,6 @@ public class EditorBook : Singleton<EditorBook>
         else if (_editBook != null)
             MenuSceneController.Instance.DeletedBook(_editBook);
 
-        MenuSceneController.Instance.LoadScreen(true, "Создаем книгу...");
 
         try
         {
@@ -203,7 +202,6 @@ public class EditorBook : Singleton<EditorBook>
             Debug.LogWarning($"Failed to save book: {e.Message}");
         }
 
-        MenuSceneController.Instance.LoadScreen(false);
     }
 
     private List<Texture2D> CreatePagesForBook()

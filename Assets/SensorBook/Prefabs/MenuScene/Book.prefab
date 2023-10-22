@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: -9.01, y: 0, z: -10.18, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -780,7 +780,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: -16.7, y: 0, z: -19.1, w: -10.82}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -908,7 +908,6 @@ MonoBehaviour:
   _bookBtn: {fileID: 5271886248547242359}
   _favoriteBookBTN: {fileID: 5629883305097117797}
   _selectionFavoriteBTN: {fileID: 3680153950798014722}
-  _loadingScreen: {fileID: 8981468834216002098}
   _deletedBTN: {fileID: 7935441726710133442}
   _exportBTN: {fileID: 7532818884209629423}
   _editBookBTN: {fileID: 3384485835540881337}
@@ -974,7 +973,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: -4.9, y: 0, z: -7.15, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1051,7 +1050,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_RaycastPadding: {x: -7.48, y: 0, z: -5.68, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

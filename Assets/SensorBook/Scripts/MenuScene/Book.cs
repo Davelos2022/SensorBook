@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.IO;
 using VolumeBox.Toolbox.UIInformer;
 using Cysharp.Threading.Tasks;
 
@@ -38,7 +36,6 @@ public class Book : MonoBehaviour
     private List<Texture2D> _pagesBook = new List<Texture2D>();
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
-    private enum _stateBook { ShowBook, EditBook };
 
     public bool DefaultBook => _defaultBook;
     public RawImage CoverBook => _coverBook;
@@ -88,14 +85,14 @@ public class Book : MonoBehaviour
         _defaultBook = defaultBook;
     }
 
-    private async void ShowBook()
+    private void ShowBook()
     {
-        await LoadPages(_stateBook.ShowBook);
+        MenuSceneController.Instance.BookMode(this);
     }
 
-    private async void EditBook()
+    private void EditBook()
     {
-        await LoadPages(_stateBook.EditBook);
+        MenuSceneController.Instance.EditorBook(this);
     }
 
     private void ExportBook()
@@ -103,15 +100,15 @@ public class Book : MonoBehaviour
         MenuSceneController.Instance.ExportBook(this);
     }
 
+    private void DeletedBook()
+    {
+        MenuSceneController.Instance.DeletedBook(this);
+    }
+
     private void DeletedBook_Click()
     {
         Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?",
             DeletedBook, null, null, "Удалить книгу", "Отмена");
-    }
-
-    private void DeletedBook()
-    {
-        MenuSceneController.Instance.DeletedBook(this);
     }
 
     private void FavoriteBook()
@@ -143,24 +140,9 @@ public class Book : MonoBehaviour
         }
     }
 
-    private async UniTask LoadPages(_stateBook stateBook)
+    public async UniTask LoadPages()
     {
-        MenuSceneController.Instance.LoadScreen(true, "Загружаем страницы книги...");
         _pagesBook = await PdfFileManager.OpenPdfFile(_pathToPDF);
-
-        switch (stateBook)
-        {
-            case _stateBook.ShowBook:
-                MenuSceneController.Instance.
-                    BookMode(this);
-                break;
-            case _stateBook.EditBook:
-                MenuSceneController.Instance.
-                    EditorBook(this);
-                break;
-            default:
-                break;
-        }
     }
 
     public void ClearPages()

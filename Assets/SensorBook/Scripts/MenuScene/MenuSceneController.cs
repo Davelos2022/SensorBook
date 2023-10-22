@@ -7,8 +7,6 @@ using System.Linq;
 using System;
 using VolumeBox.Toolbox;
 using Cysharp.Threading.Tasks;
-using TMPro;
-using VolumeBox.Toolbox.UIInformer;
 
 public class MenuSceneController : Singleton<MenuSceneController>
 {
@@ -22,11 +20,6 @@ public class MenuSceneController : Singleton<MenuSceneController>
     private GameObject _imageIfNullBook;
     [SerializeField]
     private GameObject _fadeMenu;
-    [Space]
-    [SerializeField]
-    private GameObject _loadScreen;
-    [SerializeField]
-    private TextMeshProUGUI _loadText;
 
     private List<Book> _collectionBook = new List<Book>();  //<--- ARRAY!!!! Why? if I need to controll collection (replenish it and delete it book) 
     private BookFavorite _bookFavorite;
@@ -315,7 +308,12 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     private async UniTask LoadSceneAsync(string sceneName)
     {
-        _fadeMenu.SetActive(false);
+        if (_currentBook != null)
+        {
+            LoadScreenBook.Instance.LoadScreen(true, "Загрузка страниц книги...");
+            await _currentBook.LoadPages();
+        }
+
         AsyncOperation asyncLoad = SceneManager.
             LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
@@ -325,20 +323,15 @@ public class MenuSceneController : Singleton<MenuSceneController>
         }
 
         _loaderScene = SceneManager.GetSceneByName(sceneName);
-        LoadScreen(false);
-    }
+        _fadeMenu.SetActive(false);
 
-    public void LoadScreen(bool active, string textLoad = null)
-    {
-        _loadScreen.SetActive(active);
-        _loadText.text = textLoad;
+        LoadScreenBook.Instance.LoadScreen(false);
     }
 
     public void ExitApp()
     {
         Application.Quit();
     }
-
 }
 
 [Serializable]

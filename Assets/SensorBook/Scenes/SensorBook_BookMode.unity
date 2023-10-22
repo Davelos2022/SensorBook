@@ -1977,12 +1977,20 @@ PrefabInstance:
       value: -4.7244873
       objectReference: {fileID: 0}
     - target: {fileID: 4495260567139804308, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
+      propertyPath: ActivePage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4495260567139804308, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
       propertyPath: BookModeMenu
       value: 
       objectReference: {fileID: 859296899134008680}
     - target: {fileID: 4495260567139804308, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
       propertyPath: SpeedPageMove
-      value: 20
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6047745059054610597, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7026312301095791743, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
       propertyPath: m_Sprite

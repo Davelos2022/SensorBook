@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public abstract class PdfFileManager : FileManager
 {
@@ -93,8 +94,10 @@ public abstract class PdfFileManager : FileManager
                 await UniTask.RunOnThreadPool(() => pDFJS_Promise.HasFinished);
 
                 pagesTextures.Add(texture);
+                LoadScreenBook.Instance.SetTextLoadPage($"{pageNumber} | {document.GetPageCount() -1}");
             }
 
+            LoadScreenBook.Instance.SetTextLoadPage(null);
             return pagesTextures;
         }
         catch (Exception e)
@@ -107,10 +110,14 @@ public abstract class PdfFileManager : FileManager
 
     public async static UniTask SaveBookInPDF(string path, List<Texture2D> pagesTexture, RectTransform sizePage)
     {
+        LoadScreenBook.Instance.LoadScreen(true, "Cоздаем книгу...");
+
         await RecoveryImagePage(pagesTexture);
         await CreateDocumentPDF((int)sizePage.rect.width
             , (int)sizePage.rect.height, path);
         await DeleteRecoveryImage();
+
+        LoadScreenBook.Instance.LoadScreen(false);
     }
 
     private static async UniTask RecoveryImagePage(List<Texture2D> texturePages)
@@ -147,8 +154,11 @@ public abstract class PdfFileManager : FileManager
             {
                 var image = LoadAndScaleImage(page, document);
                 paragraph.Add(image);
+                LoadScreenBook.Instance.SetTextLoadPage($"{paragraph.Count - 1} / {files.Length - 1}");
             });
         }
+
+        LoadScreenBook.Instance.SetTextLoadPage(null);
 
         document.Add(paragraph);
         document.Close();

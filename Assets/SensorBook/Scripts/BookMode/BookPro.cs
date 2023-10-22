@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 using System.Collections.Generic;
-
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 public enum FlipMode
 {
@@ -13,12 +13,14 @@ public enum FlipMode
 }
 public class BookPro : MonoBehaviour
 {
+    [Header("Added new propirtes")]
     public GameObject PagePrefab;
     public float SpeedPageMove = 15;
     [Space]
     public RectTransform BookObject;
     public RectTransform PegesRectTransdorm;
     public BookModeMenu BookModeMenu;
+    [Header("Default setting from Asset")]
     [Space]
     public Image ClippingPlane;
     public Image Shadow;
@@ -176,8 +178,11 @@ public class BookPro : MonoBehaviour
         LeftPageShadow.rectTransform.pivot = new Vector2(1, (pageWidth / 2) / shadowPageHeight);
     }
 
+
+
+
     //create by Denis  ****////
-    private void OnEnable()
+    private void Awake()
     {
         OpenCurrentBook();
     }
@@ -211,38 +216,89 @@ public class BookPro : MonoBehaviour
             EndFlippingPaper = papers.Count - 1;
             currentPaper = 0;
 
-            CheckAndSetSizeBook(pages[0], pages[1]);
-            UpdatePages();
+            CalculateAndApplyScale(pages[0], pages[1]);
+            ActivatePage(0, _activePage);
         }
     }
 
-    private void CheckAndSetSizeBook(Texture2D leftPage, Texture2D rightPage)
+    private void CalculateAndApplyScale(Texture2D leftPage, Texture2D rightPage)
     {
-        float restrictiveIndicator = 1.45f;
-        float reSacle_x = 0.8f;
+        float leftPageAspectRatio = (float)leftPage.width / leftPage.height;
+        float rightPageAspectRatio = (float)rightPage.width / rightPage.height;
+        float textureAspectRatio = Mathf.Max(leftPageAspectRatio, rightPageAspectRatio);
 
-        if (leftPage != null && rightPage != null)
+        float screenAspectRatio = (float)Screen.width / Screen.height;
+
+        float scaleX = 1f;
+        float scaleY = 1f;
+
+        if (textureAspectRatio > screenAspectRatio)
         {
-            // Левая страница
-            int spriteWidtLeft = leftPage.width;
+            scaleY = /*screenAspectRatio /*/ textureAspectRatio; 
+        }
+        else
+        {
+            scaleX = /*screenAspectRatio /*/ textureAspectRatio;
+        }
 
-            // Правая страница
-            int spriteWidtRight = rightPage.width;
+        BookObject.localScale = new Vector3(scaleX, scaleY, 1f);
+    }
 
-            // Получаем размеры экрана сцены в пикселях
-            float pageWidth = PegesRectTransdorm.rect.width;
+    private int _startPage = 0;
+    private int _activePage = 5;
+    private int _endPage;
 
-            // Вычисляем разницу размеров в пикселях
-            float widthDifference = (spriteWidtLeft + spriteWidtRight) / pageWidth;
+    private void OnScrollValuePage()
+    {
+        _endPage = _startPage + _activePage;
 
-            if (widthDifference < restrictiveIndicator)
-                BookObject.localScale = new Vector3(reSacle_x, 1, 1);
+        if (CurrentPaper == _endPage)
+        {
+            ActivatePage(_endPage, _endPage + _activePage);
+            DeActivePage(_startPage, _endPage - 4);
+            _startPage = _endPage;
+        }
 
-            Debug.Log("Разница в ширине: " + widthDifference);
+        if (CurrentPaper == (_startPage - 1))
+        {
+            ActivatePage(_startPage - _activePage, _startPage);
+            DeActivePage(_endPage - _activePage, _endPage);
+            _startPage = _startPage - _activePage;
         }
     }
 
+    private void ActivatePage(int starIndex, int endIndex)
+    {
+        for (int i = starIndex; i <= endIndex; i++)
+        {
+            if (i < papers.Count)
+            {
+                if (!papers[i].Front.activeSelf)
+                {
+                    papers[i].Front.SetActive(true);
+                    papers[i].Back.SetActive(true);
+                }
+            }
+        }
+    }
+
+    private void DeActivePage(int starIndex, int endIndex)
+    {
+        for (int i = starIndex; i <= endIndex; i++)
+        {
+            if (i > 0 && i < papers.Count)
+            {
+                if (papers[i].Front.activeSelf)
+                {
+                    papers[i].Front.SetActive(false);
+                    papers[i].Back.SetActive(false);
+                }
+            }
+        }
+    }
     //End****////
+
+
 
 
 
@@ -392,6 +448,7 @@ public class BookPro : MonoBehaviour
 
         }
 
+        OnScrollValuePage();
         //BookModeMenu.SetNumberPage(currentPaper);
         #endregion
     }
@@ -486,14 +543,13 @@ public class BookPro : MonoBehaviour
             pageDragging = false;
             float distanceToLeft = Vector2.Distance(c, ebl);
             float distanceToRight = Vector2.Distance(c, ebr);
-            if (distanceToRight < distanceToLeft - offSet  && mode == FlipMode.RightToLeft)
+            if (distanceToRight < distanceToLeft - offSet && mode == FlipMode.RightToLeft)
                 TweenBack();
             else if (distanceToRight > distanceToLeft + offSet && mode == FlipMode.LeftToRight)
                 TweenBack();
             else
                 TweenForward();
-        }
-    }
+        }    }
 
     // Update is called once per frame
     void Update()
@@ -634,6 +690,8 @@ public class BookPro : MonoBehaviour
         radius1 = Vector2.Distance(sb, ebr);
         float pageWidth = PegesRectTransdorm.rect.width / 2.0f;
         float pageHeight = PegesRectTransdorm.rect.height;
+
+
         radius2 = Mathf.Sqrt(pageWidth * pageWidth + pageHeight * pageHeight);
     }
     public void UpdateBookRTLToPoint(Vector3 followLocation)
