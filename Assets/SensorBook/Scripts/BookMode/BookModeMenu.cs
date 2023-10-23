@@ -59,5 +59,4 @@ public class BookModeMenu : MonoBehaviour
     {
         MenuSceneController.Instance.ReturnLibary();
     }
-
 }

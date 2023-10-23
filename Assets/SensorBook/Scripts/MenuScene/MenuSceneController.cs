@@ -17,7 +17,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
     [SerializeField]
     private Transform _parentBook;
     [SerializeField]
-    private GameObject _imageIfNullBook;
+    private GameObject _backDrop;
     [SerializeField]
     private GameObject _fadeMenu;
 
@@ -28,6 +28,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public enum SortMode { sortDate, sortAz }
     private SortMode _currentSortState;
     private bool _favoriteShow = false;
+
     private Scene _loaderScene;
 
     private bool _adminStatus = false;
@@ -40,7 +41,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     private void Awake()
     {
-        if (HasInstance)  //The conflict with the Singleton is due to the Main scene, when it closes, it reverts and creates a scene and launches this method
+        if (HasInstance)  // This "if"  - The conflict with the Singleton is due to the Main scene, when it closes, it reverts and creates a scene and launches this method
             LoadBookInLibary();
     }
 
@@ -74,12 +75,14 @@ public class MenuSceneController : Singleton<MenuSceneController>
             if (DoesBookExists(Path.GetFileNameWithoutExtension(path)))
                 return;
 
+            LoadScreenBook.Instance.LoadScreen(true, "Добавляем книгу в библиотеку...");
             string newPath = PdfFileManager._bookPath + Path.GetFileName(path);
             await FileManager.CopyFileAsync(path, newPath);
 
             CreateBook(newPath);
             SortBook(_currentSortState);
 
+            LoadScreenBook.Instance.LoadScreen(false);
             Notifier.Instance.Notify(NotifyType.Success, "Книга добавлена");
             Debug.Log("Книга добавлена");
         }
@@ -108,8 +111,8 @@ public class MenuSceneController : Singleton<MenuSceneController>
     public void LoadBookInLibary()
     {
         string[] allPathBook = PdfFileManager.GetCountBookFiles();
-
         LoadFileFavoriteBook();
+
         _currentSortState = SortMode.sortAz;
 
         if (allPathBook.Length > 0)
@@ -211,16 +214,13 @@ public class MenuSceneController : Singleton<MenuSceneController>
         bool favoriteBook = CheckFavoriteBook(nameBook);
 
         PDFDocument bookPDF = new PDFDocument(pathToBook, "");
-        GameObject bookObj = Instantiate(_bookPrefab, _parentBook);
-
-        Book newBook = bookObj.GetComponent<Book>();
         Texture2D coverBook = bookPDF.Renderer.RenderPageToTexture(bookPDF.GetPage(0));
+
+        GameObject bookObj = Instantiate(_bookPrefab, _parentBook);
+        Book newBook = bookObj.GetComponent<Book>();
         newBook.SetupPreviewBook(nameBook, pathToBook, coverBook, defaultBook, favoriteBook);
 
         _collectionBook.Add(newBook);
-
-        if (_imageIfNullBook.activeSelf)
-            _imageIfNullBook.SetActive(false);
     }
 
     public void SortBook(SortMode sortMode)
@@ -248,16 +248,27 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
     public void ShowFavoriteBook()
     {
+        int countFovorite = 0;
         _favoriteShow = true;
 
         foreach (var book in _collectionBook)
         {
             book.gameObject.SetActive(book.Favorite);
+
+            if (book.Favorite)
+                countFovorite++;
         }
+
+        if (countFovorite == 0)
+            _backDrop.SetActive(true);
     }
+
 
     public void ShowAllBook()
     {
+        if (_backDrop.activeSelf)
+            _backDrop.SetActive(false);
+
         _favoriteShow = false;
 
         foreach (var book in _collectionBook)
@@ -273,9 +284,6 @@ public class MenuSceneController : Singleton<MenuSceneController>
 
         Notifier.Instance.Notify(NotifyType.Success, $"Книга {book.NameBook} удалена!");
         Destroy(book.gameObject);
-
-        if (_collectionBook.Count <= 0)
-            _imageIfNullBook.SetActive(true);
     }
 
     public async void EditorBook(Book editBook = null)
@@ -323,8 +331,6 @@ public class MenuSceneController : Singleton<MenuSceneController>
         }
 
         _loaderScene = SceneManager.GetSceneByName(sceneName);
-        _fadeMenu.SetActive(false);
-
         LoadScreenBook.Instance.LoadScreen(false);
     }
 
@@ -334,10 +340,6 @@ public class MenuSceneController : Singleton<MenuSceneController>
     }
 }
 
-[Serializable]
-public class BookFavorite
-{
-    public List<string> NameBook = new List<string>();
-}
+
 
 

@@ -16,6 +16,7 @@ public class BookPro : MonoBehaviour
     [Header("Added new propirtes")]
     public GameObject PagePrefab;
     public float SpeedPageMove = 15;
+    public Texture2D TheEndTexture;
     [Space]
     public RectTransform BookObject;
     public RectTransform PegesRectTransdorm;
@@ -59,7 +60,7 @@ public class BookPro : MonoBehaviour
         _leftPageRectTransform.anchoredPosition = LeftPageTransform.anchoredPosition;
         _leftPageRectTransform.localScale = LeftPageTransform.localScale;
 
-        leftPage.name = "Page";
+        leftPage.name = "FrontPage";
         leftPage.AddComponent<RawImage>();
         leftPage.AddComponent<Mask>().showMaskGraphic = true;
         leftPage.AddComponent<CanvasGroup>();
@@ -73,7 +74,7 @@ public class BookPro : MonoBehaviour
         _rightPageRectTransform.anchoredPosition = RightPageTransform.anchoredPosition;
         _rightPageRectTransform.localScale = RightPageTransform.localScale;
 
-        rightPage.name = "Page";
+        rightPage.name = "BackPage";
         rightPage.AddComponent<RawImage>();
         rightPage.AddComponent<Mask>().showMaskGraphic = true;
         rightPage.AddComponent<CanvasGroup>();
@@ -187,6 +188,17 @@ public class BookPro : MonoBehaviour
         OpenCurrentBook();
     }
 
+    private void OnDisable()
+    {
+        for (int x = 0; x < papers.Count; x++)
+        {
+            Destroy(papers[x].Front);
+            Destroy(papers[x].Back);
+        }
+
+        papers.Clear();
+    }
+
     private void OpenCurrentBook()
     {
         if (MenuSceneController.Instance.CurrentBook != null)
@@ -198,9 +210,9 @@ public class BookPro : MonoBehaviour
             {
                 int nextPage = x + 1;
 
-                if (x > pages.Count)
+                if (x >= pages.Count - 1)
                 {
-                    Create(pages[pages.Count - 1], null);
+                    Create(pages[pages.Count -1]);
                     break;
                 }
                 else
@@ -209,61 +221,64 @@ public class BookPro : MonoBehaviour
                         Create(pages[x], pages[nextPage]);
 
                     x++;
+
+                    if (x == pages.Count -1)
+                        break;
                 }
             }
 
-            StartFlippingPaper = 0;
-            EndFlippingPaper = papers.Count - 1;
-            currentPaper = 0;
+            StartFlippingPaper = 1;
+            EndFlippingPaper = papers.Count -1;
+            currentPaper = 1;
 
             CalculateAndApplyScale(pages[0], pages[1]);
-            ActivatePage(0, _activePage);
+            ActivatePage(0, _activeCountPages);
         }
     }
 
     private void CalculateAndApplyScale(Texture2D leftPage, Texture2D rightPage)
     {
-        float leftPageAspectRatio = (float)leftPage.width / leftPage.height;
-        float rightPageAspectRatio = (float)rightPage.width / rightPage.height;
-        float textureAspectRatio = Mathf.Max(leftPageAspectRatio, rightPageAspectRatio);
-
-        float screenAspectRatio = (float)Screen.width / Screen.height;
-
         float scaleX = 1f;
         float scaleY = 1f;
 
+        float leftPageAspectRatio = (float)leftPage.width / leftPage.height ;
+        float rightPageAspectRatio = (float)rightPage.width / rightPage.height;
+        float textureAspectRatio = leftPageAspectRatio + rightPageAspectRatio;
+
+        float screenAspectRatio = (float)Screen.width / Screen.height;
+
         if (textureAspectRatio > screenAspectRatio)
         {
-            scaleY = /*screenAspectRatio /*/ textureAspectRatio; 
+            scaleY = screenAspectRatio / textureAspectRatio; 
         }
         else
         {
-            scaleX = /*screenAspectRatio /*/ textureAspectRatio;
+            scaleX = textureAspectRatio / screenAspectRatio;
         }
 
         BookObject.localScale = new Vector3(scaleX, scaleY, 1f);
     }
 
-    private int _startPage = 0;
-    private int _activePage = 5;
-    private int _endPage;
+    private int _startActivePage = 0;
+    private int _activeCountPages = 5;
+    private int _endActivePage;
 
     private void OnScrollValuePage()
     {
-        _endPage = _startPage + _activePage;
+        _endActivePage = _startActivePage + _activeCountPages;
 
-        if (CurrentPaper == _endPage)
+        if (CurrentPaper == _endActivePage)
         {
-            ActivatePage(_endPage, _endPage + _activePage);
-            DeActivePage(_startPage, _endPage - 4);
-            _startPage = _endPage;
+            ActivatePage(_endActivePage, _endActivePage + _activeCountPages);
+            DeActivePage(_startActivePage, _endActivePage - 4);
+            _startActivePage = _endActivePage;
         }
 
-        if (CurrentPaper == (_startPage - 1))
+        if (CurrentPaper == (_startActivePage - 1))
         {
-            ActivatePage(_startPage - _activePage, _startPage);
-            DeActivePage(_endPage - _activePage, _endPage);
-            _startPage = _startPage - _activePage;
+            ActivatePage(_startActivePage - _activeCountPages, _startActivePage);
+            DeActivePage(_endActivePage - _activeCountPages, _endActivePage);
+            _startActivePage = _startActivePage - _activeCountPages;
         }
     }
 
@@ -653,16 +668,6 @@ public class BookPro : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        for (int x = 0; x < papers.Count; x++)
-        {
-            Destroy(papers[x].Front);
-            Destroy(papers[x].Back);
-        }
-
-        papers.Clear();
-    }
 
     #region Page Curl Internal Calculations
     //for more info about this part please check this link : http://rbarraza.com/html5-canvas-pageflip/

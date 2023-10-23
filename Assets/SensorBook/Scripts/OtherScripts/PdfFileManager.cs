@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using TMPro;
 
 public abstract class PdfFileManager : FileManager
 {
@@ -83,7 +82,7 @@ public abstract class PdfFileManager : FileManager
 
             var document = new PDFDocument(filePath);
 
-            for (int pageNumber = 1; pageNumber < document.GetPageCount(); pageNumber++)
+            for (int pageNumber = 0; pageNumber < document.GetPageCount(); pageNumber++)
             {
                 PDFPage page = document.GetPage(pageNumber);
 

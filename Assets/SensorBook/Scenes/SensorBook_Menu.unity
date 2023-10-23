@@ -1319,7 +1319,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 333 / 650
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ae8b3db9b9431f74d805189d1896459d, type: 2}
   m_sharedMaterial: {fileID: 8268833925639159369, guid: ae8b3db9b9431f74d805189d1896459d, type: 2}
@@ -1895,7 +1895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1205395250
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2284,7 +2284,7 @@ MonoBehaviour:
   - "\u0421\u0442\u0438\u0445\u0438"
   - "\u0424\u043E\u0442\u043E\u0433\u0430\u043B\u0435\u0440\u0435\u044F"
   _parentBook: {fileID: 647262406}
-  _imageIfNullBook: {fileID: 1205395249}
+  _backDrop: {fileID: 1205395249}
   _fadeMenu: {fileID: 163043778}
 --- !u!1 &1362876755
 GameObject:

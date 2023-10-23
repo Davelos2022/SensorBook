@@ -31,6 +31,10 @@ public class SwipeHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                 _bookModeMenu.ShowMenu();
             }
         }
+        else
+        {
+            _bookModeMenu.ShowMenu();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)

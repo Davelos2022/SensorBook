@@ -17,7 +17,7 @@ public class Book : MonoBehaviour
     [SerializeField]
     private RawImage _coverBook;
     [SerializeField]
-    private Button _bookBtn;
+    private Button _bookBTN;
     [SerializeField]
     private Button _favoriteBookBTN;
     [SerializeField]
@@ -31,26 +31,27 @@ public class Book : MonoBehaviour
     [SerializeField]
     private Button _editBookBTN;
 
-    private bool _defaultBook;
     private string _pathToPDF;
     private List<Texture2D> _pagesBook = new List<Texture2D>();
+    private bool _defaultBook;
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
 
-    public bool DefaultBook => _defaultBook;
-    public RawImage CoverBook => _coverBook;
+
     public string NameBook => _nameBookTMP.text;
+    public RawImage CoverBook => _coverBook;
     public string PathToPDF => _pathToPDF;
-    public bool Favorite => _favoriteBook;
     public List<Texture2D> PagesBook => _pagesBook;
+    public bool DefaultBook => _defaultBook;
+    public bool Favorite => _favoriteBook;
     public DateTime DataTimeBook => _dateTimeCreation;
 
 
     private void Start()
     {
-        _bookBtn.onClick.AddListener(ShowBook);
+        _bookBTN.onClick.AddListener(ShowBook);
         _favoriteBookBTN.onClick.AddListener(FavoriteBook);
-        _deletedBTN.onClick.AddListener(DeletedBook_Click);
+        _deletedBTN.onClick.AddListener(DeletedBook_MessagBox);
         _exportBTN.onClick.AddListener(ExportBook);
         _editBookBTN.onClick.AddListener(EditBook);
 
@@ -60,9 +61,9 @@ public class Book : MonoBehaviour
 
     private void OnDestroy()
     {
-        _bookBtn.onClick.RemoveListener(ShowBook);
+        _bookBTN.onClick.RemoveListener(ShowBook);
         _favoriteBookBTN.onClick.RemoveListener(FavoriteBook);
-        _deletedBTN.onClick.RemoveListener(DeletedBook_Click);
+        _deletedBTN.onClick.RemoveListener(DeletedBook_MessagBox);
         _exportBTN.onClick.RemoveListener(ExportBook);
         _editBookBTN.onClick.RemoveListener(EditBook);
 
@@ -105,7 +106,7 @@ public class Book : MonoBehaviour
         MenuSceneController.Instance.DeletedBook(this);
     }
 
-    private void DeletedBook_Click()
+    private void DeletedBook_MessagBox()
     {
         Info.Instance.ShowBox($"Вы действительно хотите удалить книгу?",
             DeletedBook, null, null, "Удалить книгу", "Отмена");
@@ -117,7 +118,7 @@ public class Book : MonoBehaviour
         _selectionFavoriteBTN.SetActive(_favoriteBook);
 
         if (MenuSceneController.Instance.FavoriteShowNow)
-            gameObject.SetActive(_favoriteBook);
+            MenuSceneController.Instance.ShowFavoriteBook();
     }
 
     private void ActivateAdminPanel()
