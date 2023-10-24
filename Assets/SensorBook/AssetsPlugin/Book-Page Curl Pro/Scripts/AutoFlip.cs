@@ -33,7 +33,7 @@ public class AutoFlip : MonoBehaviour
     public void FlipLeftPage()
     {
         if (isPageFlipping) return;
-        if (ControledBook.CurrentPaper <= 0) return;
+        if (ControledBook.CurrentPaper <= 1) return;
         isPageFlipping = true;
         PageFlipper.FlipPage(ControledBook, PageFlipTime, FlipMode.LeftToRight, () => { isPageFlipping = false; });
     }

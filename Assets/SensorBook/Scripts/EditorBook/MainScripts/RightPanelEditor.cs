@@ -42,6 +42,7 @@ public class RightPanelEditor : MonoBehaviour
 
     private void AddPageClick()
     {
+        EditorBook.Instance.TakeScreenShotCurrentPage();
         EditorBook.Instance.AddPage();
     }
 }

@@ -6,9 +6,6 @@ using UnityEngine.UI;
 using VolumeBox.Toolbox.UIInformer;
 using Cysharp.Threading.Tasks;
 
-
-
-
 [Serializable]
 public class Book : MonoBehaviour
 {
@@ -16,6 +13,8 @@ public class Book : MonoBehaviour
     private TextMeshProUGUI _nameBookTMP;
     [SerializeField]
     private RawImage _coverBook;
+    [SerializeField]
+    private RawImageAspectPreserver _coverImageAspect;
     [SerializeField]
     private Button _bookBTN;
     [SerializeField]
@@ -36,7 +35,6 @@ public class Book : MonoBehaviour
     private bool _defaultBook;
     private bool _favoriteBook;
     private DateTime _dateTimeCreation;
-
 
     public string NameBook => _nameBookTMP.text;
     public RawImage CoverBook => _coverBook;
@@ -71,7 +69,7 @@ public class Book : MonoBehaviour
         MenuSceneController.Instance._adminOff -= DeActiveAdminPanel;
     }
 
-    public void SetupPreviewBook(string nameBook, string pathToBook, Texture2D coverTexture, bool defaultBook, bool favoriteBook)
+    public void SetupPreviewBook(string nameBook, string pathToBook, bool defaultBook, bool favoriteBook)
     {
         if (MenuSceneController.Instance.AdminStatus)
             AdminPanel(true);
@@ -79,11 +77,13 @@ public class Book : MonoBehaviour
         if (favoriteBook)
             FavoriteBook();
 
-        _nameBookTMP.text = nameBook;
-        _coverBook.texture = coverTexture;
         _pathToPDF = pathToBook;
-        _dateTimeCreation = PdfFileManager.GetDateCreation(pathToBook);
+        _nameBookTMP.text = nameBook;
         _defaultBook = defaultBook;
+        _coverBook.texture = PdfFileManager.GetCoverBook(pathToBook);
+        _dateTimeCreation = PdfFileManager.GetDateCreationBook(pathToBook);
+
+        //_coverImageAspect.SetAspect();
     }
 
     private void ShowBook()

@@ -17,7 +17,7 @@ public class PagePreview : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     [SerializeField] private Button _deletedBTN;
     [Space]
     [SerializeField] private RawImage _imageBox;
-    [SerializeField] private Texture2D _basicImage;
+    [SerializeField] private Texture2D _defaultTexture;
     [SerializeField] private RawImageAspectPreserver _rawImageAspect;
     [Space]
     [SerializeField] private GameObject _selectedPanel;
@@ -62,7 +62,7 @@ public class PagePreview : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     public void SetImage(Texture2D texture)
     {
         if (texture == null)
-            _imageBox.texture = _basicImage;
+            _imageBox.texture = _defaultTexture;
         else
             _imageBox.texture = texture;
 

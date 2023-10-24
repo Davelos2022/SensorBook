@@ -36,7 +36,7 @@ public class ScreenshotHandlerPage : MonoBehaviour
     }
 
 
-    public  void TakeScreenshot(GameObject pageObject, int indexPage)
+    public void TakeScreenshot(GameObject pageObject, int indexPage)
     {
         _indexPage = indexPage;
         _screenshot = Instantiate(pageObject, transform.parent);

@@ -36,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.33080292, y: 5.4717}
-  m_SizeDelta: {x: -29.9362, y: -26.9989}
+  m_AnchoredPosition: {x: -0.14409637, y: 6.289}
+  m_SizeDelta: {x: -39.5808, y: -36.0349}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3146428554058171923
 CanvasRenderer:
@@ -202,10 +202,10 @@ RectTransform:
   m_Father: {fileID: 4475616018113553805}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.96191055, y: -2.0663407}
-  m_SizeDelta: {x: 123.1269, y: 143.0936}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0.000015258789, y: 0.000015258789}
+  m_SizeDelta: {x: 0, y: -0.000061035}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8396225555209704035
 CanvasRenderer:
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 6876710da449acd4eb00cf53eaf47d11, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -452,7 +452,7 @@ MonoBehaviour:
   _pageBTN: {fileID: 6018923388777807293}
   _deletedBTN: {fileID: 6511285646532381844}
   _imageBox: {fileID: 7500681711004767069}
-  _basicImage: {fileID: 2800000, guid: cc8d68749c544fb4aa93122a7d2d0aba, type: 3}
+  _defaultTexture: {fileID: 2800000, guid: 6876710da449acd4eb00cf53eaf47d11, type: 3}
   _rawImageAspect: {fileID: 4436397768688605688}
   _selectedPanel: {fileID: 8641446201046146376}
   _textPage: {fileID: 4597972976816310868}

@@ -66,13 +66,13 @@ public class EditorBook : Singleton<EditorBook>
         _coverBook.SetImage((Texture2D)book.CoverBook.texture);
         _coverExist = true;
 
-        for (int x = 0; x < book.PagesBook.Count; x++)
+        for (int x = 1; x < book.PagesBook.Count; x++)
         {
             AddPage();
-            ResizeAreaPageForTexture(book.PagesBook[x], _pages[x].transform);
+            ResizeAreaPageForTexture(book.PagesBook[x], _pages[x - 1].transform);
 
-            CreateImage(book.PagesBook[x], x, true);
-            _pagesPreviews[x].SetImage(book.PagesBook[x]);
+            CreateImage(book.PagesBook[x], x - 1, true);
+            _pagesPreviews[x - 1].SetImage(book.PagesBook[x]);
         }
     }
 
@@ -86,16 +86,19 @@ public class EditorBook : Singleton<EditorBook>
         pageRectTransform.sizeDelta = new Vector2(textureWidth, textureHeight);
     }
 
-
     public async void AddImage()
     {
         string pathToImage = FileManager.SelectImageInBrowser();
 
         if (!string.IsNullOrWhiteSpace(pathToImage))
         {
+            LoadScreenBook.Instance.LoadScreen(true, "Загрузка фотографии...");
+
             Texture2D image = await FileManager.LoadTextureAsync(pathToImage, false);
             CreateImage(image, _currentIndexPage);
             TakeScreenShotCurrentPage();
+
+            LoadScreenBook.Instance.LoadScreen(false);
         }
         else
         {
@@ -103,7 +106,7 @@ public class EditorBook : Singleton<EditorBook>
         }
     }
 
-    private void CreateImage(Texture2D texture, int indexPage, bool openEdit = false)
+    private void CreateImage(Texture2D texture, int indexPage, bool openEditBook = false)
     {
         GameObject image = Instantiate(_imagePrefab, _pages[indexPage].transform);
         image.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -113,9 +116,8 @@ public class EditorBook : Singleton<EditorBook>
 
         rawImage.GetComponent<RawImageAspectPreserver>().SetAspect();
 
-        if (!openEdit)
+        if (!openEditBook)
             UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(image));
-
     }
 
     public void AddText()
@@ -149,7 +151,7 @@ public class EditorBook : Singleton<EditorBook>
     public void DeletedObject(GameObject gameObject)
     {
         //Destroy(gameObject);
-        UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(gameObject,true));
+        UndoRedoSystem.Instance.AddAction(new CreateDeleteObjectAction(gameObject, true));
         gameObject.SetActive(false);
 
         TakeScreenShotCurrentPage();
@@ -160,17 +162,23 @@ public class EditorBook : Singleton<EditorBook>
         if (!CheckingForCorrectnessData())
             return;
 
-        if (MenuSceneController.Instance.DoesBookExists(_nameBook.text) && _editBook == null)
-            return;
-        else if (_editBook != null)
-            MenuSceneController.Instance.DeletedBook(_editBook);
+        if (_editBook == null)
+        {
+            if (MenuSceneController.Instance.DoesBookExists(_nameBook.text))
+                return;
+        }
+        else
+        {
+            PdfFileManager.DeleteFile(_editBook.PathToPDF);
+        }
 
+        LoadScreenBook.Instance.LoadScreen(true, "Cоздаем книгу...");
 
         try
         {
-            RectTransform sizePage = _pagePrefab.GetComponent<RectTransform>();
-            List<Texture2D> pagesTexture = CreatePagesForBook();
             string pathToBook;
+            RectTransform sizePage = _pagePrefab.GetComponent<RectTransform>();
+            List<Texture2D> pagesTexture = await CreatePagesForBook();
 
             if (export)
             {
@@ -189,7 +197,15 @@ public class EditorBook : Singleton<EditorBook>
                 pathToBook = PdfFileManager._bookPath + _nameBook.text + ".pdf";
                 await PdfFileManager.SaveBookInPDF(pathToBook, pagesTexture, sizePage);
 
-                MenuSceneController.Instance.CreateBook(pathToBook);
+                if (_editBook == null)
+                {
+                    MenuSceneController.Instance.CreateBook(pathToBook);
+                }
+                else
+                {
+                    _editBook.SetupPreviewBook(_nameBook.text, pathToBook, false, false);
+                }
+
                 MenuSceneController.Instance.ReturnLibary();
 
                 Notifier.Instance.Notify(NotifyType.Success, "Книга cохранена");
@@ -202,21 +218,22 @@ public class EditorBook : Singleton<EditorBook>
             Debug.LogWarning($"Failed to save book: {e.Message}");
         }
 
+        LoadScreenBook.Instance.LoadScreen(false);
     }
 
-    private List<Texture2D> CreatePagesForBook()
+    private async UniTask<List<Texture2D>> CreatePagesForBook()
     {
         List<Texture2D> pages = new List<Texture2D>();
 
-        pages.Add((Texture2D)_coverBook.ImageBox.texture);
-
-        for (int x = 0; x < _pagesPreviews.Count; x++)
+        await UniTask.RunOnThreadPool(() =>
         {
-            if (_pagesPreviews[x].ImageBox.texture = null)
-                _pagesPreviews[x].SetImage(null);
+            pages.Add((Texture2D)_coverBook.ImageBox.texture);
 
+            for (int x = 0; x < _pagesPreviews.Count; x++)
+            {
                 pages.Add((Texture2D)_pagesPreviews[x].ImageBox.texture);
-        }
+            }
+        });
 
         return pages;
     }
@@ -261,9 +278,13 @@ public class EditorBook : Singleton<EditorBook>
 
         if (!string.IsNullOrWhiteSpace(pathToImage))
         {
+            LoadScreenBook.Instance.LoadScreen(true, "Загружаем обложку...");
+
             Texture2D cover = await FileManager.LoadTextureAsync(pathToImage, false);
             _coverBook.SetImage(cover);
             _coverExist = true;
+
+            LoadScreenBook.Instance.LoadScreen(false);
         }
         else
         {

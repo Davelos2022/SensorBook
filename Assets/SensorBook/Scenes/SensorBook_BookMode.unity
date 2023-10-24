@@ -1999,7 +1999,7 @@ PrefabInstance:
     - target: {fileID: 4495260567139804308, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
       propertyPath: TheEndTexture
       value: 
-      objectReference: {fileID: 2800000, guid: b41bf8362a8acc74fb0b6cb0b37dbae2, type: 3}
+      objectReference: {fileID: 2800000, guid: 01a4522dbad916541900b8723b80462e, type: 3}
     - target: {fileID: 4495260567139804308, guid: 87fa92821fd70254db5e06e2036dd132, type: 3}
       propertyPath: hasTransparentPages
       value: 1

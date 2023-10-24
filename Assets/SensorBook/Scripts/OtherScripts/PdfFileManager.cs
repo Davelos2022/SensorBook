@@ -27,12 +27,21 @@ public abstract class PdfFileManager : FileManager
         return countFiles;
     }
 
-    public static DateTime GetDateCreation(string path)
+    public static DateTime GetDateCreationBook(string path)
     {
         var info = new FileInfo(path);
         var dateFile = info.CreationTime;
 
         return dateFile;
+    }
+
+    public static Texture2D GetCoverBook(string filePath)
+    {
+        PDFDocument pDFDocument = new PDFDocument(filePath, "");
+
+        Texture2D coverTex;
+        coverTex = pDFDocument.Renderer.RenderPageToTexture(pDFDocument.GetPage(0));
+        return coverTex;
     }
 
     public static string SelectPdfFileBrowser()
@@ -109,14 +118,9 @@ public abstract class PdfFileManager : FileManager
 
     public async static UniTask SaveBookInPDF(string path, List<Texture2D> pagesTexture, RectTransform sizePage)
     {
-        LoadScreenBook.Instance.LoadScreen(true, "Cоздаем книгу...");
-
         await RecoveryImagePage(pagesTexture);
-        await CreateDocumentPDF((int)sizePage.rect.width
-            , (int)sizePage.rect.height, path);
+        await CreateDocumentPDF((int)sizePage.rect.width, (int)sizePage.rect.height, path);
         await DeleteRecoveryImage();
-
-        LoadScreenBook.Instance.LoadScreen(false);
     }
 
     private static async UniTask RecoveryImagePage(List<Texture2D> texturePages)
@@ -153,11 +157,8 @@ public abstract class PdfFileManager : FileManager
             {
                 var image = LoadAndScaleImage(page, document);
                 paragraph.Add(image);
-                LoadScreenBook.Instance.SetTextLoadPage($"{paragraph.Count - 1} / {files.Length - 1}");
             });
         }
-
-        LoadScreenBook.Instance.SetTextLoadPage(null);
 
         document.Add(paragraph);
         document.Close();

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Paroxe.PdfRenderer;
 using UnityEngine.SceneManagement;
 using System.IO;
 using System.Linq;
@@ -166,8 +165,8 @@ public class MenuSceneController : Singleton<MenuSceneController>
         {
             if (_collectionBook[x].NameBook == nameBook)
             {
-                Notifier.Instance.Notify(NotifyType.Error, " нига с таким названием уже имеетс€!");
-                Debug.Log(" нига с таким названием уже имеетс€!");
+                Notifier.Instance.Notify(NotifyType.Error, " нига с таким названием уже существует!");
+                Debug.Log(" нига с таким названием уже существует!");
                 return true;
             }
         }
@@ -213,12 +212,9 @@ public class MenuSceneController : Singleton<MenuSceneController>
         bool defaultBook = CheckDefaultBook(nameBook);
         bool favoriteBook = CheckFavoriteBook(nameBook);
 
-        PDFDocument bookPDF = new PDFDocument(pathToBook, "");
-        Texture2D coverBook = bookPDF.Renderer.RenderPageToTexture(bookPDF.GetPage(0));
-
         GameObject bookObj = Instantiate(_bookPrefab, _parentBook);
         Book newBook = bookObj.GetComponent<Book>();
-        newBook.SetupPreviewBook(nameBook, pathToBook, coverBook, defaultBook, favoriteBook);
+        newBook.SetupPreviewBook(nameBook, pathToBook, defaultBook, favoriteBook);
 
         _collectionBook.Add(newBook);
     }
@@ -330,6 +326,7 @@ public class MenuSceneController : Singleton<MenuSceneController>
             await UniTask.Yield();
         }
 
+        _fadeMenu.SetActive(false);
         _loaderScene = SceneManager.GetSceneByName(sceneName);
         LoadScreenBook.Instance.LoadScreen(false);
     }
@@ -339,7 +336,3 @@ public class MenuSceneController : Singleton<MenuSceneController>
         Application.Quit();
     }
 }
-
-
-
-

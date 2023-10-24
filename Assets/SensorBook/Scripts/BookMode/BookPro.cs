@@ -210,9 +210,9 @@ public class BookPro : MonoBehaviour
             {
                 int nextPage = x + 1;
 
-                if (x >= pages.Count - 1)
+                if (x == pages.Count - 1)
                 {
-                    Create(pages[pages.Count -1]);
+                    Create(pages[pages.Count -1], TheEndTexture);
                     break;
                 }
                 else
